@@ -232,7 +232,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2023/09/13/%E3%80%90redis%E3%80%91ZSet%E7%9A%84%E4%BD%BF%E7%94%A8/" target="_self">
         <div>
-          1docker run -d -p 6379:6379 --name redis redis    1docker ps    1redis-cli    ZADD添加元素 O(log(N))  1zadd myzset 1 &quot;1&quot;    ZCARD查看zset的元素个数  O（1） 1zcard myzset     ZCOUNT 查看zset区间的与元素个数（默认为左闭右闭
+          准备动作启动docker1docker run -d -p 6379:6379 --name redis redis  查看docke状态1docker ps  进入redis-cli1redis-cli      Zset的基本指令集合ZADD	添加元素 	O(log(N))1zadd myzset 1 &quot;1&quot;    ZREM	 删除元素​	O(M*log(N)) with
         </div>
       </a>
 
