@@ -16,20 +16,22 @@
   <meta name="author" content="Forrest">
   <meta name="keywords" content="">
   
-    <meta property="og:type" content="article">
-<meta property="og:title" content="【redis】ZSet的基本使用">
+    <meta name="description" content="1docker run -d -p 6379:6379 --name redis redis    1docker ps    1redis-cli    ZADD添加元素 O(log(N))  1zadd myzset 1 &quot;1&quot;    ZCARD查看zset的元素个数  O（1） 1zcard myzset     ZCOUNT 查看zset区间的与元素个数（默认为左闭右闭">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
 <meta property="og:url" content="http://example.com/2023/09/12/%E3%80%90redis%E3%80%91ZSet%E7%9A%84%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="1docker run -d -p 6379:6379 --name redis redis    1docker ps    1redis-cli    ZADD添加元素 O(log(N))  1zadd myzset 1 &quot;1&quot;    ZCARD查看zset的元素个数  O（1） 1zcard myzset     ZCOUNT 查看zset区间的与元素个数（默认为左闭右闭">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-09-12T14:29:47.000Z">
-<meta property="article:modified_time" content="2023-09-12T14:30:07.522Z">
+<meta property="article:modified_time" content="2023-09-13T02:38:58.572Z">
 <meta property="article:author" content="Forrest">
 <meta property="article:tag" content="redis">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>【redis】ZSet的基本使用 - Hexo</title>
+  <title>Hexo</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -195,7 +197,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="【redis】ZSet的基本使用"></span>
+            <span id="subtitle" data-typed-text=""></span>
           
         </div>
 
@@ -218,7 +220,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          0 字
+          1.8k 字
         
       </span>
     
@@ -229,7 +231,7 @@
         
         
         
-          1 分钟
+          16 分钟
         
       </span>
     
@@ -266,12 +268,94 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">【redis】ZSet的基本使用</h1>
+            <h1 id="seo-header"></h1>
             
             
               <div class="markdown-body">
                 
-                
+                <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">docker run -d -p 6379:6379 --name redis redis<br></code></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">docker ps<br></code></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">redis-cli<br></code></pre></td></tr></table></figure>
+
+
+
+<p><strong>ZADD</strong>添加元素 O(log(N)) </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">zadd myzset 1 &quot;1&quot;<br></code></pre></td></tr></table></figure>
+
+
+
+<p><strong>ZCARD</strong>查看zset的元素个数  O（1）</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">zcard myzset</span> <br></code></pre></td></tr></table></figure>
+
+
+
+<p><strong>ZCOUNT</strong> 查看zset区间的与元素个数（默认为左闭右闭）O(log(N))  </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">zcount myzset 1 3#查看大于等于1小于等于3的<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">zcount myzset (1 3 #查看大于1小于等于3的<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">zcount myzset -inf +inf <br></code></pre></td></tr></table></figure>
+
+<p>ZINCRBY 给元素添加值</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">ZINCRBY myzset -10 &quot;one&quot;<br></code></pre></td></tr></table></figure>
+
+<p>ZRANGE  查询区间值的元素</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">ZRANGE myzset -10 100 WITHSOCRES<br></code></pre></td></tr></table></figure>
+
+
+
+<p><strong>ZINTERSTORE</strong>  </p>
+<p><code>ZINTERSTORE</code> 是 Redis 中用于计算多个有序集合（Sorted Set）的交集并将结果存储到新有序集合的命令。这个命令非常有用，可以用于获取多个有序集合的共同成员或者计算多个有序集合的交集分数。以下是 <code>ZINTERSTORE</code> 命令的基本用法：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">ZINTERSTORE destination numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX]<br></code></pre></td></tr></table></figure>
+
+<p>参数说明：</p>
+<ul>
+<li><code>destination</code>：目标有序集合的键名，用于存储交集结果。</li>
+<li><code>numkeys</code>：指定参与计算的有序集合的数量。</li>
+<li><code>key [key ...]</code>：要参与计算交集的有序集合的键名列表。</li>
+<li><code>WEIGHTS weight [weight ...]</code>（可选）：用于指定每个有序集合的权重，可以调整每个成员分数的权重。如果不指定权重，则默认为 1。</li>
+<li><code>AGGREGATE SUM|MIN|MAX</code>（可选）：用于指定计算交集时的聚合方式，可以是 SUM（求和，默认）、MIN（最小值）或 MAX（最大值）。</li>
+</ul>
+<p>示例：</p>
+<p>假设有两个有序集合 “set1” 和 “set2”，它们包含以下成员和分数：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">set1</span>:<br><span class="hljs-attribute">1</span>. <span class="hljs-string">&quot;Alice&quot;</span> - 分数 <span class="hljs-number">100</span><br><span class="hljs-attribute">2</span>. <span class="hljs-string">&quot;Bob&quot;</span> - 分数 <span class="hljs-number">200</span><br><span class="hljs-attribute">3</span>. <span class="hljs-string">&quot;Charlie&quot;</span> - 分数 <span class="hljs-number">300</span><br><br><span class="hljs-attribute">set2</span>:<br><span class="hljs-attribute">1</span>. <span class="hljs-string">&quot;Alice&quot;</span> - 分数 <span class="hljs-number">10</span><br><span class="hljs-attribute">2</span>. <span class="hljs-string">&quot;David&quot;</span> - 分数 <span class="hljs-number">20</span><br><span class="hljs-attribute">3</span>. <span class="hljs-string">&quot;Eve&quot;</span> - 分数 <span class="hljs-number">30</span><br></code></pre></td></tr></table></figure>
+
+<p>现在，如果您想计算这两个有序集合的交集并将结果存储到新的有序集合 “intersection” 中，可以使用 <code>ZINTERSTORE</code> 命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">ZINTERSTORE intersection 2 set1 set2<br></code></pre></td></tr></table></figure>
+
+<p>上述命令将计算 “set1” 和 “set2” 的交集，并将结果存储在名为 “intersection” 的新有序集合中。交集的结果如下：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">intersection</span>:<br><span class="hljs-attribute">1</span>. <span class="hljs-string">&quot;Alice&quot;</span> - 分数 <span class="hljs-number">110</span> (<span class="hljs-number">100</span> + <span class="hljs-number">10</span>)<br></code></pre></td></tr></table></figure>
+
+<p>如果您希望调整分数的权重，可以使用 <code>WEIGHTS</code> 参数。例如，您可以将 “set1” 的分数乘以 2，然后计算交集：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">ZINTERSTORE intersection_weighted 2 set1 set2 WEIGHTS 2 1<br></code></pre></td></tr></table></figure>
+
+<p>上述命令中，”set1” 的分数乘以 2，”set2” 的分数不变，然后计算交集。结果如下：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">intersection_weighted</span>:<br><span class="hljs-attribute">1</span>. <span class="hljs-string">&quot;Alice&quot;</span> - 分数 <span class="hljs-number">220</span> ((<span class="hljs-number">100</span> * <span class="hljs-number">2</span>) + <span class="hljs-number">10</span>)<br></code></pre></td></tr></table></figure>
+
+<p>您还可以使用 <code>AGGREGATE</code> 参数来指定如何聚合分数。默认情况下，使用 SUM 聚合，但您可以选择 MIN 或 MAX。例如，使用 MAX 聚合：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">ZINTERSTORE intersection_max 2 set1 set2 AGGREGATE MAX<br></code></pre></td></tr></table></figure>
+
+<p>上述命令将计算 “set1” 和 “set2” 的交集，并在计算分数时选择最大值。结果如下：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">intersection_max</span>:<br><span class="hljs-attribute">1</span>. <span class="hljs-string">&quot;Alice&quot;</span> - 分数 <span class="hljs-number">100</span> (最大值为 <span class="hljs-number">100</span>)<br></code></pre></td></tr></table></figure>
+
+<p>总之，<code>ZINTERSTORE</code> 命令允许您计算多个有序集合的交集，并根据需要调整权重和聚合方式。它非常有用，可以用于各种分析和统计任务。</p>
+<p>ZRANK O(log(N)) </p>
+<ul>
+<li><p>键存在，返回排名（默认为从小到大排序），最小的排序名词为（0）</p>
+</li>
+<li><p>键不存在，返回nil</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">zrank myzset &quot;one&quot;<br></code></pre></td></tr></table></figure></li>
+</ul>
+<p>ZREM  O(M*log(N)) M:len(数值为v的元素的个数)  N:len(zset的元素个数)</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">ZREM myzset &quot;one&quot;<br></code></pre></td></tr></table></figure>
+
+
                 
               </div>
             
@@ -295,7 +379,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>【redis】ZSet的基本使用</div>
+      <div></div>
       <div>http://example.com/2023/09/12/【redis】ZSet的基本使用/</div>
     </div>
     <div class="license-meta">
