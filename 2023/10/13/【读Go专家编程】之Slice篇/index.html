@@ -16,24 +16,26 @@
   <meta name="author" content="Forrest">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Golang设计模式 Easy搞定Golang设计模式(Go语言设计模式，如此简单)_哔哩哔哩_bilibili B+树 B+树,B-link树,LSM树…一个视频带你了解常用存储引擎数据结构（中）_哔哩哔哩_bilibili TCP IP 八股 tcp&#x2F;ip协议第10讲：tcp四次挥手以及wireshark抓包验证_哔哩哔哩_bilibili Kubernetes 完整版Kubern">
+    <meta name="description" content="Slice的实现原理Slice依托数组实现，底层数组对用户屏蔽，底层数组在Cap不足时，会自动扩容，生成一个新的Slice 12345type slice struct &amp;#123;    array unsafe.Pointer    len   int    cap   int&amp;#125;  从数据结构看Slice很清晰, array指针指向底层数组，len表示切片长度，cap表示底层数组容量">
 <meta property="og:type" content="article">
-<meta property="og:title" content="【Golang 学习路线总结】">
-<meta property="og:url" content="http://example.com/2023/09/09/%E3%80%90Golang-%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF%E6%80%BB%E7%BB%93%E3%80%91/index.html">
+<meta property="og:title" content="【读Go专家编程】之Slice篇">
+<meta property="og:url" content="http://example.com/2023/10/13/%E3%80%90%E8%AF%BBGo%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E3%80%91%E4%B9%8BSlice%E7%AF%87/index.html">
 <meta property="og:site_name" content="Forrest’s blog">
-<meta property="og:description" content="Golang设计模式 Easy搞定Golang设计模式(Go语言设计模式，如此简单)_哔哩哔哩_bilibili B+树 B+树,B-link树,LSM树…一个视频带你了解常用存储引擎数据结构（中）_哔哩哔哩_bilibili TCP IP 八股 tcp&#x2F;ip协议第10讲：tcp四次挥手以及wireshark抓包验证_哔哩哔哩_bilibili Kubernetes 完整版Kubern">
+<meta property="og:description" content="Slice的实现原理Slice依托数组实现，底层数组对用户屏蔽，底层数组在Cap不足时，会自动扩容，生成一个新的Slice 12345type slice struct &amp;#123;    array unsafe.Pointer    len   int    cap   int&amp;#125;  从数据结构看Slice很清晰, array指针指向底层数组，len表示切片长度，cap表示底层数组容量">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-09-09T09:22:54.000Z">
-<meta property="article:modified_time" content="2023-10-13T11:13:24.519Z">
+<meta property="og:image" content="https://static.sitestack.cn/projects/GoExpertProgramming/chapter01/images/slice-02-create_slice_from_array.png">
+<meta property="article:published_time" content="2023-10-13T13:50:25.000Z">
+<meta property="article:modified_time" content="2023-10-13T14:06:46.030Z">
 <meta property="article:author" content="Forrest">
-<meta property="article:tag" content="-学习路线记录">
+<meta property="article:tag" content="Slice">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://static.sitestack.cn/projects/GoExpertProgramming/chapter01/images/slice-02-create_slice_from_array.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>【Golang 学习路线总结】 - Forrest’s blog</title>
+  <title>【读Go专家编程】之Slice篇 - Forrest’s blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -199,7 +201,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="【Golang 学习路线总结】"></span>
+            <span id="subtitle" data-typed-text="【读Go专家编程】之Slice篇"></span>
           
         </div>
 
@@ -210,8 +212,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-09-09 17:22" pubdate>
-          2023年9月9日 下午
+        <time datetime="2023-10-13 21:50" pubdate>
+          2023年10月13日 晚上
         </time>
       </span>
     
@@ -222,7 +224,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          348 字
+          916 字
         
       </span>
     
@@ -233,7 +235,7 @@
         
         
         
-          2 分钟
+          4 分钟
         
       </span>
     
@@ -278,20 +280,34 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">【Golang 学习路线总结】</h1>
+            <h1 id="seo-header">【读Go专家编程】之Slice篇</h1>
             
             
               <div class="markdown-body">
                 
-                <ul>
-<li>Golang设计模式 <a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Eg411m7rV/?spm_id_from=333.999.0.0&vd_source=7e55f4c87cf718e9cce051dc48d89bb7">Easy搞定Golang设计模式(Go语言设计模式，如此简单)_哔哩哔哩_bilibili</a></li>
-<li>B+树 <a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1kT411N7it/?spm_id_from=333.999.0.0&vd_source=7e55f4c87cf718e9cce051dc48d89bb7">B+树,B-link树,LSM树…一个视频带你了解常用存储引擎数据结构（中）_哔哩哔哩_bilibili</a></li>
-<li>TCP IP 八股 <a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Mp4y1x7eX/?spm_id_from=pageDriver&vd_source=7e55f4c87cf718e9cce051dc48d89bb7">tcp&#x2F;ip协议第10讲：tcp四次挥手以及wireshark抓包验证_哔哩哔哩_bilibili</a></li>
-<li>Kubernetes <a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1MT411x7GH/?spm_id_from=333.999.0.0&vd_source=7e55f4c87cf718e9cce051dc48d89bb7">完整版Kubernetes（K8S）全套入门+微服务实战项目，带你一站式深入掌握K8S核心能力_哔哩哔哩_bilibili</a></li>
-<li>开发效率提升神器 <strong>air</strong> <a target="_blank" rel="noopener" href="https://github.com/cosmtrek/air/tree/master">cosmtrek&#x2F;air: ☁️ Live reload for Go apps (github.com)</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.yuque.com/aceld/lfhu8y/rg6nsf">Easy搞定Golang设计模式 (yuque.com)</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.bookstack.cn/read/GoExpertProgramming/chapter01-1.1-chan.md">常见数据结构实现原理 GO专家编程》</a></li>
+                <h2 id="Slice的实现原理"><a href="#Slice的实现原理" class="headerlink" title="Slice的实现原理"></a>Slice的实现原理</h2><p>Slice依托数组实现，底层数组对用户屏蔽，底层数组在Cap不足时，会自动扩容，生成一个新的Slice</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> slice <span class="hljs-keyword">struct</span> &#123;<br>    array unsafe.Pointer<br>    <span class="hljs-built_in">len</span>   <span class="hljs-type">int</span><br>    <span class="hljs-built_in">cap</span>   <span class="hljs-type">int</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>从数据结构看Slice很清晰, array指针指向底层数组，len表示切片长度，cap表示底层数组容量</p>
+<h2 id="使用Array创建Slice"><a href="#使用Array创建Slice" class="headerlink" title="使用Array创建Slice"></a>使用Array创建Slice</h2><p>当我们用Array创建Slice时，所创建的Slice会和原数组公用一部分内存</p>
+<p>eg: slice:&#x3D;<code>array[5:7]</code> </p>
+<p><img src="https://static.sitestack.cn/projects/GoExpertProgramming/chapter01/images/slice-02-create_slice_from_array.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>注意</strong>：创建的Slice的cap为array的5那个位置开始到array的末尾位置（所以，slice的cap为9-5+1）</p>
+<h2 id="Slice的扩容"><a href="#Slice的扩容" class="headerlink" title="Slice的扩容"></a>Slice的扩容</h2><p>当Cap小于Len时，元素插不进去了，所以开始扩容</p>
+<h3 id="扩容策略"><a href="#扩容策略" class="headerlink" title="扩容策略"></a>扩容策略</h3><ul>
+<li>如果原Slice容量小于1024，则新Slice容量将扩大为原来的2倍；</li>
+<li>如果原Slice容量大于等于1024，则新Slice容量将扩大为原来的1.25倍；</li>
 </ul>
+<h3 id="append-的过程"><a href="#append-的过程" class="headerlink" title="append 的过程"></a>append 的过程</h3><ul>
+<li>假如Slice容量够用，则将新元素追加进去，Slice.len++，返回原Slice</li>
+<li>原Slice容量不够，则将Slice先扩容，扩容后得到新Slice</li>
+<li>将新元素追加进新Slice，Slice.len++，返回新的Slice。</li>
+</ul>
+<h2 id="Slice-Copy"><a href="#Slice-Copy" class="headerlink" title="Slice Copy"></a>Slice Copy</h2><p>Go 标准库提供了 <code>copy</code> 函数，可以用于将一个切片的内容复制到另一个切片。这种方法允许你精确控制复制的元素数量。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs go">originalSlice := []<span class="hljs-type">int</span>&#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>&#125;<br>copiedSlice := <span class="hljs-built_in">make</span>([]<span class="hljs-type">int</span>, <span class="hljs-number">3</span>) <span class="hljs-comment">// 创建一个长度为3的目标切片</span><br><span class="hljs-built_in">copy</span>(copiedSlice, originalSlice[<span class="hljs-number">1</span>:<span class="hljs-number">4</span>]) <span class="hljs-comment">// 复制 originalSlice 中的第2到第4个元素到 copiedSlice</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="一种不太常见的slice用法"><a href="#一种不太常见的slice用法" class="headerlink" title="一种不太常见的slice用法"></a>一种不太常见的slice用法</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs go">sliceA := <span class="hljs-built_in">make</span>([]<span class="hljs-type">int</span>, <span class="hljs-number">5</span>, <span class="hljs-number">10</span>)  <span class="hljs-comment">//length = 5; capacity = 10</span><br>sliceB := sliceA[<span class="hljs-number">0</span>:<span class="hljs-number">5</span>]         <span class="hljs-comment">//length = 5; capacity = 10</span><br>sliceC := sliceA[<span class="hljs-number">0</span>:<span class="hljs-number">5</span>:<span class="hljs-number">5</span>]       <span class="hljs-comment">//length = 5; capacity = 5</span><br></code></pre></td></tr></table></figure>
+
 
                 
               </div>
@@ -300,39 +316,11 @@
             <div>
               <div class="post-metas my-3">
   
-    <div class="post-meta mr-3 d-flex align-items-center">
-      <i class="iconfont icon-category"></i>
-      
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%80%BB%E7%BB%93/" class="category-chain-item">总结</a>
-  
-  
-    <span>></span>
-    
-  <a href="/categories/%E6%80%BB%E7%BB%93/golang/" class="category-chain-item">golang</a>
-  
-  
-
-  
-
-      </span>
-    
-  
-</span>
-
-    </div>
-  
   
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF%E8%AE%B0%E5%BD%95/" class="print-no-link">#-学习路线记录</a>
+        <a href="/tags/Slice/" class="print-no-link">#Slice</a>
       
     </div>
   
@@ -344,8 +332,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>【Golang 学习路线总结】</div>
-      <div>http://example.com/2023/09/09/【Golang-学习路线总结】/</div>
+      <div>【读Go专家编程】之Slice篇</div>
+      <div>http://example.com/2023/10/13/【读Go专家编程】之Slice篇/</div>
     </div>
     <div class="license-meta">
       
@@ -357,7 +345,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年9月9日</div>
+          <div>2023年10月13日</div>
         </div>
       
       
@@ -389,9 +377,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/09/11/grpc%E5%88%9D%E6%8E%A2/" title="grpc初探">
+                      <a href="/2023/10/13/%E3%80%90%E8%AF%BBGo%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E3%80%91%E4%B9%8BChannel%E7%AF%87/" title="【读Go专家编程】之Channel篇">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">grpc初探</span>
+                        <span class="hidden-mobile">【读Go专家编程】之Channel篇</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -399,8 +387,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/09/07/%E5%82%BB%E8%9B%8B%E9%80%9F%E6%88%90python/" title="傻蛋速成python">
-                        <span class="hidden-mobile">傻蛋速成python</span>
+                      <a href="/2023/09/23/Sort%E5%8C%85%E7%9A%84%E4%BD%BF%E7%94%A8/" title="Sort包的使用">
+                        <span class="hidden-mobile">Sort包的使用</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

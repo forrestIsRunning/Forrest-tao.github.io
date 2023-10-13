@@ -23,11 +23,14 @@
 <meta property="og:site_name" content="Forrest’s blog">
 <meta property="og:description" content="什么是rpcRPC（Remote Procedure Call，远程过程调用）是一种计算机编程模型和协议，允许一个程序在另一个地址空间（通常是远程计算机上）执行函数或过程调用，就像调用本地函数一样。RPC 的目标是使分布式系统中的不同组件能够相互通信和协作，而不必手动编写复杂的网络通信代码。(chatGPT解释) 是什么grpcgRPC（gRPC Remote Procedure Call）是一种">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="c:\Users\Forrest\AppData\Roaming\Typora\typora-user-images\image-20231004144526377.png">
+<meta property="og:image" content="c:\Users\Forrest\AppData\Roaming\Typora\typora-user-images\image-20231004151742178.png">
 <meta property="article:published_time" content="2023-09-11T06:25:33.000Z">
-<meta property="article:modified_time" content="2023-09-14T04:33:38.902Z">
+<meta property="article:modified_time" content="2023-10-04T07:17:42.843Z">
 <meta property="article:author" content="Forrest">
 <meta property="article:tag" content="grpc">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="c:\Users\Forrest\AppData\Roaming\Typora\typora-user-images\image-20231004144526377.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -222,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          5.6k 字
+          5.9k 字
         
       </span>
     
@@ -233,7 +236,7 @@
         
         
         
-          19 分钟
+          20 分钟
         
       </span>
     
@@ -285,7 +288,13 @@
                 
                 <h2 id="什么是rpc"><a href="#什么是rpc" class="headerlink" title="什么是rpc"></a>什么是rpc</h2><p>RPC（Remote Procedure Call，远程过程调用）是一种计算机编程模型和协议，允许一个程序在另一个地址空间（通常是远程计算机上）执行函数或过程调用，就像调用本地函数一样。RPC 的目标是使分布式系统中的不同组件能够相互通信和协作，而不必手动编写复杂的网络通信代码。(chatGPT解释)</p>
 <h2 id="是什么grpc"><a href="#是什么grpc" class="headerlink" title="是什么grpc"></a>是什么grpc</h2><p>gRPC（gRPC Remote Procedure Call）是一种高性能、跨语言的远程过程调用（RPC）框架，由Google开发并开源。它建立在HTTP&#x2F;2协议上，使用Protocol Buffers（protobuf）作为接口定义语言（IDL），支持多种编程语言。gRPC的目标是使分布式系统之间的通信更加高效、可靠和易于扩展。(chatGPT解释)</p>
-<h2 id="Hello-world-Demo"><a href="#Hello-world-Demo" class="headerlink" title="Hello world  Demo"></a>Hello world  Demo</h2><h3 id="编写-proto文件"><a href="#编写-proto文件" class="headerlink" title="编写 proto文件"></a>编写 proto文件</h3><h4 id="Server端"><a href="#Server端" class="headerlink" title="Server端"></a>Server端</h4><figure class="highlight protobuf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs protobuf">syntax = <span class="hljs-string">&quot;proto3&quot;</span>;<br><br><span class="hljs-keyword">option</span> go_package =<span class="hljs-string">&quot;server/pb&quot;</span>;<br><br><span class="hljs-keyword">package</span> pb;<br><br><span class="hljs-keyword">service </span><span class="hljs-title class_">Greeter</span>&#123;<br>  <span class="hljs-function"><span class="hljs-keyword">rpc</span> SayHello (HelloRequest) <span class="hljs-keyword">returns</span> (HelloResponse)</span>;<br>&#125;<br><br><span class="hljs-keyword">message </span><span class="hljs-title class_">HelloRequest</span>&#123;<br>  <span class="hljs-type">string</span>  name =<span class="hljs-number">1</span>;<br>&#125;<br><br><span class="hljs-keyword">message </span><span class="hljs-title class_">HelloResponse</span>&#123;<br>  <span class="hljs-type">string</span>  reply=<span class="hljs-number">1</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="protoc文件简要了解"><a href="#protoc文件简要了解" class="headerlink" title="protoc文件简要了解"></a>protoc文件简要了解</h2><figure class="highlight protobuf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs protobuf">syntax=<span class="hljs-string">&quot;proto3&quot;</span>; <span class="hljs-comment">//指定版本号</span><br><br><span class="hljs-keyword">message </span><span class="hljs-title class_">SearchReqeust</span> &#123;<br>	<span class="hljs-type">string</span> KeyWord=<span class="hljs-number">1</span>;<br>	<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+
+
+<p><img src="C:\Users\Forrest\AppData\Roaming\Typora\typora-user-images\image-20231004144526377.png" srcset="/img/loading.gif" lazyload alt="image-20231004144526377"></p>
+<p><img src="C:\Users\Forrest\AppData\Roaming\Typora\typora-user-images\image-20231004151742178.png" srcset="/img/loading.gif" lazyload alt="image-20231004151742178"></p>
+<h2 id="Hello-world-Demo"><a href="#Hello-world-Demo" class="headerlink" title="Hello world  Demo"></a>Hello world  Demo</h2><h3 id="编写-proto文件"><a href="#编写-proto文件" class="headerlink" title="编写 proto文件"></a>编写 proto文件</h3><h4 id="Server端"><a href="#Server端" class="headerlink" title="Server端"></a>Server端</h4><figure class="highlight protobuf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs protobuf">syntax = <span class="hljs-string">&quot;proto3&quot;</span>;<br><br><span class="hljs-keyword">option</span> go_package =<span class="hljs-string">&quot;server/pb&quot;</span>;<span class="hljs-comment">// 项目中import 导入生成的Go代码的名称 </span><br><br><span class="hljs-keyword">package</span> pb; <span class="hljs-comment">// proto文件模块</span><br><br><span class="hljs-keyword">service </span><span class="hljs-title class_">Greeter</span>&#123;<br>  <span class="hljs-function"><span class="hljs-keyword">rpc</span> SayHello (HelloRequest) <span class="hljs-keyword">returns</span> (HelloResponse)</span>;<br>&#125;<br><br><span class="hljs-keyword">message </span><span class="hljs-title class_">HelloRequest</span>&#123;<br>  <span class="hljs-type">string</span>  name =<span class="hljs-number">1</span>;<br>&#125;<br><br><span class="hljs-keyword">message </span><span class="hljs-title class_">HelloResponse</span>&#123;<br>  <span class="hljs-type">string</span>  reply=<span class="hljs-number">1</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 
 
@@ -295,9 +304,19 @@
 
 <h3 id="执行-proto文件"><a href="#执行-proto文件" class="headerlink" title="执行 proto文件"></a>执行 proto文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">protoc --go_out=. --go_opt=paths=source_relative \<br>--go-grpc_out=. --go-grpc_opt=paths=source_relative \<br>pb/hello.proto<br></code></pre></td></tr></table></figure>
 
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">protoc --proto_path=pb --go_out=pb --go_opt=paths=source_relative \<br>--go-grpc_out=pb --go-grpc_opt=paths=source_relative \<br>add.proto<br></code></pre></td></tr></table></figure>
 
 
+
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">protoc --proto_path=pb --go_out=pb --go_opt=paths=source_relative \<br>--go-grpc_out=pb --go-grpc_opt=paths=source_relative \<br>hello.proto<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">protoc -I=pb --go_out=pb --go_opt=paths=source_relative \<br>--go-grpc_out=pb --go-grpc_opt=paths=source_relative \<br>hello.proto<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs ada"><span class="hljs-comment">--I=pb 指定protoc_path </span><br><span class="hljs-comment">--go_out 指定pb.go输出文件位置</span><br><span class="hljs-comment">--go-grpc_out 指定grpc代码的位置</span><br><br></code></pre></td></tr></table></figure>
 
 <h3 id="编写-逻辑代码"><a href="#编写-逻辑代码" class="headerlink" title="编写 逻辑代码"></a>编写 逻辑代码</h3><h4 id="Server端-1"><a href="#Server端-1" class="headerlink" title="Server端"></a>Server端</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;context&quot;</span><br>	<span class="hljs-string">&quot;log&quot;</span><br>	<span class="hljs-string">&quot;microService_Learning/grpc_demo/server/pb&quot;</span><br>	<span class="hljs-string">&quot;net&quot;</span><br><br>	<span class="hljs-string">&quot;google.golang.org/grpc&quot;</span><br>)<br><br><span class="hljs-comment">// hello server</span><br><br><span class="hljs-keyword">type</span> server <span class="hljs-keyword">struct</span> &#123;<br>	pb.UnimplementedGreeterServer<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(s *server)</span></span> SayHello(ctx context.Context, request *pb.HelloRequest) (*pb.HelloResponse, <span class="hljs-type">error</span>) &#123;<br>	<span class="hljs-keyword">return</span> &amp;pb.HelloResponse&#123;Reply: <span class="hljs-string">&quot;Hello&quot;</span> + request.Name&#125;, <span class="hljs-literal">nil</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	listener, err := net.Listen(<span class="hljs-string">&quot;tcp&quot;</span>, <span class="hljs-string">&quot;:9091&quot;</span>)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Fatalf(<span class="hljs-string">&quot;net.Listen failed,err:%v\n&quot;</span>, err)<br>		<span class="hljs-keyword">return</span><br>	&#125;<br>	s := grpc.NewServer()<br>	pb.RegisterGreeterServer(s, &amp;server&#123;&#125;)<br>	<span class="hljs-keyword">if</span> err = s.Serve(listener); err != <span class="hljs-literal">nil</span> &#123;<br>		log.Fatalf(<span class="hljs-string">&quot;s.Serve failed,err:%v\n&quot;</span>, err)<br>	&#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
 
