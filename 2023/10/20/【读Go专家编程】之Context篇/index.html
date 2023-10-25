@@ -16,24 +16,23 @@
   <meta name="author" content="Forrest">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Golang设计模式 Easy搞定Golang设计模式(Go语言设计模式，如此简单)_哔哩哔哩_bilibili B+树 B+树,B-link树,LSM树…一个视频带你了解常用存储引擎数据结构（中）_哔哩哔哩_bilibili TCP IP 八股 tcp&#x2F;ip协议第10讲：tcp四次挥手以及wireshark抓包验证_哔哩哔哩_bilibili Kubernetes 完整版Kubern">
+    <meta name="description" content="Context的注意事项  不要把Context放在结构体中，要以参数的方式显示传递 以Context作为参数传递的函数方法，应该发Context作为第一个参数 给一个函数方法传递Context的时候，不要传递nil，如果不知道要传递什么，可以传递 contex.TODO（） context 的Value相关方法应该传递爱请求域的必要参数，不应该用于传递可选参数 Context是线程安全的，可以放">
 <meta property="og:type" content="article">
-<meta property="og:title" content="【Golang 学习路线总结】">
-<meta property="og:url" content="http://example.com/2023/09/09/%E3%80%90Golang-%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF%E6%80%BB%E7%BB%93%E3%80%91/index.html">
+<meta property="og:title" content="【读Go专家编程】之Context篇">
+<meta property="og:url" content="http://example.com/2023/10/20/%E3%80%90%E8%AF%BBGo%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E3%80%91%E4%B9%8BContext%E7%AF%87/index.html">
 <meta property="og:site_name" content="Forrest’s blog">
-<meta property="og:description" content="Golang设计模式 Easy搞定Golang设计模式(Go语言设计模式，如此简单)_哔哩哔哩_bilibili B+树 B+树,B-link树,LSM树…一个视频带你了解常用存储引擎数据结构（中）_哔哩哔哩_bilibili TCP IP 八股 tcp&#x2F;ip协议第10讲：tcp四次挥手以及wireshark抓包验证_哔哩哔哩_bilibili Kubernetes 完整版Kubern">
+<meta property="og:description" content="Context的注意事项  不要把Context放在结构体中，要以参数的方式显示传递 以Context作为参数传递的函数方法，应该发Context作为第一个参数 给一个函数方法传递Context的时候，不要传递nil，如果不知道要传递什么，可以传递 contex.TODO（） context 的Value相关方法应该传递爱请求域的必要参数，不应该用于传递可选参数 Context是线程安全的，可以放">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-09-09T09:22:54.000Z">
-<meta property="article:modified_time" content="2023-10-25T14:18:52.427Z">
+<meta property="article:published_time" content="2023-10-20T05:30:23.000Z">
+<meta property="article:modified_time" content="2023-10-20T07:41:30.358Z">
 <meta property="article:author" content="Forrest">
-<meta property="article:tag" content="-学习路线记录">
 <meta name="twitter:card" content="summary_large_image">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>【Golang 学习路线总结】 - Forrest’s blog</title>
+  <title>【读Go专家编程】之Context篇 - Forrest’s blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -199,7 +198,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="【Golang 学习路线总结】"></span>
+            <span id="subtitle" data-typed-text="【读Go专家编程】之Context篇"></span>
           
         </div>
 
@@ -210,8 +209,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-09-09 17:22" pubdate>
-          2023年9月9日 下午
+        <time datetime="2023-10-20 13:30" pubdate>
+          2023年10月20日 下午
         </time>
       </span>
     
@@ -222,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          472 字
+          207 字
         
       </span>
     
@@ -233,7 +232,7 @@
         
         
         
-          2 分钟
+          1 分钟
         
       </span>
     
@@ -278,22 +277,18 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">【Golang 学习路线总结】</h1>
+            <h1 id="seo-header">【读Go专家编程】之Context篇</h1>
             
             
               <div class="markdown-body">
                 
-                <ul>
-<li>Golang设计模式 <a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Eg411m7rV/?spm_id_from=333.999.0.0&vd_source=7e55f4c87cf718e9cce051dc48d89bb7">Easy搞定Golang设计模式(Go语言设计模式，如此简单)_哔哩哔哩_bilibili</a></li>
-<li>B+树 <a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1kT411N7it/?spm_id_from=333.999.0.0&vd_source=7e55f4c87cf718e9cce051dc48d89bb7">B+树,B-link树,LSM树…一个视频带你了解常用存储引擎数据结构（中）_哔哩哔哩_bilibili</a></li>
-<li>TCP IP 八股 <a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Mp4y1x7eX/?spm_id_from=pageDriver&vd_source=7e55f4c87cf718e9cce051dc48d89bb7">tcp&#x2F;ip协议第10讲：tcp四次挥手以及wireshark抓包验证_哔哩哔哩_bilibili</a></li>
-<li>Kubernetes <a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1MT411x7GH/?spm_id_from=333.999.0.0&vd_source=7e55f4c87cf718e9cce051dc48d89bb7">完整版Kubernetes（K8S）全套入门+微服务实战项目，带你一站式深入掌握K8S核心能力_哔哩哔哩_bilibili</a></li>
-<li>开发效率提升神器 <strong>air</strong> <a target="_blank" rel="noopener" href="https://github.com/cosmtrek/air/tree/master">cosmtrek&#x2F;air: ☁️ Live reload for Go apps (github.com)</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.yuque.com/aceld/lfhu8y/rg6nsf">Easy搞定Golang设计模式 (yuque.com)</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.bookstack.cn/read/GoExpertProgramming/chapter01-1.1-chan.md">常见数据结构实现原理 GO专家编程》</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1cr4y1s7H4/?spm_id_from=333.337.search-card.all.click&vd_source=7e55f4c87cf718e9cce051dc48d89bb7">【Go项目实战】基于Go-zero、Xorm的网盘系统_哔哩哔哩_bilibili</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1BP4y1H7gV/?spm_id_from=333.337.search-card.all.click&vd_source=7e55f4c87cf718e9cce051dc48d89bb7">【Go语言实战】Gin+WebSocket构建IM即时聊天Demo_哔哩哔哩_bilibili</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Df4y1C7o5/?spm_id_from=333.337.search-card.all.click&vd_source=7e55f4c87cf718e9cce051dc48d89bb7">【Go语言战实战】日志收集项目开发（完整版）_哔哩哔哩_bilibili</a></li>
+                <p>Context的注意事项</p>
+<ul>
+<li>不要把Context放在结构体中，要以参数的方式显示传递</li>
+<li>以Context作为参数传递的函数方法，应该发Context作为第一个参数</li>
+<li>给一个函数方法传递Context的时候，不要传递nil，如果不知道要传递什么，可以传递 contex.TODO（）</li>
+<li>context 的Value相关方法应该传递爱请求域的必要参数，不应该用于传递可选参数</li>
+<li>Context是线程安全的，可以放心的在goroutine中传递</li>
 </ul>
 
                 
@@ -303,41 +298,6 @@
             <div>
               <div class="post-metas my-3">
   
-    <div class="post-meta mr-3 d-flex align-items-center">
-      <i class="iconfont icon-category"></i>
-      
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%80%BB%E7%BB%93/" class="category-chain-item">总结</a>
-  
-  
-    <span>></span>
-    
-  <a href="/categories/%E6%80%BB%E7%BB%93/golang/" class="category-chain-item">golang</a>
-  
-  
-
-  
-
-      </span>
-    
-  
-</span>
-
-    </div>
-  
-  
-    <div class="post-meta">
-      <i class="iconfont icon-tags"></i>
-      
-        <a href="/tags/%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF%E8%AE%B0%E5%BD%95/" class="print-no-link">#-学习路线记录</a>
-      
-    </div>
   
 </div>
 
@@ -347,8 +307,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>【Golang 学习路线总结】</div>
-      <div>http://example.com/2023/09/09/【Golang-学习路线总结】/</div>
+      <div>【读Go专家编程】之Context篇</div>
+      <div>http://example.com/2023/10/20/【读Go专家编程】之Context篇/</div>
     </div>
     <div class="license-meta">
       
@@ -360,7 +320,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年9月9日</div>
+          <div>2023年10月20日</div>
         </div>
       
       
@@ -392,18 +352,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/09/11/grpc%E5%88%9D%E6%8E%A2/" title="grpc初探">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">grpc初探</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/09/07/%E5%82%BB%E8%9B%8B%E9%80%9F%E6%88%90python/" title="傻蛋速成python">
-                        <span class="hidden-mobile">傻蛋速成python</span>
+                      <a href="/2023/10/18/%E7%8E%8B%E9%81%93%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/" title="王道计算机组成原理">
+                        <span class="hidden-mobile">王道计算机组成原理</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
