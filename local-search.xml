@@ -4,11 +4,32 @@
   
   
   <entry>
+    <title>两个nil可能不相等吗？</title>
+    <link href="/2023/11/05/%E4%B8%A4%E4%B8%AAnil%E5%8F%AF%E8%83%BD%E4%B8%8D%E7%9B%B8%E7%AD%89%E5%90%97%EF%BC%9F/"/>
+    <url>/2023/11/05/%E4%B8%A4%E4%B8%AAnil%E5%8F%AF%E8%83%BD%E4%B8%8D%E7%9B%B8%E7%AD%89%E5%90%97%EF%BC%9F/</url>
+    
+    <content type="html"><![CDATA[<h3 id="两个nil可能不相等吗？"><a href="#两个nil可能不相等吗？" class="headerlink" title="两个nil可能不相等吗？"></a>两个nil可能不相等吗？</h3><p>接口时对非接口之（例如指针，struct等）的封装，内部实现包含两个字段，类型<code>T</code>和值<code>V</code> 。一个接口为nil，当且仅当T和V都处于unset的状态（T&#x3D;nil，V is unset）</p><ul><li><p>两个接口比较时，会先比较T，再比较V</p></li><li><p>接口值和非接口值相比比较时，会将非接口值转为接口值，再比较</p>  <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br><span class="hljs-keyword">var</span> p *<span class="hljs-type">int</span> =<span class="hljs-literal">nil</span><br>    <span class="hljs-keyword">var</span> i <span class="hljs-keyword">interface</span>&#123;&#125; =p<span class="hljs-comment">//会将i转为 （type=*int，v=nil）</span><br>    fmt.Println(p==i)<span class="hljs-comment">//true</span><br>    fmt.Println(p==<span class="hljs-literal">nil</span>)<span class="hljs-comment">//true</span><br>    fmt.Println(i==<span class="hljs-literal">nil</span>)<span class="hljs-comment">//false</span><br>&#125;<br></code></pre></td></tr></table></figure></li></ul><ol><li><code>fmt.Println(p==i)</code>  ,接口值与非接口值相比较时，会将i转为 （type&#x3D;* int，v&#x3D;nil）,此时p为（type&#x3D;*int，v&#x3D;nil），所以 p&#x3D;&#x3D;i ,返回true</li><li>p的V为nil，p&#x3D;&#x3D;nil，返回true</li><li>接口值与非接口值相比较时，会将非接口值转为接口值,再比较,(type&#x3D;* int,v&#x3D;nil)!&#x3D;(type&#x3D;nil,v&#x3D;nil),返回false</li></ol>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>GO</tag>
+      
+      <tag>八股</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Go的逃逸分析</title>
     <link href="/2023/11/05/Go%E7%9A%84%E9%80%83%E9%80%B8%E5%88%86%E6%9E%90/"/>
     <url>/2023/11/05/Go%E7%9A%84%E9%80%83%E9%80%B8%E5%88%86%E6%9E%90/</url>
     
-    <content type="html"><![CDATA[<p>Go语言的局部变量是分配到栈上还是堆上？</p><p>这由编译器决定。GO语言的百年一起会自动扒皮一个变量梵高栈上还是堆上，编译器会做逃逸分析（escape analysis），当发现变量的作用域没有超出函数的范围，可以在栈上，反之必须在堆上。</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">foo</span><span class="hljs-params">()</span></span> *<span class="hljs-type">int</span> &#123;<br>v := <span class="hljs-number">100</span><br><span class="hljs-keyword">return</span> &amp;v<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>m := foo()<br><span class="hljs-built_in">println</span>(*m)<br>&#125;<br></code></pre></td></tr></table></figure><p>foo函数中，如果v分配在栈上，foo函数返回时，&amp;v就会不存在，但这段程序是可以正常运行的。Go编译器会发现v的引用脱离了foo的作用域，会将其分配到堆上。</p>]]></content>
+    <content type="html"><![CDATA[<h3 id="Go语言的局部变量是分配到栈上还是堆上？"><a href="#Go语言的局部变量是分配到栈上还是堆上？" class="headerlink" title="Go语言的局部变量是分配到栈上还是堆上？"></a>Go语言的局部变量是分配到栈上还是堆上？</h3><p>这由编译器决定。GO语言的编译器会决定分配到栈上还是堆上，编译器会做逃逸分析（escape analysis），当发现变量的作用域没有超出函数的范围，可以在栈上，反之必须在堆上。</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">foo</span><span class="hljs-params">()</span></span> *<span class="hljs-type">int</span> &#123;<br>v := <span class="hljs-number">100</span><br><span class="hljs-keyword">return</span> &amp;v<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>m := foo()<br><span class="hljs-built_in">println</span>(*m)<br>&#125;<br></code></pre></td></tr></table></figure><p>foo函数中，如果v分配在栈上，foo函数返回时，&amp;v就会不存在，但这段程序是可以正常运行的。Go编译器会发现v的引用脱离了foo的作用域，会将其分配到堆上。</p>]]></content>
     
     
     

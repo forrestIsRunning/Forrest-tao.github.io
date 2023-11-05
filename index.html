@@ -293,6 +293,48 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
+        <a href="/2023/11/05/%E4%B8%A4%E4%B8%AAnil%E5%8F%AF%E8%83%BD%E4%B8%8D%E7%9B%B8%E7%AD%89%E5%90%97%EF%BC%9F/" target="_self">
+          两个nil可能不相等吗？
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2023/11/05/%E4%B8%A4%E4%B8%AAnil%E5%8F%AF%E8%83%BD%E4%B8%8D%E7%9B%B8%E7%AD%89%E5%90%97%EF%BC%9F/" target="_self">
+        <div>
+          两个nil可能不相等吗？接口时对非接口之（例如指针，struct等）的封装，内部实现包含两个字段，类型T和值V 。一个接口为nil，当且仅当T和V都处于unset的状态（T&#x3D;nil，V is unset）  两个接口比较时，会先比较T，再比较V  接口值和非接口值相比比较时，会将非接口值转为接口值，再比较   1234567func main()&#123;	var p *int =ni
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-11-05 08:46" pubdate>
+              2023-11-05
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/GO/">#GO</a>
+            
+              <a href="/tags/%E5%85%AB%E8%82%A1/">#八股</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
         <a href="/2023/11/05/Go%E7%9A%84%E9%80%83%E9%80%B8%E5%88%86%E6%9E%90/" target="_self">
           Go的逃逸分析
         </a>
@@ -301,7 +343,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2023/11/05/Go%E7%9A%84%E9%80%83%E9%80%B8%E5%88%86%E6%9E%90/" target="_self">
         <div>
-          Go语言的局部变量是分配到栈上还是堆上？ 这由编译器决定。GO语言的百年一起会自动扒皮一个变量梵高栈上还是堆上，编译器会做逃逸分析（escape analysis），当发现变量的作用域没有超出函数的范围，可以在栈上，反之必须在堆上。 123456789func foo() *int &#123;	v := 100	return &amp;v&#125;func main() &#123;	m :=
+          Go语言的局部变量是分配到栈上还是堆上？这由编译器决定。GO语言的编译器会决定分配到栈上还是堆上，编译器会做逃逸分析（escape analysis），当发现变量的作用域没有超出函数的范围，可以在栈上，反之必须在堆上。 123456789func foo() *int &#123;	v := 100	return &amp;v&#125;func main() &#123;	m := foo()
         </div>
       </a>
 
@@ -826,48 +868,6 @@
           </div>
         
         
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2023/10/13/%E3%80%90%E8%AF%BBGo%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E3%80%91%E4%B9%8BChannel%E7%AF%87/" target="_self">
-          【读Go专家编程】之Channel篇
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/10/13/%E3%80%90%E8%AF%BBGo%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B%E3%80%91%E4%B9%8BChannel%E7%AF%87/" target="_self">
-        <div>
-          前言 channel是Golang在语言层面提供的goroutine间的通信方式，比Unix管道更易用也更轻便。 channel主要用于进程内各goroutine间通信，如果需要跨进程通信，建议使用分布式系统的方法来解决。  Chan 数据结构12345678910111213type hchan struct &#123;    qcount   uint           // 当前队列中剩
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-10-13 22:07" pubdate>
-              2023-10-13
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Go%E4%B8%93%E5%AE%B6%E7%BC%96%E7%A8%8B/">#Go专家编程</a>
-            
-              <a href="/tags/Channel/">#Channel</a>
-            
-          </div>
         
       </div>
     </article>
