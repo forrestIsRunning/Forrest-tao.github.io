@@ -4,6 +4,25 @@
   
   
   <entry>
+    <title>hash函数</title>
+    <link href="/2023/11/05/hash%E5%87%BD%E6%95%B0/"/>
+    <url>/2023/11/05/hash%E5%87%BD%E6%95%B0/</url>
+    
+    <content type="html"><![CDATA[<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>WIKIPEDIA</p><blockquote><p>A <strong>hash function</strong> is any <a href="https://en.wikipedia.org/wiki/Function_(mathematics)">function</a> that can be used to map <a href="https://en.wikipedia.org/wiki/Data_(computing)">data</a> of arbitrary size to fixed-size values, though there are some hash functions that support variable length output.[<a href="https://en.wikipedia.org/wiki/Hash_function#cite_note-1">1]</a> The values returned by a hash function are called <em>hash values</em>, <em>hash codes</em>, <em>digests</em>, or simply <em>hashes</em>. The values are usually used to index a fixed-size table called a <em><a href="https://en.wikipedia.org/wiki/Hash_table">hash table</a></em>. Use of a hash function to index a hash table is called <em>hashing</em> or <em>scatter storage addressing</em>.</p></blockquote><h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><ol><li>input可以是一个变长的字符串，output为一个固定长度的输出，该值称为散列值，长度固定</li><li>hash function的计算时间不应该过长</li><li>不可逆性</li><li>冲突性较低，抗碰撞性强</li><li>映射相对均匀</li></ol><h3 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h3><ul><li><p>错误验证，数据验证，完整性校验</p></li><li><p>数据加密，密码加盐</p></li><li><p>语音识别</p><blockquote><p>对于像从一个已知列表中匹配一个MP3文件这样的应用，一种可能的方案是使用传统的散列函数——例如<a href="https://zh.wikipedia.org/wiki/MD5">MD5</a>，但是这种方案会对时间平移、CD读取错误、不同的音频压缩算法或者音量调整的实现机制等情况非常敏感。使用一些类似于MD5的方法有利于迅速找到那些严格相同（从音频文件的二进制数据来看）的音频文件，但是要找到全部相同（从音频文件的内容来看）的音频文件就需要使用其他更高级的算法了。</p><p>那些并不紧随IT工业潮流的人往往能反其道而行之，对于那些微小差异足够健壮的散列函数确实存在。现存的绝大多数散列算法都是不够健壮的，但是有少数散列算法能够达到辨别从嘈杂房间里的扬声器里播放出来的音乐的健壮性。有一个实际的例子是<a href="https://zh.wikipedia.org/w/index.php?title=Shazam_Entertainment&action=edit&redlink=1">Shazam</a>[<a href="http://www.shazam.com/">1]</a> （<a href="https://web.archive.org/web/20080821140538/http://www.shazam.com/">页面存档备份</a>，存于<a href="https://zh.wikipedia.org/wiki/%E4%BA%92%E8%81%94%E7%BD%91%E6%A1%A3%E6%A1%88%E9%A6%86">互联网档案馆</a>） 服务。用户可以用手机打开其app，并将话筒靠近用于播放音乐的扬声器。该项服务会分析正在播放的音乐，并将它于存储在数据库中的已知的散列值进行比较。用户就能够收到被识别的音乐的曲名。</p></blockquote></li></ul><h3 id="常见的hash-算法"><a href="#常见的hash-算法" class="headerlink" title="常见的hash 算法"></a>常见的hash 算法</h3><h4 id="SHA-2"><a href="#SHA-2" class="headerlink" title="SHA-2"></a>SHA-2</h4><p><strong>secure Hash Algorithm 2</strong> </p><p>先留一个坑位，慢慢看hash function</p><p>MD系列</p><p><strong>Message-Digest Algorithm</strong>  </p>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>hash</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>各种锁</title>
     <link href="/2023/11/05/%E5%90%84%E7%A7%8D%E9%94%81/"/>
     <url>/2023/11/05/%E5%90%84%E7%A7%8D%E9%94%81/</url>
