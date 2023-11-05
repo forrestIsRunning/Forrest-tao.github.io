@@ -16,25 +16,27 @@
   <meta name="author" content="Forrest">
   <meta name="keywords" content="">
   
-    <meta name="description" content="两个nil可能不相等吗？接口时对非接口之（例如指针，struct等）的封装，内部实现包含两个字段，类型T和值V 。一个接口为nil，当且仅当T和V都处于unset的状态（T&#x3D;nil，V is unset）  两个接口比较时，会先比较T，再比较V  接口值和非接口值相比比较时，会将非接口值转为接口值，再比较   1234567func main()&amp;#123;	var p *int &#x3D;ni">
+    <meta name="description" content="各种锁🔒当有多个线程同时访问共享资源时，该共享资源可能会数据错乱，此时，锁就有了作用。 加锁的目的是为了保证共享资源在任意时间里，只有一个线程访问，这样可以避免多线程导致共享数据错乱的问题。 互斥锁 当线程加锁成功后，该线程会占用该共享资源，直到该线程解锁，这期间其他线程无法访问该共享资源 当互斥锁加锁失败后，线程会释放CPU，把资源给其他线程，进入阻塞状态   互斥锁加锁失败后，会从用户态陷入">
 <meta property="og:type" content="article">
-<meta property="og:title" content="两个nil可能不相等吗？">
-<meta property="og:url" content="http://example.com/2023/11/05/%E4%B8%A4%E4%B8%AAnil%E5%8F%AF%E8%83%BD%E4%B8%8D%E7%9B%B8%E7%AD%89%E5%90%97%EF%BC%9F/index.html">
+<meta property="og:title" content="各种锁">
+<meta property="og:url" content="http://example.com/2023/11/05/%E5%90%84%E7%A7%8D%E9%94%81/index.html">
 <meta property="og:site_name" content="Forrest’s blog">
-<meta property="og:description" content="两个nil可能不相等吗？接口时对非接口之（例如指针，struct等）的封装，内部实现包含两个字段，类型T和值V 。一个接口为nil，当且仅当T和V都处于unset的状态（T&#x3D;nil，V is unset）  两个接口比较时，会先比较T，再比较V  接口值和非接口值相比比较时，会将非接口值转为接口值，再比较   1234567func main()&amp;#123;	var p *int &#x3D;ni">
+<meta property="og:description" content="各种锁🔒当有多个线程同时访问共享资源时，该共享资源可能会数据错乱，此时，锁就有了作用。 加锁的目的是为了保证共享资源在任意时间里，只有一个线程访问，这样可以避免多线程导致共享数据错乱的问题。 互斥锁 当线程加锁成功后，该线程会占用该共享资源，直到该线程解锁，这期间其他线程无法访问该共享资源 当互斥锁加锁失败后，线程会释放CPU，把资源给其他线程，进入阻塞状态   互斥锁加锁失败后，会从用户态陷入">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-11-05T00:46:14.000Z">
-<meta property="article:modified_time" content="2023-11-05T00:55:57.592Z">
+<meta property="og:image" content="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost2/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E9%94%81/%E4%BA%92%E6%96%A5%E9%94%81%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B.png">
+<meta property="article:published_time" content="2023-11-05T06:20:06.000Z">
+<meta property="article:modified_time" content="2023-11-05T07:09:50.380Z">
 <meta property="article:author" content="Forrest">
-<meta property="article:tag" content="GO">
-<meta property="article:tag" content="八股">
+<meta property="article:tag" content="操作系统">
+<meta property="article:tag" content="锁">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost2/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E9%94%81/%E4%BA%92%E6%96%A5%E9%94%81%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>两个nil可能不相等吗？ - Forrest’s blog</title>
+  <title>各种锁 - Forrest’s blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -200,7 +202,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="两个nil可能不相等吗？"></span>
+            <span id="subtitle" data-typed-text="各种锁"></span>
           
         </div>
 
@@ -211,8 +213,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-11-05 08:46" pubdate>
-          2023年11月5日 早上
+        <time datetime="2023-11-05 14:20" pubdate>
+          2023年11月5日 下午
         </time>
       </span>
     
@@ -223,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          564 字
+          1.1k 字
         
       </span>
     
@@ -234,7 +236,7 @@
         
         
         
-          2 分钟
+          4 分钟
         
       </span>
     
@@ -279,23 +281,39 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">两个nil可能不相等吗？</h1>
+            <h1 id="seo-header">各种锁</h1>
             
             
               <div class="markdown-body">
                 
-                <h3 id="两个nil可能不相等吗？"><a href="#两个nil可能不相等吗？" class="headerlink" title="两个nil可能不相等吗？"></a>两个nil可能不相等吗？</h3><p>接口时对非接口之（例如指针，struct等）的封装，内部实现包含两个字段，类型<code>T</code>和值<code>V</code> 。一个接口为nil，当且仅当T和V都处于unset的状态（T&#x3D;nil，V is unset）</p>
-<ul>
-<li><p>两个接口比较时，会先比较T，再比较V</p>
-</li>
-<li><p>接口值和非接口值相比比较时，会将非接口值转为接口值，再比较</p>
-  <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br>	<span class="hljs-keyword">var</span> p *<span class="hljs-type">int</span> =<span class="hljs-literal">nil</span><br>    <span class="hljs-keyword">var</span> i <span class="hljs-keyword">interface</span>&#123;&#125; =p<span class="hljs-comment">//会将i转为 （type=*int，v=nil）</span><br>    fmt.Println(p==i)<span class="hljs-comment">//true</span><br>    fmt.Println(p==<span class="hljs-literal">nil</span>)<span class="hljs-comment">//true</span><br>    fmt.Println(i==<span class="hljs-literal">nil</span>)<span class="hljs-comment">//false</span><br>&#125;<br></code></pre></td></tr></table></figure></li>
+                <h2 id="各种锁🔒"><a href="#各种锁🔒" class="headerlink" title="各种锁🔒"></a>各种锁🔒</h2><p>当有多个线程同时访问共享资源时，该共享资源可能会数据错乱，此时，锁就有了作用。</p>
+<p>加锁的目的是为了保证共享资源在任意时间里，只有一个线程访问，这样可以避免多线程导致共享数据错乱的问题。</p>
+<h4 id="互斥锁"><a href="#互斥锁" class="headerlink" title="互斥锁"></a>互斥锁</h4><ul>
+<li>当线程加锁成功后，该线程会占用该共享资源，直到该线程解锁，这期间其他线程无法访问该共享资源</li>
+<li>当互斥锁加锁失败后，线程会释放CPU，把资源给其他线程，进入阻塞状态</li>
 </ul>
-<ol>
-<li><code>fmt.Println(p==i)</code>  ,接口值与非接口值相比较时，会将i转为 （type&#x3D;* int，v&#x3D;nil）,此时p为（type&#x3D;*int，v&#x3D;nil），所以 p&#x3D;&#x3D;i ,返回true</li>
-<li>p的V为nil，p&#x3D;&#x3D;nil，返回true</li>
-<li>接口值与非接口值相比较时，会将非接口值转为接口值,再比较,(type&#x3D;* int,v&#x3D;nil)!&#x3D;(type&#x3D;nil,v&#x3D;nil),返回false</li>
-</ol>
+<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/ImageHost2/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E9%94%81/%E4%BA%92%E6%96%A5%E9%94%81%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B.png" srcset="/img/loading.gif" lazyload></p>
+<p>互斥锁加锁失败后，会从用户态陷入内核态，让内核来切换线程，这存在一定的<strong>性能开销</strong></p>
+<ul>
+<li>加锁失败，内核把线程的状态从【运行】-&gt;【阻塞】状态，把资源让给洽谈线程</li>
+<li>当锁被释放后，该线程有机会拿到该锁。从【阻塞】状态转为【就绪】状态</li>
+</ul>
+<h4 id="自旋锁"><a href="#自旋锁" class="headerlink" title="自旋锁"></a>自旋锁</h4><p>自旋锁是通过 CPU 提供的 <code>CAS</code> 函数（<em>Compare And Swap</em>），在「用户态」完成加锁和解锁操作，不会主动产生线程上下文切换，所以相比互斥锁来说，会快一些，开销也小一些。</p>
+<p>一般加锁的过程，包含两个步骤：</p>
+<ul>
+<li>第一步，查看锁的状态，如果锁是空闲的，则执行第二步；</li>
+<li>第二步，将锁设置为当前线程持有；</li>
+</ul>
+<p>CAS 函数就把这两个步骤合并成一条硬件级指令，形成<strong>原子指令</strong>，这样就保证了这两个步骤是不可分割的，要么一次性执行完两个步骤，要么两个步骤都不执行。</p>
+<p>比如，设锁为变量 lock，整数 0 表示锁是空闲状态，整数 pid 表示线程 ID，那么 CAS(lock, 0, pid) 就表示自旋锁的加锁操作，CAS(lock, pid, 0) 则表示解锁操作。</p>
+<p>加锁失败后，一直忙等待，直到获取锁</p>
+<p>自旋锁是最比较简单的一种锁，一直自旋，利用 CPU 周期，直到锁可用。<strong>需要注意，在单核 CPU 上，需要抢占式的调度器（即不断通过时钟中断一个线程，运行其他线程）。否则，自旋锁在单 CPU 上无法使用，因为一个自旋的线程永远不会放弃 CPU。</strong></p>
+<h4 id="读写锁"><a href="#读写锁" class="headerlink" title="读写锁"></a>读写锁</h4><p>读写锁适用于能明确区分读操作和写操作的场景。</p>
+<h4 id="乐观锁和悲观锁"><a href="#乐观锁和悲观锁" class="headerlink" title="乐观锁和悲观锁"></a>乐观锁和悲观锁</h4><p>悲观锁做事比较悲观，它认为<strong>多线程同时修改共享资源的概率比较高，于是很容易出现冲突，所以访问共享资源前，先要上锁</strong>。</p>
+<p>乐观锁做事比较乐观，它假定冲突的概率很低，它的工作方式是：<strong>先修改完共享资源，再验证这段时间内有没有发生冲突，如果没有其他线程在修改资源，那么操作完成，如果发现有其他线程已经修改过这个资源，就放弃本次操作</strong>。</p>
+<p>其中读写锁、互斥锁、自旋锁都是悲观锁</p>
+<p>实际上，我们常见的git 也是用了乐观锁的思想，先让用户编辑代码，然后提交的时候，通过版本号来判断是否产生了冲突，发生了冲突的地方，需要我们自己修改后，再重新提交。</p>
+<p>乐观锁虽然去除了加锁解锁的操作，但是一旦发生冲突，重试的成本非常高，所以<strong>只有在冲突概率非常低，且加锁成本非常高的场景时，才考虑使用乐观锁。</strong></p>
 
                 
               </div>
@@ -308,9 +326,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/GO/" class="print-no-link">#GO</a>
+        <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" class="print-no-link">#操作系统</a>
       
-        <a href="/tags/%E5%85%AB%E8%82%A1/" class="print-no-link">#八股</a>
+        <a href="/tags/%E9%94%81/" class="print-no-link">#锁</a>
       
     </div>
   
@@ -322,8 +340,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>两个nil可能不相等吗？</div>
-      <div>http://example.com/2023/11/05/两个nil可能不相等吗？/</div>
+      <div>各种锁</div>
+      <div>http://example.com/2023/11/05/各种锁/</div>
     </div>
     <div class="license-meta">
       
@@ -367,18 +385,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/11/05/%E5%90%84%E7%A7%8D%E9%94%81/" title="各种锁">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">各种锁</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/11/05/Go%E7%9A%84%E9%80%83%E9%80%B8%E5%88%86%E6%9E%90/" title="Go的逃逸分析">
-                        <span class="hidden-mobile">Go的逃逸分析</span>
+                      <a href="/2023/11/05/%E4%B8%A4%E4%B8%AAnil%E5%8F%AF%E8%83%BD%E4%B8%8D%E7%9B%B8%E7%AD%89%E5%90%97%EF%BC%9F/" title="两个nil可能不相等吗？">
+                        <span class="hidden-mobile">两个nil可能不相等吗？</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
