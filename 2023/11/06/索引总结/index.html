@@ -16,23 +16,25 @@
   <meta name="author" content="Forrest">
   <meta name="keywords" content="">
   
-    <meta name="description" content="格林深瞳 一面一面时间：2023.11.1   用之前的笔试题开场，问我的处理逻辑，为什么这么想  通过第二道笔试题（报警响应），问了email的具体逻辑，有什么输出，有什么输入，还需要什么其他参数吗？  报警信息的来源  http的请求  http中 content type 有哪些 ?  text&#x2F;plain: 表示文本内容，通常是纯文本，不含任何格式化，如纯文本文件或普通文本消息。">
+    <meta name="description" content="为什么mysql 的 innoDB 选择 使用 B+ tree作为索引的数据结构B + tree VS B tree 存储相同数量级别的情况下，B+ tree 的树高比B tree低，磁盘IO次数少 B+ tree叶子节点用双向链表串联起来，适合范围查询  B + tree VS Hash 虽然hash的等值查询效率很高，但无法做到范围长查询 hash会有hash碰撞发生  什么时候适合使用索引">
 <meta property="og:type" content="article">
-<meta property="og:title" content="面试记录">
-<meta property="og:url" content="http://example.com/2023/10/30/%E9%9D%A2%E8%AF%95%E8%AE%B0%E5%BD%95/index.html">
+<meta property="og:title" content="索引总结">
+<meta property="og:url" content="http://example.com/2023/11/06/%E7%B4%A2%E5%BC%95%E6%80%BB%E7%BB%93/index.html">
 <meta property="og:site_name" content="Forrest’s blog">
-<meta property="og:description" content="格林深瞳 一面一面时间：2023.11.1   用之前的笔试题开场，问我的处理逻辑，为什么这么想  通过第二道笔试题（报警响应），问了email的具体逻辑，有什么输出，有什么输入，还需要什么其他参数吗？  报警信息的来源  http的请求  http中 content type 有哪些 ?  text&#x2F;plain: 表示文本内容，通常是纯文本，不含任何格式化，如纯文本文件或普通文本消息。">
+<meta property="og:description" content="为什么mysql 的 innoDB 选择 使用 B+ tree作为索引的数据结构B + tree VS B tree 存储相同数量级别的情况下，B+ tree 的树高比B tree低，磁盘IO次数少 B+ tree叶子节点用双向链表串联起来，适合范围查询  B + tree VS Hash 虽然hash的等值查询效率很高，但无法做到范围长查询 hash会有hash碰撞发生  什么时候适合使用索引">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-10-30T11:47:22.000Z">
-<meta property="article:modified_time" content="2023-11-14T02:03:59.232Z">
+<meta property="article:published_time" content="2023-11-06T11:12:15.000Z">
+<meta property="article:modified_time" content="2023-11-06T11:29:51.630Z">
 <meta property="article:author" content="Forrest">
+<meta property="article:tag" content="八股">
+<meta property="article:tag" content="索引">
 <meta name="twitter:card" content="summary_large_image">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>面试记录 - Forrest’s blog</title>
+  <title>索引总结 - Forrest’s blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -198,7 +200,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="面试记录"></span>
+            <span id="subtitle" data-typed-text="索引总结"></span>
           
         </div>
 
@@ -209,8 +211,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-10-30 19:47" pubdate>
-          2023年10月30日 晚上
+        <time datetime="2023-11-06 19:12" pubdate>
+          2023年11月6日 晚上
         </time>
       </span>
     
@@ -221,7 +223,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.6k 字
+          382 字
         
       </span>
     
@@ -232,7 +234,7 @@
         
         
         
-          9 分钟
+          2 分钟
         
       </span>
     
@@ -277,131 +279,35 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">面试记录</h1>
+            <h1 id="seo-header">索引总结</h1>
             
             
               <div class="markdown-body">
                 
-                <h3 id="格林深瞳-一面"><a href="#格林深瞳-一面" class="headerlink" title="格林深瞳 一面"></a>格林深瞳 一面</h3><p>一面时间：2023.11.1 </p>
-<ul>
-<li><p>用之前的笔试题开场，问我的处理逻辑，为什么这么想</p>
-</li>
-<li><p>通过第二道笔试题（报警响应），问了email的具体逻辑，有什么输出，有什么输入，还需要什么其他参数吗？</p>
-</li>
-<li><p>报警信息的来源</p>
-</li>
-<li><p>http的请求</p>
-</li>
-<li><p>http中 content type 有哪些 ?</p>
-<ol>
-<li><strong>text&#x2F;plain</strong>: 表示文本内容，通常是纯文本，不含任何格式化，如纯文本文件或普通文本消息。</li>
-<li><strong>text&#x2F;html</strong>: 表示HTML文档，通常用于Web页面。</li>
-<li><strong>text&#x2F;css</strong>: 表示Cascading Style Sheets（CSS）文件，用于定义文档的样式和布局。</li>
-<li><strong>application&#x2F;json</strong>: 表示JSON（JavaScript Object Notation）数据，常用于数据交换。</li>
-<li><strong>application&#x2F;xml</strong>: 表示XML（eXtensible Markup Language）数据，用于数据交换和配置文件等。</li>
-<li><strong>application&#x2F;pdf</strong>: 表示Adobe PDF文档，通常用于电子文档的传输和显示。</li>
-<li><strong>image&#x2F;jpeg</strong>: 表示JPEG图像，一种常见的图像格式。</li>
-<li><strong>image&#x2F;png</strong>: 表示PNG图像，另一种常见的图像格式。</li>
-<li><strong>image&#x2F;gif</strong>: 表示GIF图像，一种支持动画的图像格式。</li>
-<li><strong>audio&#x2F;mpeg</strong>: 表示MPEG音频文件，如MP3音频文件。</li>
-<li><strong>video&#x2F;mp4</strong>: 表示MP4视频文件，一种常见的视频格式。</li>
-<li><strong>application&#x2F;octet-stream</strong>: 表示二进制数据，通常不指定特定的媒体类型。</li>
-<li><strong>multipart&#x2F;form-data</strong>: 通常用于HTML表单文件上传，允许传输二进制文件数据。</li>
-<li><strong>application&#x2F;x-www-form-urlencoded</strong>: 通常用于HTML表单提交，编码表单字段的键值对。</li>
-</ol>
-</li>
-<li><p>http 中参数传递的方式</p>
-<ol>
-<li><strong>URL查询字符串（Query Parameters）</strong>：参数直接附加在URL的末尾，以问号（?）开头，不同参数之间使用“&amp;”符号分隔。例如：<code>https://example.com/page?param1=value1&amp;param2=value2</code>。</li>
-<li><strong>表单（Form）</strong>：表单是HTML中的一种元素，可以包含各种输入字段（文本框、下拉列表、单选框等），用户可以在浏览器中填写表单字段，然后提交给服务器。这些字段的值通常以键值对的形式传递，可以使用不同的HTTP方法，如POST和GET，来提交表单数据。</li>
-<li><strong>HTTP头部（HTTP Headers）</strong>：HTTP头部可以包含自定义的键值对，以传递一些元信息或参数。例如，可以在HTTP请求的头部中包含自定义的<code>X-My-Header: value</code>头部字段，服务器可以根据这些字段来处理请求。</li>
-<li><strong>URL路径参数（Path Parameters）</strong>：有时，参数信息可以包含在URL的路径中，通过在路径中使用占位符来传递参数。例如，RESTful API通常使用这种方式，如<code>https://example.com/users/123</code>中的<code>123</code>是用户ID。</li>
-<li><strong>请求正文（Request Body）</strong>：对于HTTP POST、PUT、PATCH等方法，数据可以包含在请求的正文中，通常以JSON、XML、或其他自定义格式进行编码。这种方式适用于传递复杂的数据结构，例如提交表单数据或上传文件。</li>
-<li><strong>Cookie（HTTP Cookies）</strong>：Cookie 是一种在客户端和服务器之间传递数据的方式，通常用于跟踪用户的会话状态。服务器可以在HTTP响应中设置Cookie，然后浏览器会在后续请求中自动包含Cookie数据。</li>
-<li><strong>会话（Session）</strong>：在某些情况下，参数可以存储在会话中，用户的会话状态在多个HTTP请求之间保持一致。</li>
-<li><strong>URL重写（URL Rewriting）</strong>：在URL中将参数信息进行编码，通常使用URL路径的方式，以便将参数传递给服务器。</li>
-</ol>
-</li>
-<li><p>开始笔试</p>
-<ul>
-<li>无缓冲的channel的读和写 （被卡脖子了~~，写了一个死锁，后来debug出来了）</li>
-<li>有限容量队列的实现<ul>
-<li>先是这么写 <code>arr:=arr[1:]</code>，发现arr的长度会变短</li>
-<li>后来不敢偷懒了，共用了一块内存，过了</li>
+                <h3 id="为什么mysql-的-innoDB-选择-使用-B-tree作为索引的数据结构"><a href="#为什么mysql-的-innoDB-选择-使用-B-tree作为索引的数据结构" class="headerlink" title="为什么mysql 的 innoDB 选择 使用 B+ tree作为索引的数据结构"></a>为什么mysql 的 innoDB 选择 使用 B+ tree作为索引的数据结构</h3><h4 id="B-tree-VS-B-tree"><a href="#B-tree-VS-B-tree" class="headerlink" title="B + tree VS B tree"></a>B + tree VS B tree</h4><ul>
+<li>存储相同数量级别的情况下，B+ tree 的树高比B tree低，磁盘IO次数少</li>
+<li>B+ tree叶子节点用双向链表串联起来，适合范围查询</li>
 </ul>
-</li>
+<h4 id="B-tree-VS-Hash"><a href="#B-tree-VS-Hash" class="headerlink" title="B + tree VS Hash"></a>B + tree VS Hash</h4><ul>
+<li>虽然hash的等值查询效率很高，但无法做到范围长查询</li>
+<li>hash会有hash碰撞发生</li>
 </ul>
-<p>		</p>
-</li>
-<li><p>问项目</p>
-<ul>
-<li><code>特殊词过滤和防止循环转链</code>的具体逻辑</li>
-<li>MD5的实现，hash是什么…</li>
-<li>Snowflake 怎么实现，具体的参数有哪些<br>         1. 开始时间+机器ID构成node<br>             1. 使用来generate Int64的值</li>
-<li>JWT 怎么使用的，具体的参数有哪些<ol>
-<li>自定义的字段，如username，userID + standardClaims，构成了最终的Claims</li>
-<li>其中StandardClaims 包括了expirationAt、Audience、ID、IssureAt、Subject、NotBefore</li>
-</ol>
-</li>
-<li><code>随时间权重下降的算法评论系统</code> 的具体逻辑</li>
+<h3 id="什么时候适合使用索引"><a href="#什么时候适合使用索引" class="headerlink" title="什么时候适合使用索引"></a>什么时候适合使用索引</h3><ul>
+<li>字段具有唯一性，比如商品的编码</li>
+<li>常用于 Where 查询的字段</li>
+<li>经常用于 <code>group by</code>和 <code>order by</code>的字段</li>
 </ul>
-</li>
-<li><p>我开始反问</p>
-<ul>
-<li>有没有相应的ld，mt</li>
-<li>面试会有几轮，会有HR面吗？</li>
-<li><code>健康体育</code>的版块在公司中属于什么地位，开始研发多久了</li>
-<li>公司的主要技术栈</li>
-<li>可以讲讲我的面试表现吗</li>
+<h3 id="什么时候不需要索引"><a href="#什么时候不需要索引" class="headerlink" title="什么时候不需要索引"></a>什么时候不需要索引</h3><ul>
+<li>数据量少</li>
+<li>索引字段常更新</li>
+<li>字段中存在大量重复的数据</li>
+<li><code>where</code> <code>order by</code>  <code> group by</code> 用不到的字段</li>
 </ul>
-<p>我没了~~</p>
-<p>2023.11.2 我收到了第一份感谢信，我被打回了人才库~~~</p>
-</li>
-</ul>
-<h3 id="字节后端一面"><a href="#字节后端一面" class="headerlink" title="字节后端一面"></a>字节后端一面</h3><p>​    面试时间：2023.11.7 </p>
-<p>​    2023.11.14，也就是7天后我开始反思自己，调整心态，一方面项目自己没能把握机会，另一方面自己的简历有夸大的部分，面试官基本围绕你的项目和简历来进行提问。</p>
-<p>总结：</p>
-<ul>
-<li>主动，你要主动把自己的知识面和特性展现出来，不要等面试官来找你的优点，你要牵引面试官跟着你的思路走，而不是他牵着你的鼻子走</li>
-</ul>
-<ol start="2">
-<li>自己不是很熟练的东西就不要往简历中写，面试官的问题思路来源大部分都是来自你的项目和个人介绍的技术栈中</li>
-</ol>
-<h3 id="字节AI编辑实习生"><a href="#字节AI编辑实习生" class="headerlink" title="字节AI编辑实习生"></a>字节AI编辑实习生</h3><p>2023.11.13 </p>
-<h4 id="总结转链项目："><a href="#总结转链项目：" class="headerlink" title="总结转链项目："></a>总结转链项目：</h4><h5 id="Convert"><a href="#Convert" class="headerlink" title="Convert"></a>Convert</h5><pre><code class="hljs"> 1. 校验数据
- - 数据不为空
- - 链接可访问
- - 不是之前已经转过的长链接（用MD5计算长链接的值，去数据库中查询）
- - 不是数据库中存在的短链接
- 2. 取号
- - 号码转链接
- - 查看是否为blackList
- 3. 存入bloom filter
- 4. 存储长短连接的对应关系
- 5. 返回响应
-</code></pre>
-<p>​    </p>
-<h5 id="Show"><a href="#Show" class="headerlink" title="Show"></a>Show</h5><ol>
-<li>查询布隆过滤器 （若短链接不存在，访问失败）</li>
-<li>用go-zero 查询短链接和长链接的对应关系</li>
-<li>返回响应</li>
-</ol>
-<p>http中的常见字段：</p>
-<ul>
-<li>connection</li>
-<li>content-type </li>
-<li>content-length</li>
-<li>host</li>
-<li>content-encoding</li>
-</ul>
-<p>get 和 post的区别</p>
-<ul>
-<li>幂等</li>
-<li>数据传送方式</li>
-<li>语义</li>
-<li>数据长度</li>
-<li>缓存</li>
-<li>安全性</li>
+<h3 id="什么时候索引会失效"><a href="#什么时候索引会失效" class="headerlink" title="什么时候索引会失效"></a>什么时候索引会失效</h3><ul>
+<li>使用 左或者是左右模糊匹配的时候 <code>like %xxx</code> <code>like%xx%</code> </li>
+<li>查询条件中存在计算、函数、类型转化操作</li>
+<li>没能遵循最左匹配原则</li>
+<li>在where字句中，如果 or 前的条件 是索引列，而在 or 之后为非索引列</li>
 </ul>
 
                 
@@ -412,6 +318,15 @@
               <div class="post-metas my-3">
   
   
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%85%AB%E8%82%A1/" class="print-no-link">#八股</a>
+      
+        <a href="/tags/%E7%B4%A2%E5%BC%95/" class="print-no-link">#索引</a>
+      
+    </div>
+  
 </div>
 
 
@@ -420,8 +335,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>面试记录</div>
-      <div>http://example.com/2023/10/30/面试记录/</div>
+      <div>索引总结</div>
+      <div>http://example.com/2023/11/06/索引总结/</div>
     </div>
     <div class="license-meta">
       
@@ -433,7 +348,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年10月30日</div>
+          <div>2023年11月6日</div>
         </div>
       
       
@@ -465,9 +380,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/11/02/%E8%AF%BBsync%E5%8C%85/" title="读sync包">
+                      <a href="/2023/11/18/influxDB%E7%9A%84%E4%BD%BF%E7%94%A8/" title="influxDB的使用">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">读sync包</span>
+                        <span class="hidden-mobile">influxDB的使用</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -475,8 +390,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/10/26/MongoDB%E7%9A%84%E4%BD%BF%E7%94%A8/" title="MongoDB的使用">
-                        <span class="hidden-mobile">MongoDB的使用</span>
+                      <a href="/2023/11/06/%E8%BF%9B%E7%A8%8B%E9%97%B4%E7%9A%84%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F/" title="进程间的通信方式">
+                        <span class="hidden-mobile">进程间的通信方式</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
