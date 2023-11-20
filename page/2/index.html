@@ -228,6 +228,48 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
+        <a href="/2023/11/05/Go%E7%9A%84%E9%80%83%E9%80%B8%E5%88%86%E6%9E%90/" target="_self">
+          Go的逃逸分析
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2023/11/05/Go%E7%9A%84%E9%80%83%E9%80%B8%E5%88%86%E6%9E%90/" target="_self">
+        <div>
+          Go语言的局部变量是分配到栈上还是堆上？这由编译器决定。GO语言的编译器会决定分配到栈上还是堆上，编译器会做逃逸分析（escape analysis），当发现变量的作用域没有超出函数的范围，可以在栈上，反之必须在堆上。 123456789func foo() *int &#123;	v := 100	return &amp;v&#125;func main() &#123;	m := foo()
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-11-05 08:17" pubdate>
+              2023-11-05
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Go/">#Go</a>
+            
+              <a href="/tags/%E9%80%83%E9%80%B8%E5%88%86%E6%9E%90/">#逃逸分析</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
         <a href="/2023/11/02/%E8%AF%BBsync%E5%8C%85/" target="_self">
           读sync包
         </a>
@@ -799,46 +841,6 @@
             <i class="iconfont icon-tags"></i>
             
               <a href="/tags/Slice/">#Slice</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2023/09/23/Sort%E5%8C%85%E7%9A%84%E4%BD%BF%E7%94%A8/" target="_self">
-          Sort包的使用
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/09/23/Sort%E5%8C%85%E7%9A%84%E4%BD%BF%E7%94%A8/" target="_self">
-        <div>
-          Sort包的简介Go语言标准库sort包中实现了３种基本的排序算法：插入排序、快排和堆排序。和其他语言中一样， 这三种方式都是不公开的，他们只在sort包内部使用。所以用户在使用sort包进行排序时无需考虑使 用那种排序方式，sort.Interface定义的三个方法：获取数据集合长度的Len()方法、比较两个元素 大小的Less()方法和交换两个元素位置的Swap()方法，就可以顺利对数据集合进
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-09-23 14:11" pubdate>
-              2023-09-23
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/golang-sort%E5%8C%85%E7%9A%84%E4%BD%BF%E7%94%A8/">#-golang -sort包的使用</a>
             
           </div>
         

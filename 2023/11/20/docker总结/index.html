@@ -1,0 +1,770 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Forrest">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="什么是dockerDocker 使用 Google 公司推出的 Go 语言 进行开发实现，基于 Linux 内核的 cgroup，namespace，以及 OverlayFS 类的 Union FS 等技术，对进程进行封装隔离，属于 操作系统层面的虚拟化技术。由于隔离的进程独立于宿主和其它的隔离的进程，因此也称其为容器。最初实现是基于 LXC，从 0.7 版本以后开始去除 LXC，转而使用自行开发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="docker总结">
+<meta property="og:url" content="http://example.com/2023/11/20/docker%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="Forrest’s blog">
+<meta property="og:description" content="什么是dockerDocker 使用 Google 公司推出的 Go 语言 进行开发实现，基于 Linux 内核的 cgroup，namespace，以及 OverlayFS 类的 Union FS 等技术，对进程进行封装隔离，属于 操作系统层面的虚拟化技术。由于隔离的进程独立于宿主和其它的隔离的进程，因此也称其为容器。最初实现是基于 LXC，从 0.7 版本以后开始去除 LXC，转而使用自行开发">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-11-20T08:20:17.000Z">
+<meta property="article:modified_time" content="2023-11-20T14:57:13.845Z">
+<meta property="article:author" content="Forrest">
+<meta property="article:tag" content="docker">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>docker总结 - Forrest’s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Forrest</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="docker总结"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-11-20 16:20" pubdate>
+          2023年11月20日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          19 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">docker总结</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="什么是docker"><a href="#什么是docker" class="headerlink" title="什么是docker"></a>什么是docker</h2><p><strong>Docker</strong> 使用 <code>Google</code> 公司推出的 <a target="_blank" rel="noopener" href="https://golang.google.cn/">Go 语言</a> 进行开发实现，基于 <code>Linux</code> 内核的 <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/Cgroups">cgroup</a>，<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Linux_namespaces">namespace</a>，以及 <a target="_blank" rel="noopener" href="https://docs.docker.com/storage/storagedriver/overlayfs-driver/">OverlayFS</a> 类的 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Union_mount">Union FS</a> 等技术，对进程进行封装隔离，属于 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Operating-system-level_virtualization">操作系统层面的虚拟化技术</a>。由于隔离的进程独立于宿主和其它的隔离的进程，因此也称其为容器。最初实现是基于 <a target="_blank" rel="noopener" href="https://linuxcontainers.org/lxc/introduction/">LXC</a>，从 <code>0.7</code> 版本以后开始去除 <code>LXC</code>，转而使用自行开发的 <a target="_blank" rel="noopener" href="https://github.com/docker/libcontainer">libcontainer</a>，从 <code>1.11</code> 版本开始，则进一步演进为使用 <a target="_blank" rel="noopener" href="https://github.com/opencontainers/runc">runC</a> 和 <a target="_blank" rel="noopener" href="https://github.com/containerd/containerd">containerd</a>。</p>
+<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><h2 id="使用镜像"><a href="#使用镜像" class="headerlink" title="使用镜像"></a>使用镜像</h2><h3 id="获取镜像"><a href="#获取镜像" class="headerlink" title="获取镜像"></a>获取镜像</h3><p>从docker中获取镜像的命令是 <code>docker pull</code> </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker pull [选项] [Docker Registry 地址[:端口号]/]仓库名[:标签]<br></code></pre></td></tr></table></figure>
+
+<p>eg:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker pull ubuntu:18.04<br></code></pre></td></tr></table></figure>
+
+<p>运行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker run -it ubuntu:18.04 bash<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><code>it</code> ：这是两个参数，一个是 <code>-i</code>：交互式操作，一个是 <code>-t</code> 终端。我们这里打算进入 <code>bash</code> 执行一些命令并查看返回结果，因此我们需要交互式终端。</li>
+</ul>
+<p>退出</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-keyword">exit</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="列举镜像"><a href="#列举镜像" class="headerlink" title="列举镜像"></a>列举镜像</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker image <span class="hljs-built_in">ls</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="删除镜像"><a href="#删除镜像" class="headerlink" title="删除镜像"></a>删除镜像</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker image <span class="hljs-built_in">rm</span> [选项] &lt;镜像1&gt; [&lt;镜像2&gt; ...] (ID 或者是镜像名)<br></code></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ docker image <span class="hljs-built_in">ls</span><br>REPOSITORY                  TAG                 IMAGE ID            CREATED             SIZE<br>centos                      latest              0584b3d2cf6d        3 weeks ago         196.5 MB<br>redis                       alpine              501ad78535f0        3 weeks ago         21.03 MB<br>docker                      latest              cf693ec9b5c7        3 weeks ago         105.1 MB<br>nginx                       latest              e43d811ce2f4        5 weeks ago         181.5 MB<br></code></pre></td></tr></table></figure>
+
+<p>我们可以使用长 <code>ID</code> 来删除，但也可也使用短 <code>ID</code> 来删除，一般来说只需要输入前三位即可</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ docker image <span class="hljs-built_in">rm</span> 501<br>Untagged: redis:alpine<br>Untagged: redis@sha256:f1ed3708f538b537eb9c2a7dd50dc90a706f7debd7e1196c9264edeea521a86d<br>Deleted: sha256:501ad78535f015d88872e13fa87a828425117e3d28075d0c117932b05bf189b7<br>Deleted: sha256:96167737e29ca8e9d74982ef2a0dda76ed7b430da55e321c071f0dbff8c2899b<br>Deleted: sha256:32770d1dcf835f192cafd6b9263b7b597a1778a403a109e2cc2ee866f74adf23<br>Deleted: sha256:127227698ad74a5846ff5153475e03439d96d4b1c7f2a449c7a826ef74a2d2fa<br>Deleted: sha256:1333ecc582459bac54e1437335c0816bc17634e131ea0cc48daa27d32c75eab3<br>Deleted: sha256:4fc455b921edf9c4aea207c51ab39b10b06540c8b4825ba57b3feed1668fa7c7<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+<h3 id="使用dockerfile-定制镜像"><a href="#使用dockerfile-定制镜像" class="headerlink" title="使用dockerfile 定制镜像"></a>使用dockerfile 定制镜像</h3><ul>
+<li>使用 FROM 指定基础镜像</li>
+</ul>
+<p>所谓定制镜像，那一定是以一个镜像为基础，在其上进行定制。</p>
+<p>在 <a target="_blank" rel="noopener" href="https://hub.docker.com/search?q=&type=image&image_filter=official">Docker Hub</a> 上有非常多的高质量的官方镜像，有可以直接拿来使用的服务类的镜像，如 <a target="_blank" rel="noopener" href="https://hub.docker.com/_/nginx/"><code>nginx</code></a>、<a target="_blank" rel="noopener" href="https://hub.docker.com/_/redis/"><code>redis</code></a>、<a target="_blank" rel="noopener" href="https://hub.docker.com/_/mongo/"><code>mongo</code></a>、<a target="_blank" rel="noopener" href="https://hub.docker.com/_/mysql/"><code>mysql</code></a>、<a target="_blank" rel="noopener" href="https://hub.docker.com/_/httpd/"><code>httpd</code></a>、<a target="_blank" rel="noopener" href="https://hub.docker.com/_/php/"><code>php</code></a>、<a target="_blank" rel="noopener" href="https://hub.docker.com/_/tomcat/"><code>tomcat</code></a> 等。如果没有找到对应服务的镜像，官方镜像中还提供了一些更为基础的操作系统镜像，如 <a target="_blank" rel="noopener" href="https://hub.docker.com/_/ubuntu/"><code>ubuntu</code></a>、<a target="_blank" rel="noopener" href="https://hub.docker.com/_/debian/"><code>debian</code></a>、<a target="_blank" rel="noopener" href="https://hub.docker.com/_/centos/"><code>centos</code></a>、<a target="_blank" rel="noopener" href="https://hub.docker.com/_/fedora/"><code>fedora</code></a>、<a target="_blank" rel="noopener" href="https://hub.docker.com/_/alpine/"><code>alpine</code></a> 等，这些操作系统的软件库为我们提供了更广阔的扩展空间。除了选择现有镜像为基础镜像外，Docker 还存在一个特殊的镜像，名为 <code>scratch</code>。这个镜像是虚拟的概念，并不实际存在，它表示一个空白的镜像。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">FROM scratch<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>使用RUN 执行命令</li>
+</ul>
+<p>RUN指令在定制镜像是是最常用的指令之一，其格式有两种</p>
+<ol>
+<li><p>shell格式，<code>RUN &lt;命令&gt;</code> ，其中的命令就像在命令行中输入的命令一样</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">RUN <span class="hljs-built_in">echo</span> <span class="hljs-string">&#x27;&lt;h1&gt;hello,Docker!&lt;h1&gt;&#x27;</span> &gt; a.log<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>exec格式，<code>RUN [&quot;可执行文件&quot;,&quot;arg-1&quot;,&quot;arg-2&quot;]</code>，这会比较像函数调用的格式</p>
+</li>
+</ol>
+<p>注意： Union FS 是有最大层数限制的，比如 AUFS，曾经是最大不得超过 42 层，现在是不得超过 127 层。所以，要注意RUN的使用，写的时候尽量写一行，之间用 <code>&amp;&amp;</code> 连接</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs bash">FROM debian:stretch<br><br>RUN <span class="hljs-built_in">set</span> -x; buildDeps=<span class="hljs-string">&#x27;gcc libc6-dev make wget&#x27;</span> \<br>    &amp;&amp; apt-get update \<br>    &amp;&amp; apt-get install -y <span class="hljs-variable">$buildDeps</span> \<br>    &amp;&amp; wget -O redis.tar.gz <span class="hljs-string">&quot;http://download.redis.io/releases/redis-5.0.3.tar.gz&quot;</span> \<br>    &amp;&amp; <span class="hljs-built_in">mkdir</span> -p /usr/src/redis \<br>    &amp;&amp; tar -xzf redis.tar.gz -C /usr/src/redis --strip-components=1 \<br>    &amp;&amp; make -C /usr/src/redis \<br>    &amp;&amp; make -C /usr/src/redis install \<br>    &amp;&amp; <span class="hljs-built_in">rm</span> -rf /var/lib/apt/lists/* \<br>    &amp;&amp; <span class="hljs-built_in">rm</span> redis.tar.gz \<br>    &amp;&amp; <span class="hljs-built_in">rm</span> -r /usr/src/redis \<br>    &amp;&amp; apt-get purge -y --auto-remove <span class="hljs-variable">$buildDeps</span><br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<h4 id="构建镜像"><a href="#构建镜像" class="headerlink" title="构建镜像"></a>构建镜像</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker build [选项] &lt;上下文路径/URL/-&gt;<br></code></pre></td></tr></table></figure>
+
+<p>在Dockerfile 执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs bash"> $ docker build -t nginx:v3 .<br>Sending build context to Docker daemon 2.048 kB<br>Step 1 : FROM nginx<br> ---&gt; e43d811ce2f4<br>Step 2 : RUN <span class="hljs-built_in">echo</span> <span class="hljs-string">&#x27;&lt;h1&gt;Hello, Docker!&lt;/h1&gt;&#x27;</span> &gt; /usr/share/nginx/html/index.html<br> ---&gt; Running <span class="hljs-keyword">in</span> 9cdc27646c7b<br> ---&gt; 44aa4490ce2c<br>Removing intermediate container 9cdc27646c7b<br>Successfully built 44aa4490ce2c<br></code></pre></td></tr></table></figure>
+
+<p>其中的 <code>.</code> 表示当前目录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">COPY ./package.json /app/<br></code></pre></td></tr></table></figure>
+
+<p>这表示 复制上下文目录下的 <code>package.json</code> </p>
+<p>实际上 <code>Dockerfile</code> 的文件名并不要求必须为 <code>Dockerfile</code>，而且并不要求必须位于上下文目录中，比如可以用 <code>-f ../Dockerfile.php</code> 参数指定某个文件作为 <code>Dockerfile</code>。</p>
+<h4 id="add-copy"><a href="#add-copy" class="headerlink" title="add | copy"></a>add | copy</h4><p>copy 用于将上下文目录中的源文件&#x2F;目录复制到新一层的镜像的目标位置中</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">COPY [--<span class="hljs-built_in">chown</span>=&lt;user&gt;:&lt;group&gt;] &lt;源路径&gt;... &lt;目标路径&gt;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">COPY --<span class="hljs-built_in">chown</span>=55:mygroup files* /mydir/<br>COPY --<span class="hljs-built_in">chown</span>=bin files* /mydir/<br>COPY --<span class="hljs-built_in">chown</span>=1 files* /mydir/<br>COPY --<span class="hljs-built_in">chown</span>=10:11 files* /mydir/<br></code></pre></td></tr></table></figure>
+
+
+
+<p><code>ADD</code> 可以自动解压缩 压缩文件，压缩的格式为 gzip，bzip2以及XZ。ADD指令会自动解压缩这个压缩文件到目标目录中 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">FROM scratch<br>ADD buntu-xenial-core-cloudimg-amd64-root.tar.gz /<br></code></pre></td></tr></table></figure>
+
+<p>在 Docker 官方的 <a href>Dockerfile 最佳实践文档</a> 中要求，尽可能的使用 <code>COPY</code>，因为 <code>COPY</code> 的语义很明确，就是复制文件而已，而 <code>ADD</code> 则包含了更复杂的功能，其行为也不一定很清晰。最适合使用 <code>ADD</code> 的场合，就是所提及的需要自动解压缩的场合。</p>
+<p>建议：</p>
+<ul>
+<li>单纯的复制场景，使用 COPY</li>
+<li>需要自动解压缩的场景，使用 ADD</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">ADD --<span class="hljs-built_in">chown</span>=55:mygroup files* /mydir/<br>ADD --<span class="hljs-built_in">chown</span>=bin files* /mydir/<br>ADD --<span class="hljs-built_in">chown</span>=1 files* /mydir/<br>ADD --<span class="hljs-built_in">chown</span>=10:11 files* /mydir/<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="其他docker-build的用法"><a href="#其他docker-build的用法" class="headerlink" title="其他docker build的用法"></a>其他docker build的用法</h4><h5 id="直接使用git-rep"><a href="#直接使用git-rep" class="headerlink" title="直接使用git rep"></a>直接使用git rep</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># $env:DOCKER_BUILDKIT=0</span><br><span class="hljs-comment"># export DOCKER_BUILDKIT=0</span><br><br>docker build -t hello-world https://github.com/docker-library/hello-world.git<span class="hljs-comment">#master:amd64/hello-world</span><br>....<br></code></pre></td></tr></table></figure>
+
+<h5 id="使用指定的压缩包"><a href="#使用指定的压缩包" class="headerlink" title="使用指定的压缩包"></a>使用指定的压缩包</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker build http://server/context.tar.gz<br></code></pre></td></tr></table></figure>
+
+<p>Docker 引擎会下载这个包，并自动解压缩，以其作为上下文，开始构建。</p>
+<h5 id="从标准输入中读取-Dockerfile-压缩包-进行构建"><a href="#从标准输入中读取-Dockerfile-压缩包-进行构建" class="headerlink" title="从标准输入中读取 Dockerfile | 压缩包 进行构建"></a>从标准输入中读取 Dockerfile | 压缩包 进行构建</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cat</span> Dockerfile | docker build -<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker build - &lt; context.tar.gz<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="CMD容器启动"><a href="#CMD容器启动" class="headerlink" title="CMD容器启动"></a>CMD容器启动</h4><p>之前有介绍过，docker不是虚拟机，容器就是进程，既然是进程，那么在启动容器的时候，需要指定所运行的程序及参数。<code>CMD</code>指令就是用于指定默认的容器主进程启动的命令</p>
+<p><code>CMD</code> 指令的格式和 <code>RUN</code> 相似，也是两种格式：</p>
+<ul>
+<li><code>shell</code> 格式：&#96;CMD &lt;命令&gt;&#96;&#96;</li>
+<li>&#96;&#96;exec<code> 格式：</code>CMD [“可执行文件”, “参数1”, “参数2”…]<code> 参数列表格式：</code>CMD [“参数1”, “参数2”…]<code>。在指定了 </code>ENTRYPOINT<code>指令后，用</code>CMD&#96; 指定具体的参数。</li>
+</ul>
+<p><strong>错误的写法</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">CMD service nginx start<br></code></pre></td></tr></table></figure>
+
+<p>然后发现容器执行后就立即退出了。甚至在容器内去使用 <code>systemctl</code> 命令结果却发现根本执行不了。这就是因为没有搞明白前台、后台的概念，没有区分容器和虚拟机的差异，依旧在以传统虚拟机的角度去理解容器。</p>
+<p>对于容器而言，其启动程序就是容器应用进程，容器就是为了主进程而存在的，主进程退出，容器就失去了存在的意义，从而退出，其它辅助进程不是它需要关心的东西。</p>
+<p>而使用 <code>service nginx start</code> 命令，则是希望 upstart 来以后台守护进程形式启动 <code>nginx</code> 服务。而刚才说了 <code>CMD service nginx start</code> 会被理解为 <code>CMD [ &quot;sh&quot;, &quot;-c&quot;, &quot;service nginx start&quot;]</code>，因此主进程实际上是 <code>sh</code>。那么当 <code>service nginx start</code> 命令结束后，<code>sh</code> 也就结束了，<code>sh</code> 作为主进程退出了，自然就会令容器退出。</p>
+<p>正确的做法是直接执行 <code>nginx</code> 可执行文件，并且要求以前台形式运行。比如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">CMD [<span class="hljs-string">&quot;nginx&quot;</span>, <span class="hljs-string">&quot;-g&quot;</span>, <span class="hljs-string">&quot;daemon off;&quot;</span>]<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="ENTRYPOINT-入口点"><a href="#ENTRYPOINT-入口点" class="headerlink" title="ENTRYPOINT 入口点"></a>ENTRYPOINT 入口点</h4><p><code>ENTRYPOINT</code> 的格式和 <code>RUN</code> 指令格式一样，分为 <code>exec</code> 格式和 <code>shell</code> 格式。</p>
+<p><code>ENTRYPOINT</code> 的目的和 <code>CMD</code> 一样，都是在指定容器启动程序及参数。<code>ENTRYPOINT</code> 在运行时也可以替代，不过比 <code>CMD</code> 要略显繁琐，需要通过 <code>docker run</code> 的参数 <code>--entrypoint</code> 来指定。</p>
+<p>当指定了 <code>ENTRYPOINT</code> 后，<code>CMD</code> 的含义就发生了改变，不再是直接的运行其命令，而是将 <code>CMD</code> 的内容作为参数传给 <code>ENTRYPOINT</code> 指令，换句话说实际执行时，将变为：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">&lt;ENTRYPOINT&gt; <span class="hljs-string">&quot;&lt;CMD&gt;&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>场景一：让镜像变成像变量的命令一样使用</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">FROM ubuntu:18.04<br>RUN apt-get update \<br>    &amp;&amp; apt-get install -y curl \<br>    &amp;&amp; <span class="hljs-built_in">rm</span> -rf /var/lib/apt/lists/*<br>ENTRYPOINT [ <span class="hljs-string">&quot;curl&quot;</span>, <span class="hljs-string">&quot;-s&quot;</span>, <span class="hljs-string">&quot;http://myip.ipip.net&quot;</span> ]<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker run -t myip<br><br>docker run myip -i 等价于 docker run myip curl -s <span class="hljs-string">&quot;http://myip.ipip.net&quot;</span> -i<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker run myip -i<br>HTTP/1.1 200 OK<br>Connection: close<br>Content-Length: 68<br>Accept-Ranges: bytes<br>Content-Type: text/plain; charset=utf-8<br>Date: Mon, 20 Nov 2023 13:57:24 GMT<br>Server: WAF<br>X-Cache: BYPASS<br>X-Request-Id: 3c3017cc86f1ca3499256cb036918c3b<br><br>当前 IP：59.46.213.219  来自于：中国 辽宁 大连  电信<br><br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/docker/" class="print-no-link">#docker</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>docker总结</div>
+      <div>http://example.com/2023/11/20/docker总结/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Forrest</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年11月20日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/11/20/linux%E6%8C%87%E4%BB%A4%E6%94%B6%E9%9B%86/" title="linux指令收集">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">linux指令收集</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/11/20/Elasticsearch-Stack%E7%9A%84%E5%AD%A6%E4%B9%A0/" title="Elasticsearch_Stack的学习">
+                        <span class="hidden-mobile">Elasticsearch_Stack的学习</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
