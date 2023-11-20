@@ -4,11 +4,32 @@
   
   
   <entry>
+    <title>hexo中如何添加图片</title>
+    <link href="/2023/11/20/hexo%E4%B8%AD%E5%A6%82%E4%BD%95%E6%B7%BB%E5%8A%A0%E5%9B%BE%E7%89%87/"/>
+    <url>/2023/11/20/hexo%E4%B8%AD%E5%A6%82%E4%BD%95%E6%B7%BB%E5%8A%A0%E5%9B%BE%E7%89%87/</url>
+    
+    <content type="html"><![CDATA[<h2 id="一般来说有两种方法"><a href="#一般来说有两种方法" class="headerlink" title="一般来说有两种方法"></a>一般来说有两种方法</h2><ol><li>使用互联网中已存在URL的图片,即通过URL可以访问到的图片，这种情况只需要直接粘贴对应的URL即可</li><li>使用本地的图片，将图片上传到图床中，这里我们使用github作为图床</li></ol><h2 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h2><ol><li><p>下载对应的插件 </p> <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm install https://github.com/CodeFalling/hexo-asset-image --save<br></code></pre></td></tr></table></figure></li><li><p>查看<code>_config.yml</code>文件 查找 <code>post_asset_folder</code> 字段,将<code>post_asset_folder</code> 设置为 <code>true</code></p></li><li><p>此时，我们使用</p> <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">hexo new newpage<br></code></pre></td></tr></table></figure><p> 创建一个新的文章，可以在其对应的目录下找到一个同名的文件夹，我们可以在这个文件夹中放入本地的图片</p></li><li><p>插入图片</p> <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">!(图片对应的注释)[newpage/image.png]<br></code></pre></td></tr></table></figure></li></ol><p><img src="/2023/11/20/hexo%E4%B8%AD%E5%A6%82%E4%BD%95%E6%B7%BB%E5%8A%A0%E5%9B%BE%E7%89%87/2023-11-20-1.png" alt="image-20231120102455920"></p><p>完成！</p>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>hexo</tag>
+      
+      <tag>图片</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>newpage</title>
     <link href="/2023/11/20/newpage/"/>
     <url>/2023/11/20/newpage/</url>
     
-    <content type="html"><![CDATA[<p><img src="/2023/11/20/newpage/dog.JPG"></p><p><img src="/2023/11/20/newpage/newpage%5Cdog.JPG"></p>]]></content>
+    <content type="html"><![CDATA[<p><img src="/2023/11/20/newpage/dog.JPG" alt="狗子"></p><p><img src="/2023/11/20/newpage/dog.JPG"></p>]]></content>
     
     
     
