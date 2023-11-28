@@ -340,14 +340,14 @@
       <h2 class="index-header">
         
         <a href="/2023/11/26/mysql%E9%9A%94%E7%A6%BB%E6%80%A7/" target="_self">
-          m	ysql隔离性
+          mysql隔离性
         </a>
       </h2>
 
       
       <a class="index-excerpt index-excerpt__noimg" href="/2023/11/26/mysql%E9%9A%94%E7%A6%BB%E6%80%A7/" target="_self">
         <div>
-          ​	 ​	  ​	 隔离级别 读未提交  读提交  可重复读  串行化   undoLogredoLogbinlLogMVCC**multi-veriosn concurency control  ** 索引的模式 哈希表  有序表  搜索树    B+ 树  从图中不难看出，根据叶子节点的内容，索引类型分为主键索引和非主键索引。 主键索引的叶子节点存的是整行数据。在InnoDB里，主键索引也被称
+          ​	 ​	  ​	 ACID隔离级别 读未提交  读提交  可重复读  串行化   undoLog 是 Innodb 存储引擎层生成的日志，实现了事务中的原子性，主要用于事务回滚和 MVCC。  每当 InnoDB 引擎对一条记录进行操作（修改、删除、新增）时，要把回滚时需要的信息都记录到 undo log 里，比如：  在插入一条记录时，要把这条记录的主键值记下来，这样之后回滚时只需要把这个主键
         </div>
       </a>
 
