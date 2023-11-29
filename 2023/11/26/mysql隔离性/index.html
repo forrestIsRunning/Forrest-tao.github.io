@@ -18,19 +18,20 @@
   
     <meta name="description" content="​	  ​	 MySQL 执行一条查询语句的流程  客户端与服务端连接建立  建立连接 管理连接 校验用户身份   Serve层  查询缓存  查询语句如果命中查询缓存则直接返回，否则继续往下执行。MySQL 8.0 已删除该模块；   进行词法分析  进行语法分析  执行SQL  prepare 预处理 检查 SQL 查询语句中的表或者字段是否存在； 将 select * 中的 * 符号，扩展为">
 <meta property="og:type" content="article">
-<meta property="og:title" content="mysql总结">
+<meta property="og:title" content="MySQL总结">
 <meta property="og:url" content="http://example.com/2023/11/26/mysql%E9%9A%94%E7%A6%BB%E6%80%A7/index.html">
 <meta property="og:site_name" content="Forrest’s blog">
 <meta property="og:description" content="​	  ​	 MySQL 执行一条查询语句的流程  客户端与服务端连接建立  建立连接 管理连接 校验用户身份   Serve层  查询缓存  查询语句如果命中查询缓存则直接返回，否则继续往下执行。MySQL 8.0 已删除该模块；   进行词法分析  进行语法分析  执行SQL  prepare 预处理 检查 SQL 查询语句中的表或者字段是否存在； 将 select * 中的 * 符号，扩展为">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2023/11/26/mysql%E9%9A%94%E7%A6%BB%E6%80%A7/Users/Forrest/AppData/Roaming/Typora/typora-user-images/image-20231126095209387.png">
 <meta property="og:image" content="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/sql%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B/mysql%E6%9F%A5%E8%AF%A2%E6%B5%81%E7%A8%8B.png">
+<meta property="og:image" content="https://cdn.xiaolincoding.com//mysql/other/4e98ea2e60923b969790898565b4d643.png">
 <meta property="og:image" content="https://static001.geekbang.org/resource/image/dc/8d/dcda101051f28502bd5c4402b292e38d.png">
 <meta property="og:image" content="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/%E7%B4%A2%E5%BC%95/%E8%81%94%E5%90%88%E7%B4%A2%E5%BC%95.drawio.png">
 <meta property="og:image" content="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/%E7%B4%A2%E5%BC%95/%E7%B4%A2%E5%BC%95%E6%80%BB%E7%BB%93.drawio.png">
 <meta property="og:image" content="https://static001.geekbang.org/resource/image/16/d4/16dbf8124ad529fec0066950446079d4.png">
 <meta property="article:published_time" content="2023-11-26T01:51:52.000Z">
-<meta property="article:modified_time" content="2023-11-29T13:10:01.192Z">
+<meta property="article:modified_time" content="2023-11-29T14:21:53.703Z">
 <meta property="article:author" content="Forrest">
 <meta property="article:tag" content="八股">
 <meta property="article:tag" content="mysql">
@@ -42,7 +43,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>mysql总结 - Forrest’s blog</title>
+  <title>MySQL总结 - Forrest’s blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -208,7 +209,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="mysql总结"></span>
+            <span id="subtitle" data-typed-text="MySQL总结"></span>
           
         </div>
 
@@ -231,7 +232,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          5.4k 字
+          6.2k 字
         
       </span>
     
@@ -242,7 +243,7 @@
         
         
         
-          18 分钟
+          21 分钟
         
       </span>
     
@@ -287,7 +288,7 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">mysql总结</h1>
+            <h1 id="seo-header">MySQL总结</h1>
             
             
               <div class="markdown-body">
@@ -342,17 +343,45 @@
 </ul>
 </li>
 </ul>
-<h3 id="ACID"><a href="#ACID" class="headerlink" title="ACID"></a>ACID</h3><h3 id="隔离级别"><a href="#隔离级别" class="headerlink" title="隔离级别"></a>隔离级别</h3><ul>
-<li><p>读未提交</p>
-</li>
-<li><p>读提交</p>
-</li>
-<li><p>可重复读</p>
-</li>
-<li><p>串行化</p>
-</li>
+<h3 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h3><h4 id="ACID"><a href="#ACID" class="headerlink" title="ACID"></a>ACID</h4><ul>
+<li>atomicity 原子性  用undoLog (回滚)实现</li>
 </ul>
-<h3 id="undoLog"><a href="#undoLog" class="headerlink" title="undoLog"></a>undoLog</h3><ul>
+<p>一个事务中的所有操作，要么全部完成，要么全都不完成，不回结束在中间某个状态。</p>
+<ul>
+<li>consistency 一致性 用 原子性+隔离性+持久性 实现</li>
+</ul>
+<p>是指事务操作前后，数据满足完整性约束，数据库保持一致性。比如，用户 A 和用户 B 在银行分别有 800 元和 600 元，总共 1400 元，用户 A 给用户 B 转账 200 元，分为两个步骤，从 A 的账户扣除 200 元和对 B 的账户增加 200 元。一致性就是要求上述步骤操作后，最后的结果是用户 A 还有 600 元，用户 B 有 800 元，总共 1400 元，而不会出现用户 A 扣除了 200 元，但用户 B 未增加的情况（该情况，用户 A 和 B 均为 600 元，总共 1200 元）。</p>
+<ul>
+<li>isolation 隔离性 用MVCC （多版本并发控制）实现</li>
+</ul>
+<p>数据库允许多个并发事务同时对同一行数据进行读写，隔离性可以防止多个事务并发执行时由于交叉执行的数据不一致。</p>
+<ul>
+<li>durability 持久性 用redoLog（重做）实现</li>
+</ul>
+<p>事务处理结束后，对数据的修改就是永久的，即便系统故障也不会丢失。</p>
+<h4 id="并发事务会引发什么问题"><a href="#并发事务会引发什么问题" class="headerlink" title="并发事务会引发什么问题"></a>并发事务会引发什么问题</h4><h5 id="脏读"><a href="#脏读" class="headerlink" title="脏读"></a>脏读</h5><p><strong>如果一个事务「读到」了另一个「未提交事务修改过的数据」，就意味着发生了「脏读」现象。</strong></p>
+<h5 id="不可重复读"><a href="#不可重复读" class="headerlink" title="不可重复读"></a>不可重复读</h5><p><strong>在一个事务内多次读取同一个数据，如果出现前后两次读到的数据不一样的情况，就意味着发生了「不可重复读」现象。</strong></p>
+<h5 id="幻读"><a href="#幻读" class="headerlink" title="幻读"></a>幻读</h5><p><strong>在一个事务内多次查询某个符合查询条件的「记录数量」，如果出现前后两次查询到的记录数量不一样的情况，就意味着发生了「幻读」现象。</strong></p>
+<p>这有点抽象，没太看懂</p>
+<h4 id="隔离级别"><a href="#隔离级别" class="headerlink" title="隔离级别"></a>隔离级别</h4><p>SQL 标准提出了四种隔离级别来规避这些现象，隔离级别越高，性能效率就越低，这四个隔离级别如下：</p>
+<ul>
+<li>读未提交</li>
+</ul>
+<p>☞ 事务未提交，它的变更其他事务能看到</p>
+<ul>
+<li>读提交</li>
+</ul>
+<p>☞ 事务提交后，它的变更其他事务<strong>才</strong>能看到</p>
+<ul>
+<li>可重复读</li>
+</ul>
+<p> ☞ 事务执行过程中看到的数据和这个事务一开始是一致的 ，这也是MySQL InnoDB引擎的默认隔离级别</p>
+<ul>
+<li>串行化</li>
+</ul>
+<p>☞ 对记录加上读写锁，多个事务对这条记录进行读写操作时，如果发送了冲突，后访问的事务必须等待前一个事务执行完成，阻塞，才能继续执行</p>
+<p><img src="https://cdn.xiaolincoding.com//mysql/other/4e98ea2e60923b969790898565b4d643.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="undoLog"><a href="#undoLog" class="headerlink" title="undoLog"></a>undoLog</h4><ul>
 <li>是 Innodb 存储引擎层生成的日志，实现了事务中的<strong>原子性</strong>，主要<strong>用于事务回滚和 MVCC</strong>。</li>
 </ul>
 <p>每当 InnoDB 引擎对一条记录进行操作（修改、删除、新增）时，要把回滚时需要的信息都记录到 undo log 里，比如：</p>
@@ -380,7 +409,7 @@
 </ul>
 </li>
 </ol>
-<h3 id="redoLog"><a href="#redoLog" class="headerlink" title="redoLog"></a>redoLog</h3><ul>
+<h4 id="redoLog"><a href="#redoLog" class="headerlink" title="redoLog"></a>redoLog</h4><ul>
 <li>redoLog 是Innodb引擎特有的日志，实现了事务的持久性，主要用于断电后的故障修复</li>
 <li>redoLog 是物理日志，记录的是 <code>在某个数据页上做了什么修改</code> </li>
 <li>redo log是循环写的，空间固定会用完</li>
@@ -402,7 +431,7 @@
 <li><strong>New Value（新值）：</strong> 表示更新后的值，这里是 “C”</li>
 </ul>
 <p>​	</p>
-<h3 id="binlLog"><a href="#binlLog" class="headerlink" title="binlLog"></a>binlLog</h3><ul>
+<h4 id="binlLog"><a href="#binlLog" class="headerlink" title="binlLog"></a>binlLog</h4><ul>
 <li>Server特有的日志，binLog实现了数据的备份和主从复制</li>
 <li>binLog记录的是 逻辑日志，记录的是这个语句的原始逻辑</li>
 <li>binlog是可以追加写入的。“追加写”是指binlog文件写到一定大小后会切换到下一个，并不会覆盖以前的日志。</li>
@@ -432,7 +461,7 @@
 <li><strong>数据恢复：</strong> Binlog 记录允许在发生故障时从备份中进行恢复，以最小化数据丢失。</li>
 <li><strong>数据审计：</strong> Binlog 记录的 SQL 语句可以用于审计数据库的更改历史。</li>
 </ul>
-<h3 id="MVCC"><a href="#MVCC" class="headerlink" title="MVCC"></a>MVCC</h3><p>**multi-veriosn concurency control  **</p>
+<h4 id="MVCC"><a href="#MVCC" class="headerlink" title="MVCC"></a>MVCC</h4><p>**multi-veriosn concurency control  **</p>
 <h3 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h3><h4 id="索引的模式"><a href="#索引的模式" class="headerlink" title="索引的模式"></a>索引的模式</h4><ul>
 <li><p>哈希表</p>
 </li>
@@ -549,7 +578,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>mysql总结</div>
+      <div>MySQL总结</div>
       <div>http://example.com/2023/11/26/mysql隔离性/</div>
     </div>
     <div class="license-meta">
