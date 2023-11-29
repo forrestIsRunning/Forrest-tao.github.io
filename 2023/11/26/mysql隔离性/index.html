@@ -16,22 +16,25 @@
   <meta name="author" content="Forrest">
   <meta name="keywords" content="">
   
-    <meta name="description" content="​	 ​	  ​	 ACID隔离级别 读未提交  读提交  可重复读  串行化   undoLog 是 Innodb 存储引擎层生成的日志，实现了事务中的原子性，主要用于事务回滚和 MVCC。  每当 InnoDB 引擎对一条记录进行操作（修改、删除、新增）时，要把回滚时需要的信息都记录到 undo log 里，比如：  在插入一条记录时，要把这条记录的主键值记下来，这样之后回滚时只需要把这个主键">
+    <meta name="description" content="​	  ​	 MySQL 执行一条查询语句的流程  客户端与服务端连接建立  建立连接 管理连接 校验用户身份   Serve层  查询缓存  查询语句如果命中查询缓存则直接返回，否则继续往下执行。MySQL 8.0 已删除该模块；   进行词法分析  进行语法分析  执行SQL  prepare 预处理 检查 SQL 查询语句中的表或者字段是否存在； 将 select * 中的 * 符号，扩展为">
 <meta property="og:type" content="article">
-<meta property="og:title" content="mysql隔离性">
+<meta property="og:title" content="mysql总结">
 <meta property="og:url" content="http://example.com/2023/11/26/mysql%E9%9A%94%E7%A6%BB%E6%80%A7/index.html">
 <meta property="og:site_name" content="Forrest’s blog">
-<meta property="og:description" content="​	 ​	  ​	 ACID隔离级别 读未提交  读提交  可重复读  串行化   undoLog 是 Innodb 存储引擎层生成的日志，实现了事务中的原子性，主要用于事务回滚和 MVCC。  每当 InnoDB 引擎对一条记录进行操作（修改、删除、新增）时，要把回滚时需要的信息都记录到 undo log 里，比如：  在插入一条记录时，要把这条记录的主键值记下来，这样之后回滚时只需要把这个主键">
+<meta property="og:description" content="​	  ​	 MySQL 执行一条查询语句的流程  客户端与服务端连接建立  建立连接 管理连接 校验用户身份   Serve层  查询缓存  查询语句如果命中查询缓存则直接返回，否则继续往下执行。MySQL 8.0 已删除该模块；   进行词法分析  进行语法分析  执行SQL  prepare 预处理 检查 SQL 查询语句中的表或者字段是否存在； 将 select * 中的 * 符号，扩展为">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2023/11/26/mysql%E9%9A%94%E7%A6%BB%E6%80%A7/Users/Forrest/AppData/Roaming/Typora/typora-user-images/image-20231126095209387.png">
+<meta property="og:image" content="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/sql%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B/mysql%E6%9F%A5%E8%AF%A2%E6%B5%81%E7%A8%8B.png">
 <meta property="og:image" content="https://static001.geekbang.org/resource/image/dc/8d/dcda101051f28502bd5c4402b292e38d.png">
 <meta property="og:image" content="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/%E7%B4%A2%E5%BC%95/%E8%81%94%E5%90%88%E7%B4%A2%E5%BC%95.drawio.png">
 <meta property="og:image" content="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/%E7%B4%A2%E5%BC%95/%E7%B4%A2%E5%BC%95%E6%80%BB%E7%BB%93.drawio.png">
 <meta property="og:image" content="https://static001.geekbang.org/resource/image/16/d4/16dbf8124ad529fec0066950446079d4.png">
-<meta property="article:published_time" content="2023-11-26T01:51:52.418Z">
-<meta property="article:modified_time" content="2023-11-28T15:11:39.660Z">
+<meta property="article:published_time" content="2023-11-26T01:51:52.000Z">
+<meta property="article:modified_time" content="2023-11-29T13:10:01.192Z">
 <meta property="article:author" content="Forrest">
+<meta property="article:tag" content="八股">
 <meta property="article:tag" content="mysql">
+<meta property="article:tag" content="总结">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://example.com/2023/11/26/mysql%E9%9A%94%E7%A6%BB%E6%80%A7/Users/Forrest/AppData/Roaming/Typora/typora-user-images/image-20231126095209387.png">
   
@@ -39,7 +42,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>mysql隔离性 - Forrest’s blog</title>
+  <title>mysql总结 - Forrest’s blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -205,7 +208,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="mysql隔离性"></span>
+            <span id="subtitle" data-typed-text="mysql总结"></span>
           
         </div>
 
@@ -228,7 +231,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4.8k 字
+          5.4k 字
         
       </span>
     
@@ -239,7 +242,7 @@
         
         
         
-          17 分钟
+          18 分钟
         
       </span>
     
@@ -284,15 +287,61 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">mysql隔离性</h1>
+            <h1 id="seo-header">mysql总结</h1>
             
             
               <div class="markdown-body">
                 
                 <p>​	</p>
-<p>​	</p>
 <p><img src="/2023/11/26/mysql%E9%9A%94%E7%A6%BB%E6%80%A7/Users\Forrest\AppData\Roaming\Typora\typora-user-images\image-20231126095209387.png" srcset="/img/loading.gif" lazyload alt="	"></p>
 <p>​	</p>
+<h3 id="MySQL-执行一条查询语句的流程"><a href="#MySQL-执行一条查询语句的流程" class="headerlink" title="MySQL 执行一条查询语句的流程"></a>MySQL 执行一条查询语句的流程</h3><p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/sql%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B/mysql%E6%9F%A5%E8%AF%A2%E6%B5%81%E7%A8%8B.png" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li><p>客户端与服务端连接建立</p>
+<ul>
+<li>建立连接</li>
+<li>管理连接</li>
+<li>校验用户身份</li>
+</ul>
+</li>
+<li><p>Serve层</p>
+<ul>
+<li><p>查询缓存</p>
+<ul>
+<li>查询语句如果命中查询缓存则直接返回，否则继续往下执行。MySQL 8.0 已删除该模块；</li>
+</ul>
+</li>
+<li><p>进行词法分析</p>
+</li>
+<li><p>进行语法分析</p>
+</li>
+<li><p>执行SQL</p>
+<ul>
+<li>prepare 预处理<ul>
+<li>检查 SQL 查询语句中的表或者字段是否存在；</li>
+<li>将 <code>select *</code> 中的 <code>*</code> 符号，扩展为表上的所有列；</li>
+</ul>
+</li>
+<li>optimize 优化<ul>
+<li><strong>优化器主要负责将 SQL 查询语句的执行方案确定下来</strong>，比如在表里面有多个索引的时候，优化器会基于查询成本的考虑，来决定选择使用哪个索引。</li>
+</ul>
+</li>
+</ul>
+<p>  可以使用 <code>explain</code> 来解释 查询语句的执行过程</p>
+  <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">explain <span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> table_name <span class="hljs-keyword">where</span> id<span class="hljs-operator">=</span><span class="hljs-number">1</span>;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>execute 执行<ul>
+<li>主键索引查询</li>
+<li>全表扫描</li>
+<li>索引下推</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 <h3 id="ACID"><a href="#ACID" class="headerlink" title="ACID"></a>ACID</h3><h3 id="隔离级别"><a href="#隔离级别" class="headerlink" title="隔离级别"></a>隔离级别</h3><ul>
 <li><p>读未提交</p>
 </li>
@@ -384,7 +433,7 @@
 <li><strong>数据审计：</strong> Binlog 记录的 SQL 语句可以用于审计数据库的更改历史。</li>
 </ul>
 <h3 id="MVCC"><a href="#MVCC" class="headerlink" title="MVCC"></a>MVCC</h3><p>**multi-veriosn concurency control  **</p>
-<h3 id="索引的模式"><a href="#索引的模式" class="headerlink" title="索引的模式"></a>索引的模式</h3><ul>
+<h3 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h3><h4 id="索引的模式"><a href="#索引的模式" class="headerlink" title="索引的模式"></a>索引的模式</h4><ul>
 <li><p>哈希表</p>
 </li>
 <li><p>有序表</p>
@@ -401,12 +450,13 @@
 <li>如果语句是select * from T where ID&#x3D;500，即主键查询方式，则只需要搜索ID这棵B+树；</li>
 <li>如果语句是select * from T where k&#x3D;5，即普通索引查询方式，则需要先搜索k索引树，得到ID的值为500，再到ID索引树搜索一次。这个过程称为<strong>回表</strong>。</li>
 </ul>
-<h3 id="主键索引"><a href="#主键索引" class="headerlink" title="主键索引"></a>主键索引</h3><h3 id="普通索引"><a href="#普通索引" class="headerlink" title="普通索引"></a>普通索引</h3><h3 id="索引覆盖"><a href="#索引覆盖" class="headerlink" title="索引覆盖"></a>索引覆盖</h3><h3 id="最左前缀原则"><a href="#最左前缀原则" class="headerlink" title="最左前缀原则"></a>最左前缀原则</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mysql">create index index_product_no_name on product(product_no,name)<br></code></pre></td></tr></table></figure>
+<h4 id="建立索引"><a href="#建立索引" class="headerlink" title="建立索引"></a>建立索引</h4><p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/%E7%B4%A2%E5%BC%95/%E8%81%94%E5%90%88%E7%B4%A2%E5%BC%95.drawio.png" srcset="/img/loading.gif" lazyload alt="联合索引"></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">-- 在表创建时添加索引</span><br><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> employees (<br>    id <span class="hljs-type">INT</span>,<br>    name <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">255</span>),<br>    department <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">255</span>),<br>    INDEX idx_department (department)<br>);<br><br><span class="hljs-comment">-- 在已存在的表上添加唯一索引</span><br><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">UNIQUE</span> INDEX idx_unique_name <span class="hljs-keyword">ON</span> employees (name);<br><span class="hljs-comment">-- 前缀索引</span><br><span class="hljs-keyword">CREATE</span> INDEX index_name <span class="hljs-keyword">ON</span> table_name (column_name(length));<br><span class="hljs-comment">-- 联合索引</span><br><span class="hljs-keyword">CREATE</span> INDEX index_product_no_name <span class="hljs-keyword">ON</span> product(product_no, name);<br></code></pre></td></tr></table></figure>
 
-<p>联合索引<code>(product_no, name)</code> 的 B+Tree 示意图如下</p>
-<p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/%E7%B4%A2%E5%BC%95/%E8%81%94%E5%90%88%E7%B4%A2%E5%BC%95.drawio.png" srcset="/img/loading.gif" lazyload alt="联合索引"></p>
-<p>联合索引查询的 B+Tree 是先按 product_no 进行排序，然后再 product_no 相同的情况再按 name 字段排序。</p>
-<p>因此，使用联合索引时，存在<strong>最左匹配原则</strong>，也就是按照最左优先的方式进行索引的匹配。在使用联合索引进行查询的时候，如果不遵循「最左匹配原则」，联合索引会失效，这样就无法利用到索引快速查询的特性了。</p>
+
+
+<h4 id="索引覆盖"><a href="#索引覆盖" class="headerlink" title="索引覆盖"></a>索引覆盖</h4><p>覆盖索引是指 SQL 中 query 的所有字段，在索引 B+Tree 的叶子节点上都能找得到的那些索引，从二级索引中查询得到记录，而不需要通过聚簇索引查询获得，可以避免回表的操作。</p>
+<h4 id="最左前缀原则"><a href="#最左前缀原则" class="headerlink" title="最左前缀原则"></a>最左前缀原则</h4><p>使用联合索引时，存在<strong>最左匹配原则</strong>，也就是按照最左优先的方式进行索引的匹配。在使用联合索引进行查询的时候，如果不遵循「最左匹配原则」，联合索引会失效，这样就无法利用到索引快速查询的特性了。</p>
 <p>比如，如果创建了一个 <code>(a, b, c)</code> 联合索引，如果查询条件是以下这几种，就可以匹配上联合索引：</p>
 <ul>
 <li>where a&#x3D;1；</li>
@@ -421,33 +471,33 @@
 <li>where b&#x3D;2 and c&#x3D;3；</li>
 </ul>
 <p>上面这些查询条件之所以会失效，是因为<code>(a, b, c)</code> 联合索引，是先按 a 排序，在 a 相同的情况再按 b 排序，在 b 相同的情况再按 c 排序。所以，<strong>b 和 c 是全局无序，局部相对有序的</strong>，这样在没有遵循最左匹配原则的情况下，是无法利用到索引的。</p>
-<h3 id="索引下推"><a href="#索引下推" class="headerlink" title="索引下推"></a>索引下推</h3><p>对索引中包含的字段先做判断，直接过滤掉不满足条件的记录，减少回表的次数</p>
-<h3 id="什么时候需要-不需要索引"><a href="#什么时候需要-不需要索引" class="headerlink" title="什么时候需要&#x2F;不需要索引"></a>什么时候需要&#x2F;不需要索引</h3><p>索引是数据集合的目录</p>
+<h4 id="索引下推"><a href="#索引下推" class="headerlink" title="索引下推"></a>索引下推</h4><p>对索引中包含的字段先做判断，直接过滤掉不满足条件的记录，减少回表的次数</p>
+<h4 id="什么时候需要-不需要索引"><a href="#什么时候需要-不需要索引" class="headerlink" title="什么时候需要&#x2F;不需要索引"></a>什么时候需要&#x2F;不需要索引</h4><p>索引是数据集合的目录</p>
 <p>索引的最大好处是提高查询的速度，但索引也是有缺点的，比如：</p>
 <ul>
 <li>需要占用物理空间，数量越大，占用空间越大</li>
 <li>创建索引和维护索引选哟耗费时间，这种时间随数据量的增大而增大</li>
 <li>会影响数据表的增删改，因为每次增删改都需要维护B+ 树的有序性，这需要动态的维护</li>
 </ul>
-<h4 id="适合索引的场景"><a href="#适合索引的场景" class="headerlink" title="适合索引的场景"></a>适合索引的场景</h4><ul>
+<h5 id="适合索引的场景"><a href="#适合索引的场景" class="headerlink" title="适合索引的场景"></a>适合索引的场景</h5><ul>
 <li>字段唯一</li>
 <li>经常用于 <code>where</code> 查询条件的字段</li>
 <li>经常用于<code>group by</code> <code>order by</code> 的字段，这样查询的时候就可以直接利用 B+ tree 内部字段的有序性的特点</li>
 </ul>
-<h4 id="不适合实用索引的场景"><a href="#不适合实用索引的场景" class="headerlink" title="不适合实用索引的场景"></a>不适合实用索引的场景</h4><ul>
+<h5 id="不适合实用索引的场景"><a href="#不适合实用索引的场景" class="headerlink" title="不适合实用索引的场景"></a>不适合实用索引的场景</h5><ul>
 <li>使用不到  <code>where</code> <code>order by</code> <code>group by</code> 的场景</li>
 <li>字段中存在大量的重复</li>
 <li>数据量不够的场景，没必要去，费空间</li>
 <li>经常用于更新的字段 ，比如不要对电商项目的用户余额建立索引，因为索引字段频繁修改，由于要维护 B+Tree的有序性，那么就需要频繁的重建索引，这个过程是会影响数据库性能的。</li>
 </ul>
-<h3 id="什么时候发生索引失效"><a href="#什么时候发生索引失效" class="headerlink" title="什么时候发生索引失效"></a>什么时候发生索引失效</h3><ul>
+<h4 id="什么时候发生索引失效"><a href="#什么时候发生索引失效" class="headerlink" title="什么时候发生索引失效"></a>什么时候发生索引失效</h4><ul>
 <li>当我们使用左或者左右模糊匹配的时候，也就是 <code>like %xx</code> 或者 <code>like %xx%</code>这两种方式都会造成索引失效；</li>
 <li>当我们在查询条件中对索引列做了计算、函数、类型转换操作，这些情况下都会造成索引失效；</li>
 <li>联合索引要能正确使用需要遵循最左匹配原则，也就是按照最左优先的方式进行索引的匹配，否则就会导致索引失效。</li>
 <li>在 WHERE 子句中，如果在 OR 前的条件列是索引列，而在 OR 后的条件列不是索引列，那么索引会失效。</li>
 </ul>
 <p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/%E7%B4%A2%E5%BC%95/%E7%B4%A2%E5%BC%95%E6%80%BB%E7%BB%93.drawio.png" srcset="/img/loading.gif" lazyload alt="img"></p>
-<h3 id="mysql为什么有时候会选错索引"><a href="#mysql为什么有时候会选错索引" class="headerlink" title="mysql为什么有时候会选错索引"></a>mysql为什么有时候会选错索引</h3><p>优化器选择索引的目的，是找到一个最优的执行方案，并用最小的代价去执行语句。在数据库里面，扫描行数是影响执行代价的因素之一。扫描的行数越少，意味着访问磁盘数据的次数越少，消耗的CPU资源越少。</p>
+<h4 id="mysql为什么有时候会选错索引"><a href="#mysql为什么有时候会选错索引" class="headerlink" title="mysql为什么有时候会选错索引"></a>mysql为什么有时候会选错索引</h4><p>优化器选择索引的目的，是找到一个最优的执行方案，并用最小的代价去执行语句。在数据库里面，扫描行数是影响执行代价的因素之一。扫描的行数越少，意味着访问磁盘数据的次数越少，消耗的CPU资源越少。</p>
 <p>当然，扫描行数并不是唯一的判断标准，优化器还会结合是否使用临时表、是否排序等因素进行综合判断。</p>
 <img src="https://static001.geekbang.org/resource/image/16/d4/16dbf8124ad529fec0066950446079d4.png" srcset="/img/loading.gif" lazyload style="zoom: 200%;">
 
@@ -465,7 +515,7 @@
 <li>设置为off的时候，表示统计信息只存储在内存中。这时，默认的N是8，M是16。</li>
 </ul>
 <p>由于是采样统计，所以不管N是20还是8，这个基数都是很容易不准的。</p>
-<h3 id="字符串如何添加索引"><a href="#字符串如何添加索引" class="headerlink" title="字符串如何添加索引"></a>字符串如何添加索引</h3><ol>
+<h4 id="字符串如何添加索引"><a href="#字符串如何添加索引" class="headerlink" title="字符串如何添加索引"></a>字符串如何添加索引</h4><ol>
 <li>直接创建完整索引，这样可能比较占用空间；</li>
 <li>创建前缀索引，节省空间，但会增加查询扫描次数，并且不能使用覆盖索引；</li>
 <li>倒序存储，再创建前缀索引，用于绕过字符串本身前缀的区分度不够的问题；</li>
@@ -483,7 +533,11 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
+        <a href="/tags/%E5%85%AB%E8%82%A1/" class="print-no-link">#八股</a>
+      
         <a href="/tags/mysql/" class="print-no-link">#mysql</a>
+      
+        <a href="/tags/%E6%80%BB%E7%BB%93/" class="print-no-link">#总结</a>
       
     </div>
   
@@ -495,7 +549,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>mysql隔离性</div>
+      <div>mysql总结</div>
       <div>http://example.com/2023/11/26/mysql隔离性/</div>
     </div>
     <div class="license-meta">
