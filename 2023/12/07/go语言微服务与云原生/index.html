@@ -16,12 +16,12 @@
   <meta name="author" content="Forrest">
   <meta name="keywords" content="">
   
-    <meta name="description" content="什么是微服务微服务架构风格是一种将单体应用开发为一套小型服务的方法，每个服务都在自己的进程中运行，并且使用轻量级的通信机制（HTTP类型的API）进行通信。 这些服务是围绕业务能力构建的，并且可以通过全自动化的部署机制来进行独立部署。 这些服务可以使用不同的编程语言编写，也能使用不同的数据存储技术。  微服务架构带来的挑战 分布式系统的复杂度 服务依赖管理 数据的一致性保证 测试更加艰难 对Dev">
+    <meta name="description" content="极客时间 go云原生 链接: https:&#x2F;&#x2F;pan.baidu.com&#x2F;share&#x2F;init?surl&#x3D;9_bcdX5tl25pbzpKX544lQ 提取码: wzhx 什么是微服务微服务架构风格是一种将单体应用开发为一套小型服务的方法，每个服务都在自己的进程中运行，并且使用轻量级的通信机制（HTTP类型的API）进行通信。 这些服务是围绕业务能力构建的，并且可以通过全自动化的部署机制来进行独立">
 <meta property="og:type" content="article">
 <meta property="og:title" content="go语言微服务与云原生">
 <meta property="og:url" content="http://example.com/2023/12/07/go%E8%AF%AD%E8%A8%80%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%8E%E4%BA%91%E5%8E%9F%E7%94%9F/index.html">
 <meta property="og:site_name" content="Forrest’s blog">
-<meta property="og:description" content="什么是微服务微服务架构风格是一种将单体应用开发为一套小型服务的方法，每个服务都在自己的进程中运行，并且使用轻量级的通信机制（HTTP类型的API）进行通信。 这些服务是围绕业务能力构建的，并且可以通过全自动化的部署机制来进行独立部署。 这些服务可以使用不同的编程语言编写，也能使用不同的数据存储技术。  微服务架构带来的挑战 分布式系统的复杂度 服务依赖管理 数据的一致性保证 测试更加艰难 对Dev">
+<meta property="og:description" content="极客时间 go云原生 链接: https:&#x2F;&#x2F;pan.baidu.com&#x2F;share&#x2F;init?surl&#x3D;9_bcdX5tl25pbzpKX544lQ 提取码: wzhx 什么是微服务微服务架构风格是一种将单体应用开发为一套小型服务的方法，每个服务都在自己的进程中运行，并且使用轻量级的通信机制（HTTP类型的API）进行通信。 这些服务是围绕业务能力构建的，并且可以通过全自动化的部署机制来进行独立">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2023/12/07/go%E8%AF%AD%E8%A8%80%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%8E%E4%BA%91%E5%8E%9F%E7%94%9F/image-20231207131818485.png">
 <meta property="og:image" content="http://example.com/2023/12/07/go%E8%AF%AD%E8%A8%80%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%8E%E4%BA%91%E5%8E%9F%E7%94%9F/image-20231207133256660.png">
@@ -43,13 +43,14 @@
 <meta property="og:image" content="http://example.com/2023/12/07/go%E8%AF%AD%E8%A8%80%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%8E%E4%BA%91%E5%8E%9F%E7%94%9F/image-20231210160346172.png">
 <meta property="og:image" content="http://example.com/2023/12/07/go%E8%AF%AD%E8%A8%80%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%8E%E4%BA%91%E5%8E%9F%E7%94%9F/image-20231210161129270.png">
 <meta property="og:image" content="http://example.com/2023/12/07/go%E8%AF%AD%E8%A8%80%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%8E%E4%BA%91%E5%8E%9F%E7%94%9F/image-20231210161734299.png">
+<meta property="og:image" content="http://example.com/2023/12/07/go%E8%AF%AD%E8%A8%80%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%8E%E4%BA%91%E5%8E%9F%E7%94%9F/image-20231231112216683.png">
 <meta property="og:image" content="http://example.com/2023/12/07/go%E8%AF%AD%E8%A8%80%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%8E%E4%BA%91%E5%8E%9F%E7%94%9F/image-20231222142823491.png">
 <meta property="og:image" content="http://example.com/2023/12/07/go%E8%AF%AD%E8%A8%80%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%8E%E4%BA%91%E5%8E%9F%E7%94%9F/image-20231222145336075.png">
 <meta property="og:image" content="http://example.com/2023/12/07/go%E8%AF%AD%E8%A8%80%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%8E%E4%BA%91%E5%8E%9F%E7%94%9F/image-20231222152752038.png">
 <meta property="og:image" content="http://example.com/2023/12/07/go%E8%AF%AD%E8%A8%80%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%8E%E4%BA%91%E5%8E%9F%E7%94%9F/image-20231223101615268.png">
 <meta property="og:image" content="http://example.com/2023/12/07/go%E8%AF%AD%E8%A8%80%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%8E%E4%BA%91%E5%8E%9F%E7%94%9F/image-20231211162235232.png">
 <meta property="article:published_time" content="2023-12-07T05:05:04.000Z">
-<meta property="article:modified_time" content="2023-12-25T14:23:34.285Z">
+<meta property="article:modified_time" content="2023-12-31T03:22:25.618Z">
 <meta property="article:author" content="Forrest">
 <meta property="article:tag" content="笔记">
 <meta property="article:tag" content="go">
@@ -261,7 +262,7 @@
         
         
         
-          151 分钟
+          152 分钟
         
       </span>
     
@@ -311,7 +312,9 @@
             
               <div class="markdown-body">
                 
-                <h3 id="什么是微服务"><a href="#什么是微服务" class="headerlink" title="什么是微服务"></a>什么是微服务</h3><p>微服务架构风格是一种将单体应用开发为一套小型服务的方法，每个服务都在<strong>自己的进程中运行</strong>，并且使用轻量级的通信机制（HTTP类型的API）进行通信。</p>
+                <p>极客时间 go云原生</p>
+<p>链接: <a target="_blank" rel="noopener" href="https://pan.baidu.com/share/init?surl=9_bcdX5tl25pbzpKX544lQ">https://pan.baidu.com/share/init?surl=9_bcdX5tl25pbzpKX544lQ</a> 提取码: wzhx</p>
+<h3 id="什么是微服务"><a href="#什么是微服务" class="headerlink" title="什么是微服务"></a>什么是微服务</h3><p>微服务架构风格是一种将单体应用开发为一套小型服务的方法，每个服务都在<strong>自己的进程中运行</strong>，并且使用轻量级的通信机制（HTTP类型的API）进行通信。</p>
 <p>这些服务是围绕业务能力构建的，并且可以通过全自动化的部署机制来进行独立部署。</p>
 <p>这些服务可以使用不同的编程语言编写，也能使用不同的数据存储技术。</p>
 <p><img src="/2023/12/07/go%E8%AF%AD%E8%A8%80%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%8E%E4%BA%91%E5%8E%9F%E7%94%9F/image-20231207131818485.png" srcset="/img/loading.gif" lazyload alt="image-20231207131818485"></p>
@@ -976,6 +979,21 @@
 <li><p>在mysql中给canal单独建一个用户，给全库全表的读，拷贝，复制的权限</p>
   <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash">-- 使用命令登录：<br>mysql -u root -p <br>-- 创建用户 用户名：canal 密码：Canal@123456 <br>create user <span class="hljs-string">&#x27;canal&#x27;</span>@<span class="hljs-string">&#x27;%&#x27;</span> identified by <span class="hljs-string">&#x27;Canal@123456&#x27;</span>;<br>-- 授权 *.*表示所有库 <br>grant SELECT, REPLICATION SLAVE, REPLICATION CLIENT on *.* to <span class="hljs-string">&#x27;canal&#x27;</span>@<span class="hljs-string">&#x27;%&#x27;</span> identified by <span class="hljs-string">&#x27;Canal@123456&#x27;</span>;<br></code></pre></td></tr></table></figure></li>
 </ul>
+<h4 id="查询-操作"><a href="#查询-操作" class="headerlink" title="查询 操作"></a>查询 操作</h4><ul>
+<li>通过singleFlight合并大量相同的并发查询<ul>
+<li>使用redis查询<ul>
+<li>缓存命中，直接返回</li>
+<li>缓存未命中<ul>
+<li>使用es查询</li>
+<li>将查询存入cache中</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/2023/12/07/go%E8%AF%AD%E8%A8%80%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%8E%E4%BA%91%E5%8E%9F%E7%94%9F/image-20231231112216683.png" srcset="/img/loading.gif" lazyload alt="image-20231231112216683"></p>
 <h3 id="Canal-mysql的增量数据解析工具"><a href="#Canal-mysql的增量数据解析工具" class="headerlink" title="Canal mysql的增量数据解析工具"></a>Canal mysql的增量数据解析工具</h3><p>**canal [kə’næl]**，译意为水道&#x2F;管道&#x2F;沟渠，主要用途是基于 MySQL 数据库增量日志解析，提供增量数据订阅和消费</p>
 <p><img src="/2023/12/07/go%E8%AF%AD%E8%A8%80%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%8E%E4%BA%91%E5%8E%9F%E7%94%9F/image-20231222142823491.png" srcset="/img/loading.gif" lazyload alt="image-20231222142823491"></p>
 <h4 id="MySQL主备复制原理"><a href="#MySQL主备复制原理" class="headerlink" title="MySQL主备复制原理"></a>MySQL主备复制原理</h4><ul>
@@ -1030,10 +1048,15 @@
 </li>
 </ul>
 </li>
+<li><p>limit 因该在 offset前</p>
+<ul>
+<li><pre><code class="sql">  SELECT * FROM review_info ORDER BY id LIMIT 3 OFFSET 4;		
+  <figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs clean"><br>    - 使用 `lmimit offset,rows` 也可也达到同样的效果<br><br><br><br>### GEN 的使用<br><br>#### 基本使用<br><br>安装依赖<br><br>```bash<br>go get -u gorm.io/gen<br></code></pre></td></tr></table></figure>
+</code></pre>
+</li>
 </ul>
-<h3 id="GEN-的使用"><a href="#GEN-的使用" class="headerlink" title="GEN 的使用"></a>GEN 的使用</h3><h4 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h4><p>安装依赖</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">go get -u gorm.io/gen<br></code></pre></td></tr></table></figure>
-
+</li>
+</ul>
 <p>创建基本表</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs mysql">CREATE TABLE book<br>(<br>    `id`     bigint unsigned NOT NULL AUTO_INCREMENT COMMENT &#x27;主键&#x27;,<br>    `title`  varchar(128) NOT NULL COMMENT &#x27;书籍名称&#x27;,<br>    `author` varchar(128) NOT NULL COMMENT &#x27;作者&#x27;,<br>    `price`  int NOT NULL DEFAULT &#x27;0&#x27; COMMENT &#x27;价格&#x27;,<br>    `publish_date` datetime COMMENT &#x27;出版日期&#x27;,<br>    PRIMARY KEY (`id`)<br>) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT=&#x27;书籍表&#x27;;<br></code></pre></td></tr></table></figure>
 
