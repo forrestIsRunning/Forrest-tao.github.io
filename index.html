@@ -301,7 +301,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2024/02/24/go%E7%9A%84%E5%A4%9A%E8%B7%AFIO/" target="_self">
         <div>
-          IO模型IO模型指同时操作Socket的方案 阻塞IO  同步读写Socket时，线程陷入内核态 当读写完成后，切换回用户态，继续执行 优点：开发难度小 缺点：内核切换开销大  非阻塞的IO  轮询所有的socket，直到Socket可以读写 优点：不会陷入内核态，自由度高 缺点：需要自旋轮询  多路复用 Linux epoll（event poll 事件池）  注册多个socket事件 调用ep
+          IO模型IO模型指同时操作Socket的方案 阻塞IO  同步读写Socket时，线程陷入内核态 当读写完成后，切换回用户态，继续执行 优点：开发难度小 缺点：内核切换开销大  非阻塞的IO  轮询所有的socket，直到Socket可以读写 优点：不会陷入内核态，自由度高 缺点：需要自旋轮询  多路复用 Linux Epoll（event poll 事件池）  注册多个socket事件 调用ep
         </div>
       </a>
 
