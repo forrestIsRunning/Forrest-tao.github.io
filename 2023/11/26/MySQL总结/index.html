@@ -31,11 +31,9 @@
 <meta property="og:image" content="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/%E7%B4%A2%E5%BC%95/%E7%B4%A2%E5%BC%95%E6%80%BB%E7%BB%93.drawio.png">
 <meta property="og:image" content="https://static001.geekbang.org/resource/image/16/d4/16dbf8124ad529fec0066950446079d4.png">
 <meta property="article:published_time" content="2023-11-26T01:51:52.000Z">
-<meta property="article:modified_time" content="2024-01-29T10:48:26.271Z">
+<meta property="article:modified_time" content="2024-02-25T07:59:53.116Z">
 <meta property="article:author" content="Forrest">
-<meta property="article:tag" content="八股">
-<meta property="article:tag" content="mysql">
-<meta property="article:tag" content="总结">
+<meta property="article:tag" content="mysql,总结,八股">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://example.com/2023/11/26/MySQL%E6%80%BB%E7%BB%93/image-20231126095209387.png">
   
@@ -232,7 +230,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          8.2k 字
+          8.1k 字
         
       </span>
     
@@ -405,7 +403,6 @@
 <li>查询 <code>NULL</code> 值时，必须使用 <code>IS NULL</code> 或 <code>IS NOT NULLl</code> 来判断，而不能使用 &#x3D;、!&#x3D;、 &lt;、&gt; 之类的比较运算符。而<code>&#39;&#39;</code>是可以使用这些比较运算符的。</li>
 </ul>
 <hr>
-<p>著作权归JavaGuide(javaguide.cn)所有 基于MIT协议 原文链接：<a target="_blank" rel="noopener" href="https://javaguide.cn/database/mysql/mysql-questions-01.html">https://javaguide.cn/database/mysql/mysql-questions-01.html</a></p>
 <h3 id="drop、delete、truncate的区别"><a href="#drop、delete、truncate的区别" class="headerlink" title="drop、delete、truncate的区别"></a>drop、delete、truncate的区别</h3><ul>
 <li><strong>drop</strong>(丢弃数据) ：<code>drop table table_name</code> 直接将表删除</li>
 <li><strong>truncate</strong>（清空数据）： <code>truncate table table_name</code> 只删除表中的数据，但表的结构不发生变化。插入数据从第一行开始，自增id从1开始</li>
@@ -420,24 +417,25 @@
 <li><strong>数据库的运行和维护</strong> : 系统的运行与数据库的日常维护。</li>
 </ol>
 <h3 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h3><h4 id="ACID"><a href="#ACID" class="headerlink" title="ACID"></a>ACID</h4><ul>
-<li>atomicity 原子性  用undoLog (回滚)实现</li>
+<li><strong>atomicity</strong> 原子性  用 <strong>undoLog</strong> (回滚)实现</li>
 </ul>
 <p>一个事务中的所有操作，要么全部完成，要么全都不完成，不回结束在中间某个状态。</p>
 <ul>
-<li>consistency 一致性 用 原子性+隔离性+持久性 实现</li>
+<li><strong>consistency</strong> 一致性 用 <strong>原子性+隔离性+持久性</strong> 实现</li>
 </ul>
 <p>是指事务操作前后，数据满足完整性约束，数据库保持一致性。比如，用户 A 和用户 B 在银行分别有 800 元和 600 元，总共 1400 元，用户 A 给用户 B 转账 200 元，分为两个步骤，从 A 的账户扣除 200 元和对 B 的账户增加 200 元。一致性就是要求上述步骤操作后，最后的结果是用户 A 还有 600 元，用户 B 有 800 元，总共 1400 元，而不会出现用户 A 扣除了 200 元，但用户 B 未增加的情况（该情况，用户 A 和 B 均为 600 元，总共 1200 元）。</p>
 <ul>
-<li>isolation 隔离性 用MVCC （多版本并发控制）实现</li>
+<li><strong>isolation</strong> 隔离性 用<strong>MVCC</strong> （多版本并发控制）实现</li>
 </ul>
 <p>数据库允许多个并发事务同时对同一行数据进行读写，隔离性可以防止多个事务并发执行时由于交叉执行的数据不一致。</p>
 <ul>
-<li>durability 持久性 用redoLog（重做）实现</li>
+<li><strong>durability</strong> 持久性 用<strong>redoLog</strong>（重做）实现</li>
 </ul>
 <p>事务处理结束后，对数据的修改就是永久的，即便系统故障也不会丢失。</p>
 <h4 id="并发事务会引发什么问题"><a href="#并发事务会引发什么问题" class="headerlink" title="并发事务会引发什么问题"></a>并发事务会引发什么问题</h4><h5 id="脏读"><a href="#脏读" class="headerlink" title="脏读"></a>脏读</h5><p><strong>如果一个事务「读到」了另一个「未提交事务修改过的数据」，就意味着发生了「脏读」现象。</strong></p>
 <h5 id="不可重复读"><a href="#不可重复读" class="headerlink" title="不可重复读"></a>不可重复读</h5><p><strong>在一个事务内多次读取同一个数据，如果出现前后两次读到的数据不一样的情况，就意味着发生了「不可重复读」现象。</strong></p>
-<h5 id="幻读"><a href="#幻读" class="headerlink" title="幻读"></a>幻读</h5><p><strong>在一个事务中，由于其他事务的插入或删除操作，导致同一个查询在事务执行期间返回不同的行数</strong>；虽然可重复读可以保证同一事物内数据的一致性，但不能阻止其他满足要求事务对数据表进行插入和删除操作。要解决这个问题，可以使用更高级别的隔离级别，如串行化（Serializable），但这可能会导致性能下降。在实际应用中，需要权衡事务的隔离级别和性能需求，选择合适的隔离级别。此外，一些数据库系统还提供了特定的机制，如行级锁或MVCC（多版本并发控制），以减轻幻读的影响。</p>
+<h5 id="幻读"><a href="#幻读" class="headerlink" title="幻读"></a>幻读</h5><p><strong>在一个事务中，由于其他事务的插入或删除操作，导致同一个查询在事务执行期间返回不同的行数</strong>；虽然可重复读可以保证同一事物内数据的一致性，但不能阻止其他满足要求事务对数据表进行插入和删除操作。要解决这个问题，可以使用更高级别的隔离级别，如<strong>串行化（Serializable）</strong>，但这可能会导致性能下降。在实际应用中，需要权衡事务的隔离级别和性能需求，选择合适的隔离级别。</p>
+<p>此外，一些数据库系统还提供了特定的机制，如行级锁或MVCC（多版本并发控制），以减轻幻读的影响。</p>
 <h4 id="隔离级别"><a href="#隔离级别" class="headerlink" title="隔离级别"></a>隔离级别</h4><p>SQL 标准提出了四种隔离级别来规避这些现象，隔离级别越高，性能效率就越低，这四个隔离级别如下：</p>
 <ul>
 <li>读未提交</li>
@@ -505,7 +503,6 @@
 <li><strong>Old Value（旧值）：</strong> 表示更新前的值，这里是 “A”。</li>
 <li><strong>New Value（新值）：</strong> 表示更新后的值，这里是 “C”</li>
 </ul>
-<p>​	</p>
 <h4 id="binlLog"><a href="#binlLog" class="headerlink" title="binlLog"></a>binlLog</h4><ul>
 <li>Server特有的日志，binLog实现了数据的备份和主从复制</li>
 <li>binLog记录的是 逻辑日志，记录的是这个语句的原始逻辑</li>
@@ -637,11 +634,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E5%85%AB%E8%82%A1/" class="print-no-link">#八股</a>
-      
-        <a href="/tags/mysql/" class="print-no-link">#mysql</a>
-      
-        <a href="/tags/%E6%80%BB%E7%BB%93/" class="print-no-link">#总结</a>
+        <a href="/tags/mysql-%E6%80%BB%E7%BB%93-%E5%85%AB%E8%82%A1/" class="print-no-link">#mysql,总结,八股</a>
       
     </div>
   
