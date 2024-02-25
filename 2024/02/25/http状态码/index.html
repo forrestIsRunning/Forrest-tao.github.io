@@ -16,29 +16,23 @@
   <meta name="author" content="Forrest">
   <meta name="keywords" content="">
   
-    <meta name="description" content="IO模型IO模型指同时操作Socket的方案 阻塞IO  同步读写Socket时，线程陷入内核态 当读写完成后，切换回用户态，继续执行 优点：开发难度小 缺点：内核切换开销大  非阻塞的IO  轮询所有的socket，直到Socket可以读写 优点：不会陷入内核态，自由度高 缺点：需要自旋轮询  多路复用 Linux Epoll（event poll 事件池）  注册多个socket事件 调用ep">
+    <meta name="description" content="1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071&#x2F;&#x2F; HTTP status codes as registered with IANA.&#x2F;&#x2F; See: https:&#x2F;&#x2F;www.ia">
 <meta property="og:type" content="article">
-<meta property="og:title" content="go的多路IO">
-<meta property="og:url" content="http://example.com/2024/02/24/go%E7%9A%84%E5%A4%9A%E8%B7%AFIO/index.html">
+<meta property="og:title" content="http状态码">
+<meta property="og:url" content="http://example.com/2024/02/25/http%E7%8A%B6%E6%80%81%E7%A0%81/index.html">
 <meta property="og:site_name" content="Forrest’s blog">
-<meta property="og:description" content="IO模型IO模型指同时操作Socket的方案 阻塞IO  同步读写Socket时，线程陷入内核态 当读写完成后，切换回用户态，继续执行 优点：开发难度小 缺点：内核切换开销大  非阻塞的IO  轮询所有的socket，直到Socket可以读写 优点：不会陷入内核态，自由度高 缺点：需要自旋轮询  多路复用 Linux Epoll（event poll 事件池）  注册多个socket事件 调用ep">
+<meta property="og:description" content="1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071&#x2F;&#x2F; HTTP status codes as registered with IANA.&#x2F;&#x2F; See: https:&#x2F;&#x2F;www.ia">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2024/02/24/go%E7%9A%84%E5%A4%9A%E8%B7%AFIO/image-20240224215049368.png">
-<meta property="og:image" content="http://example.com/2024/02/24/go%E7%9A%84%E5%A4%9A%E8%B7%AFIO/image-20240224215333997.png">
-<meta property="og:image" content="http://example.com/2024/02/24/go%E7%9A%84%E5%A4%9A%E8%B7%AFIO/image-20240224215717352.png">
-<meta property="og:image" content="http://example.com/2024/02/24/go%E7%9A%84%E5%A4%9A%E8%B7%AFIO/image-20240224220620165.png">
-<meta property="og:image" content="http://example.com/2024/02/24/go%E7%9A%84%E5%A4%9A%E8%B7%AFIO/image-20240225082722039.png">
-<meta property="article:published_time" content="2024-02-24T13:14:34.000Z">
-<meta property="article:modified_time" content="2024-02-25T00:27:49.431Z">
+<meta property="article:published_time" content="2024-02-25T10:10:17.000Z">
+<meta property="article:modified_time" content="2024-02-25T11:31:45.420Z">
 <meta property="article:author" content="Forrest">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/2024/02/24/go%E7%9A%84%E5%A4%9A%E8%B7%AFIO/image-20240224215049368.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>go的多路IO - Forrest’s blog</title>
+  <title>http状态码 - Forrest’s blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -204,7 +198,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="go的多路IO"></span>
+            <span id="subtitle" data-typed-text="http状态码"></span>
           
         </div>
 
@@ -215,8 +209,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-02-24 21:14" pubdate>
-          2024年2月24日 晚上
+        <time datetime="2024-02-25 18:10" pubdate>
+          2024年2月25日 晚上
         </time>
       </span>
     
@@ -227,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          382 字
+          2.8k 字
         
       </span>
     
@@ -238,7 +232,7 @@
         
         
         
-          2 分钟
+          10 分钟
         
       </span>
     
@@ -283,50 +277,25 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">go的多路IO</h1>
+            <h1 id="seo-header">http状态码</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="IO模型"><a href="#IO模型" class="headerlink" title="IO模型"></a>IO模型</h2><p><strong>IO模型指同时操作Socket的方案</strong></p>
-<h3 id="阻塞IO"><a href="#阻塞IO" class="headerlink" title="阻塞IO"></a>阻塞IO</h3><p><img src="/2024/02/24/go%E7%9A%84%E5%A4%9A%E8%B7%AFIO/image-20240224215049368.png" srcset="/img/loading.gif" lazyload alt="image-20240224215049368"></p>
-<ul>
-<li>同步读写Socket时，线程陷入内核态</li>
-<li>当读写完成后，切换回用户态，继续执行</li>
-<li>优点：开发难度小</li>
-<li>缺点：内核切换开销大</li>
-</ul>
-<h3 id="非阻塞的IO"><a href="#非阻塞的IO" class="headerlink" title="非阻塞的IO"></a>非阻塞的IO</h3><p><img src="/2024/02/24/go%E7%9A%84%E5%A4%9A%E8%B7%AFIO/image-20240224215333997.png" srcset="/img/loading.gif" lazyload alt="image-20240224215333997"></p>
-<ul>
-<li>轮询所有的socket，直到Socket可以读写</li>
-<li>优点：不会陷入内核态，自由度高</li>
-<li>缺点：需要自旋轮询</li>
-</ul>
-<h3 id="多路复用-Linux-Epoll（event-poll-事件池）"><a href="#多路复用-Linux-Epoll（event-poll-事件池）" class="headerlink" title="多路复用 Linux Epoll（event poll 事件池）"></a>多路复用 Linux Epoll（event poll 事件池）</h3><p><img src="/2024/02/24/go%E7%9A%84%E5%A4%9A%E8%B7%AFIO/image-20240224215717352.png" srcset="/img/loading.gif" lazyload alt="image-20240224215717352"></p>
-<ul>
-<li>注册多个socket事件</li>
-<li>调用epoll，当有事件发生，返回事件列表</li>
-<li>优点：提供了事件列表，不需要查询各个Socket</li>
-<li>缺点：开发难度大，逻辑复杂</li>
-</ul>
-<p><strong>总结</strong></p>
-<ul>
-<li>OS 提供了Socket作为TCP通信的抽象</li>
-<li>IO则是管理Socket的方案</li>
-</ul>
-<p><img src="/2024/02/24/go%E7%9A%84%E5%A4%9A%E8%B7%AFIO/image-20240224220620165.png" srcset="/img/loading.gif" lazyload alt="image-20240224220620165"></p>
-<ul>
-<li>在底层使用OS的多路IO</li>
-<li>在协程层次使用阻塞模型</li>
-<li>阻塞协程时，休眠协程</li>
-</ul>
-<h3 id="Epoll的抽象"><a href="#Epoll的抽象" class="headerlink" title="Epoll的抽象"></a>Epoll的抽象</h3><ul>
-<li>新建多路复用器 epoll——create()</li>
-<li>往多路复用器里插入需要监听的事件 epoll_ctl()</li>
-<li>查询发生了什么事件 epoll_wait()</li>
-</ul>
-<p><img src="/2024/02/24/go%E7%9A%84%E5%A4%9A%E8%B7%AFIO/image-20240225082722039.png" srcset="/img/loading.gif" lazyload alt="image-20240225082722039"></p>
+                <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// HTTP status codes as registered with IANA.</span><br><span class="hljs-comment">// See: https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml</span><br><span class="hljs-keyword">const</span> (<br>	StatusContinue           = <span class="hljs-number">100</span> <span class="hljs-comment">// RFC 9110, 15.2.1</span><br>	StatusSwitchingProtocols = <span class="hljs-number">101</span> <span class="hljs-comment">// RFC 9110, 15.2.2</span><br>	StatusProcessing         = <span class="hljs-number">102</span> <span class="hljs-comment">// RFC 2518, 10.1</span><br>	StatusEarlyHints         = <span class="hljs-number">103</span> <span class="hljs-comment">// RFC 8297</span><br><br>	StatusOK                   = <span class="hljs-number">200</span> <span class="hljs-comment">// RFC 9110, 15.3.1</span><br>	StatusCreated              = <span class="hljs-number">201</span> <span class="hljs-comment">// RFC 9110, 15.3.2</span><br>	StatusAccepted             = <span class="hljs-number">202</span> <span class="hljs-comment">// RFC 9110, 15.3.3</span><br>	StatusNonAuthoritativeInfo = <span class="hljs-number">203</span> <span class="hljs-comment">// RFC 9110, 15.3.4</span><br>	StatusNoContent            = <span class="hljs-number">204</span> <span class="hljs-comment">// RFC 9110, 15.3.5</span><br>	StatusResetContent         = <span class="hljs-number">205</span> <span class="hljs-comment">// RFC 9110, 15.3.6</span><br>	StatusPartialContent       = <span class="hljs-number">206</span> <span class="hljs-comment">// RFC 9110, 15.3.7</span><br>	StatusMultiStatus          = <span class="hljs-number">207</span> <span class="hljs-comment">// RFC 4918, 11.1</span><br>	StatusAlreadyReported      = <span class="hljs-number">208</span> <span class="hljs-comment">// RFC 5842, 7.1</span><br>	StatusIMUsed               = <span class="hljs-number">226</span> <span class="hljs-comment">// RFC 3229, 10.4.1</span><br><br>	StatusMultipleChoices   = <span class="hljs-number">300</span> <span class="hljs-comment">// RFC 9110, 15.4.1</span><br>	StatusMovedPermanently  = <span class="hljs-number">301</span> <span class="hljs-comment">// RFC 9110, 15.4.2</span><br>	StatusFound             = <span class="hljs-number">302</span> <span class="hljs-comment">// RFC 9110, 15.4.3</span><br>	StatusSeeOther          = <span class="hljs-number">303</span> <span class="hljs-comment">// RFC 9110, 15.4.4</span><br>	StatusNotModified       = <span class="hljs-number">304</span> <span class="hljs-comment">// RFC 9110, 15.4.5</span><br>	StatusUseProxy          = <span class="hljs-number">305</span> <span class="hljs-comment">// RFC 9110, 15.4.6</span><br>	_                       = <span class="hljs-number">306</span> <span class="hljs-comment">// RFC 9110, 15.4.7 (Unused)</span><br>	StatusTemporaryRedirect = <span class="hljs-number">307</span> <span class="hljs-comment">// RFC 9110, 15.4.8</span><br>	StatusPermanentRedirect = <span class="hljs-number">308</span> <span class="hljs-comment">// RFC 9110, 15.4.9</span><br><br>	StatusBadRequest                   = <span class="hljs-number">400</span> <span class="hljs-comment">// RFC 9110, 15.5.1</span><br>	StatusUnauthorized                 = <span class="hljs-number">401</span> <span class="hljs-comment">// RFC 9110, 15.5.2</span><br>	StatusPaymentRequired              = <span class="hljs-number">402</span> <span class="hljs-comment">// RFC 9110, 15.5.3</span><br>	StatusForbidden                    = <span class="hljs-number">403</span> <span class="hljs-comment">// RFC 9110, 15.5.4</span><br>	StatusNotFound                     = <span class="hljs-number">404</span> <span class="hljs-comment">// RFC 9110, 15.5.5</span><br>	StatusMethodNotAllowed             = <span class="hljs-number">405</span> <span class="hljs-comment">// RFC 9110, 15.5.6</span><br>	StatusNotAcceptable                = <span class="hljs-number">406</span> <span class="hljs-comment">// RFC 9110, 15.5.7</span><br>	StatusProxyAuthRequired            = <span class="hljs-number">407</span> <span class="hljs-comment">// RFC 9110, 15.5.8</span><br>	StatusRequestTimeout               = <span class="hljs-number">408</span> <span class="hljs-comment">// RFC 9110, 15.5.9</span><br>	StatusConflict                     = <span class="hljs-number">409</span> <span class="hljs-comment">// RFC 9110, 15.5.10</span><br>	StatusGone                         = <span class="hljs-number">410</span> <span class="hljs-comment">// RFC 9110, 15.5.11</span><br>	StatusLengthRequired               = <span class="hljs-number">411</span> <span class="hljs-comment">// RFC 9110, 15.5.12</span><br>	StatusPreconditionFailed           = <span class="hljs-number">412</span> <span class="hljs-comment">// RFC 9110, 15.5.13</span><br>	StatusRequestEntityTooLarge        = <span class="hljs-number">413</span> <span class="hljs-comment">// RFC 9110, 15.5.14</span><br>	StatusRequestURITooLong            = <span class="hljs-number">414</span> <span class="hljs-comment">// RFC 9110, 15.5.15</span><br>	StatusUnsupportedMediaType         = <span class="hljs-number">415</span> <span class="hljs-comment">// RFC 9110, 15.5.16</span><br>	StatusRequestedRangeNotSatisfiable = <span class="hljs-number">416</span> <span class="hljs-comment">// RFC 9110, 15.5.17</span><br>	StatusExpectationFailed            = <span class="hljs-number">417</span> <span class="hljs-comment">// RFC 9110, 15.5.18</span><br>	StatusTeapot                       = <span class="hljs-number">418</span> <span class="hljs-comment">// RFC 9110, 15.5.19 (Unused)</span><br>	StatusMisdirectedRequest           = <span class="hljs-number">421</span> <span class="hljs-comment">// RFC 9110, 15.5.20</span><br>	StatusUnprocessableEntity          = <span class="hljs-number">422</span> <span class="hljs-comment">// RFC 9110, 15.5.21</span><br>	StatusLocked                       = <span class="hljs-number">423</span> <span class="hljs-comment">// RFC 4918, 11.3</span><br>	StatusFailedDependency             = <span class="hljs-number">424</span> <span class="hljs-comment">// RFC 4918, 11.4</span><br>	StatusTooEarly                     = <span class="hljs-number">425</span> <span class="hljs-comment">// RFC 8470, 5.2.</span><br>	StatusUpgradeRequired              = <span class="hljs-number">426</span> <span class="hljs-comment">// RFC 9110, 15.5.22</span><br>	StatusPreconditionRequired         = <span class="hljs-number">428</span> <span class="hljs-comment">// RFC 6585, 3</span><br>	StatusTooManyRequests              = <span class="hljs-number">429</span> <span class="hljs-comment">// RFC 6585, 4</span><br>	StatusRequestHeaderFieldsTooLarge  = <span class="hljs-number">431</span> <span class="hljs-comment">// RFC 6585, 5</span><br>	StatusUnavailableForLegalReasons   = <span class="hljs-number">451</span> <span class="hljs-comment">// RFC 7725, 3</span><br><br>	StatusInternalServerError           = <span class="hljs-number">500</span> <span class="hljs-comment">// RFC 9110, 15.6.1</span><br>	StatusNotImplemented                = <span class="hljs-number">501</span> <span class="hljs-comment">// RFC 9110, 15.6.2</span><br>	StatusBadGateway                    = <span class="hljs-number">502</span> <span class="hljs-comment">// RFC 9110, 15.6.3</span><br>	StatusServiceUnavailable            = <span class="hljs-number">503</span> <span class="hljs-comment">// RFC 9110, 15.6.4</span><br>	StatusGatewayTimeout                = <span class="hljs-number">504</span> <span class="hljs-comment">// RFC 9110, 15.6.5</span><br>	StatusHTTPVersionNotSupported       = <span class="hljs-number">505</span> <span class="hljs-comment">// RFC 9110, 15.6.6</span><br>	StatusVariantAlsoNegotiates         = <span class="hljs-number">506</span> <span class="hljs-comment">// RFC 2295, 8.1</span><br>	StatusInsufficientStorage           = <span class="hljs-number">507</span> <span class="hljs-comment">// RFC 4918, 11.5</span><br>	StatusLoopDetected                  = <span class="hljs-number">508</span> <span class="hljs-comment">// RFC 5842, 7.2</span><br>	StatusNotExtended                   = <span class="hljs-number">510</span> <span class="hljs-comment">// RFC 2774, 7</span><br>	StatusNetworkAuthenticationRequired = <span class="hljs-number">511</span> <span class="hljs-comment">// RFC 6585, 6</span><br>)<br></code></pre></td></tr></table></figure>
 
+
+
+
+
+
+
+
+
+<p>mysql</p>
+<p>redis</p>
+<p>zap</p>
+<h2 id="snowflake"><a href="#snowflake" class="headerlink" title="snowflake"></a>snowflake</h2>
                 
               </div>
             
@@ -343,8 +312,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>go的多路IO</div>
-      <div>http://example.com/2024/02/24/go的多路IO/</div>
+      <div>http状态码</div>
+      <div>http://example.com/2024/02/25/http状态码/</div>
     </div>
     <div class="license-meta">
       
@@ -356,7 +325,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年2月24日</div>
+          <div>2024年2月25日</div>
         </div>
       
       
@@ -388,9 +357,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/02/25/http%E7%8A%B6%E6%80%81%E7%A0%81/" title="http状态码">
+                      <a href="/2024/02/25/JWT%E7%9A%84%E4%BB%8B%E7%BB%8D/" title="JWT的介绍">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">http状态码</span>
+                        <span class="hidden-mobile">JWT的介绍</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -398,8 +367,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/02/24/go%E7%9A%84channel/" title="go的channel">
-                        <span class="hidden-mobile">go的channel</span>
+                      <a href="/2024/02/24/go%E7%9A%84%E5%A4%9A%E8%B7%AFIO/" title="go的多路IO">
+                        <span class="hidden-mobile">go的多路IO</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
