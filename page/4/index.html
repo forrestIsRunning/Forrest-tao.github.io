@@ -714,7 +714,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2023/09/22/Golang%E4%B8%AD%E7%9A%84GC/" target="_self">
         <div>
-          三色标记 混合写屏障 Mark Sweep的缺点  STW，stop the world；让程序暂停，程序出现卡顿 **(重要问题)**； 标记需要扫描整个heap； 清除数据会产生heap碎片。
+          Go的协程栈的位置 Go的协程栈位于Go的堆内存上  Go堆内存位于操作系统的虚拟内存上  协程栈记录了协程的执行现场  协程栈负责记录局部变量，传递参数和返回值  Go使用参数拷贝传递   逃逸分析逃逸分析是编译器在编译阶段对变量的生命周期进行分析，判断变量是在栈上还是堆上分配空间。逃逸分析的主要目的是优化内存的分配和减少垃圾回收的压力  栈帧回收后，需要继续使用的变量  变量太大了，栈里面放不
         </div>
       </a>
 
@@ -728,6 +728,13 @@
           </div>
         
         
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/GC/">#GC</a>
+            
+          </div>
         
       </div>
     </article>
