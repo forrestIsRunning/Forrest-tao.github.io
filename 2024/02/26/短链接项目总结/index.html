@@ -16,26 +16,24 @@
   <meta name="author" content="Forrest">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Go的协程栈的位置 Go的协程栈位于Go的堆内存上  Go堆内存位于操作系统的虚拟内存上  协程栈记录了协程的执行现场  协程栈负责记录局部变量，传递参数和返回值  Go使用参数拷贝传递   逃逸分析逃逸分析是编译器在编译阶段对变量的生命周期进行分析，判断变量是在栈上还是堆上分配空间。逃逸分析的主要目的是优化内存的分配和减少垃圾回收的压力  栈帧回收后，需要继续使用的变量  变量太大了，栈里面放不">
+    <meta name="description" content="模块拆分长链接转短链接 相同的长链接转为同一个短链接 生成的短链接长度短 长链接本身可达 避免生成带有特殊含义的词汇 避免循环转链  存储 存储长链接与短链接的对应关系  短链接转长连接 单独部署一个微服务  根据短链接查询到长连接后重定向相应  通过access.log 收集统计各个链接的 UV（unique visit）">
 <meta property="og:type" content="article">
-<meta property="og:title" content="go的GC">
-<meta property="og:url" content="http://example.com/2024/02/25/go%E7%9A%84GC/index.html">
+<meta property="og:title" content="短链接项目总结">
+<meta property="og:url" content="http://example.com/2024/02/26/%E7%9F%AD%E9%93%BE%E6%8E%A5%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93/index.html">
 <meta property="og:site_name" content="Forrest’s blog">
-<meta property="og:description" content="Go的协程栈的位置 Go的协程栈位于Go的堆内存上  Go堆内存位于操作系统的虚拟内存上  协程栈记录了协程的执行现场  协程栈负责记录局部变量，传递参数和返回值  Go使用参数拷贝传递   逃逸分析逃逸分析是编译器在编译阶段对变量的生命周期进行分析，判断变量是在栈上还是堆上分配空间。逃逸分析的主要目的是优化内存的分配和减少垃圾回收的压力  栈帧回收后，需要继续使用的变量  变量太大了，栈里面放不">
+<meta property="og:description" content="模块拆分长链接转短链接 相同的长链接转为同一个短链接 生成的短链接长度短 长链接本身可达 避免生成带有特殊含义的词汇 避免循环转链  存储 存储长链接与短链接的对应关系  短链接转长连接 单独部署一个微服务  根据短链接查询到长连接后重定向相应  通过access.log 收集统计各个链接的 UV（unique visit）">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2024/02/25/go%E7%9A%84GC/image-20240225094832891.png">
-<meta property="article:published_time" content="2024-02-25T15:05:05.000Z">
-<meta property="article:modified_time" content="2024-02-25T15:05:23.897Z">
+<meta property="article:published_time" content="2024-02-26T13:00:39.000Z">
+<meta property="article:modified_time" content="2024-02-26T14:04:53.176Z">
 <meta property="article:author" content="Forrest">
-<meta property="article:tag" content="GC">
+<meta property="article:tag" content="转链服务总结">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/2024/02/25/go%E7%9A%84GC/image-20240225094832891.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>go的GC - Forrest’s blog</title>
+  <title>短链接项目总结 - Forrest’s blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -201,7 +199,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="go的GC"></span>
+            <span id="subtitle" data-typed-text="短链接项目总结"></span>
           
         </div>
 
@@ -212,8 +210,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-02-25 23:05" pubdate>
-          2024年2月25日 晚上
+        <time datetime="2024-02-26 21:00" pubdate>
+          2024年2月26日 晚上
         </time>
       </span>
     
@@ -224,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          762 字
+          145 字
         
       </span>
     
@@ -235,7 +233,7 @@
         
         
         
-          3 分钟
+          1 分钟
         
       </span>
     
@@ -280,96 +278,28 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">go的GC</h1>
+            <h1 id="seo-header">短链接项目总结</h1>
             
             
               <div class="markdown-body">
                 
-                <h3 id="Go的协程栈的位置"><a href="#Go的协程栈的位置" class="headerlink" title="Go的协程栈的位置"></a>Go的协程栈的位置</h3><ul>
-<li><p>Go的协程栈位于Go的堆内存上</p>
-</li>
-<li><p>Go堆内存位于操作系统的虚拟内存上</p>
-</li>
-<li><p>协程栈记录了协程的执行现场</p>
-</li>
-<li><p>协程栈负责记录局部变量，传递参数和返回值</p>
-</li>
-<li><p>Go使用参数拷贝传递</p>
-</li>
+                <h3 id="模块拆分"><a href="#模块拆分" class="headerlink" title="模块拆分"></a>模块拆分</h3><h4 id="长链接转短链接"><a href="#长链接转短链接" class="headerlink" title="长链接转短链接"></a>长链接转短链接</h4><ul>
+<li>相同的长链接转为同一个短链接</li>
+<li>生成的短链接长度短</li>
+<li>长链接本身可达</li>
+<li>避免生成带有特殊含义的词汇</li>
+<li>避免循环转链</li>
 </ul>
-<h3 id="逃逸分析"><a href="#逃逸分析" class="headerlink" title="逃逸分析"></a>逃逸分析</h3><p>逃逸分析是编译器在编译阶段对变量的生命周期进行分析，判断变量是在栈上还是堆上分配空间。逃逸分析的主要目的是优化内存的分配和减少垃圾回收的压力</p>
-<ul>
-<li><p>栈帧回收后，需要继续使用的变量</p>
+<h4 id="存储"><a href="#存储" class="headerlink" title="存储"></a>存储</h4><ul>
+<li>存储长链接与短链接的对应关系</li>
+</ul>
+<h4 id="短链接转长连接"><a href="#短链接转长连接" class="headerlink" title="短链接转长连接"></a>短链接转长连接</h4><ul>
+<li><p>单独部署一个微服务</p>
 </li>
-<li><p>变量太大了，栈里面放不下，放到堆里面去</p>
+<li><p>根据短链接查询到长连接后重定向相应</p>
 </li>
-<li><p>指针逃逸</p>
+<li><p>通过access.log 收集统计各个链接的 UV（unique visit）</p>
 </li>
-<li><p>空接口逃逸</p>
-<ul>
-<li>如果函数的参数位interface{} </li>
-<li>函数的实参很可能会逃逸</li>
-<li>因为interface{}类型的函数往往会使用反射</li>
-</ul>
-</li>
-<li><p>大变量逃逸</p>
-</li>
-</ul>
-<h3 id="串行GC"><a href="#串行GC" class="headerlink" title="串行GC"></a>串行GC</h3><p>Go使用 <strong>标记-删除</strong> ，找到有引用的对象，剩下的就是没有引用的</p>
-<h4 id="GC-root是什么"><a href="#GC-root是什么" class="headerlink" title="GC-root是什么"></a>GC-root是什么</h4><ul>
-<li>被栈上的指针引用</li>
-<li>被全局变量指针引用</li>
-<li>被寄存器中的指针引用</li>
-<li>上述为 GC-root</li>
-</ul>
-<h4 id="串行GC步骤"><a href="#串行GC步骤" class="headerlink" title="串行GC步骤"></a>串行GC步骤</h4><ul>
-<li>stop the world，暂停所有其他协程</li>
-<li>通过可达性分析，找到无用的堆内存</li>
-<li>释放无用的堆内存</li>
-<li>恢复所有其他协程</li>
-</ul>
-<p><img src="/2024/02/25/go%E7%9A%84GC/image-20240225094832891.png" srcset="/img/loading.gif" lazyload alt="image-20240225094832891"></p>
-<h4 id="Mark-Sweep的缺点"><a href="#Mark-Sweep的缺点" class="headerlink" title="Mark Sweep的缺点"></a>Mark Sweep的缺点</h4><ul>
-<li>STW，stop the world；让程序暂停，程序出现卡顿 **(重要问题)**；</li>
-<li>标记需要扫描整个heap；</li>
-<li>清除数据会产生heap碎片。</li>
-</ul>
-<h3 id="三色标记法"><a href="#三色标记法" class="headerlink" title="三色标记法"></a>三色标记法</h3><ul>
-<li>黑色：有用，已经分析扫描</li>
-<li>灰色：有用，还未分析扫描</li>
-<li>白色：暂时无用</li>
-</ul>
-<h3 id="混合屏障"><a href="#混合屏障" class="headerlink" title="混合屏障"></a>混合屏障</h3><h4 id="删除屏障"><a href="#删除屏障" class="headerlink" title="删除屏障"></a>删除屏障</h4><ul>
-<li>并发标记时</li>
-<li>对指针释放的白色对象置灰</li>
-</ul>
-<p>防止释放的元素A被另一个元素B指向，但元素A被GC的情形</p>
-<h4 id="插入屏障"><a href="#插入屏障" class="headerlink" title="插入屏障"></a>插入屏障</h4><ul>
-<li>并发插入时</li>
-<li>对插入的白色标记置灰</li>
-</ul>
-<p>防止 新插入的元素被GC</p>
-<h3 id="GC的触发时机"><a href="#GC的触发时机" class="headerlink" title="GC的触发时机"></a>GC的触发时机</h3><ul>
-<li><p>系统定时触发</p>
-</li>
-<li><p>用户显示触发</p>
-</li>
-<li><p>申请内存时触发</p>
-</li>
-</ul>
-<h3 id="GC的优化原则"><a href="#GC的优化原则" class="headerlink" title="GC的优化原则"></a>GC的优化原则</h3><ul>
-<li>尽量少在堆上产生垃圾<ul>
-<li>内存池化（类似channel的ring buffer）</li>
-<li>减少内存逃逸</li>
-<li>使用空结构体</li>
-</ul>
-</li>
-</ul>
-<h3 id="GC的分析工具"><a href="#GC的分析工具" class="headerlink" title="GC的分析工具"></a>GC的分析工具</h3><ul>
-<li>go tool pprof</li>
-<li>go tool trace</li>
-<li>go build -gcflags&#x3D;” -m”</li>
-<li>GODEBUF&#x3D;” gctrace&#x3D;1”</li>
 </ul>
 
                 
@@ -383,7 +313,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/GC/" class="print-no-link">#GC</a>
+        <a href="/tags/%E8%BD%AC%E9%93%BE%E6%9C%8D%E5%8A%A1%E6%80%BB%E7%BB%93/" class="print-no-link">#转链服务总结</a>
       
     </div>
   
@@ -395,8 +325,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>go的GC</div>
-      <div>http://example.com/2024/02/25/go的GC/</div>
+      <div>短链接项目总结</div>
+      <div>http://example.com/2024/02/26/短链接项目总结/</div>
     </div>
     <div class="license-meta">
       
@@ -408,7 +338,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年2月25日</div>
+          <div>2024年2月26日</div>
         </div>
       
       
@@ -440,9 +370,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/02/26/%E7%9F%AD%E9%93%BE%E6%8E%A5%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93/" title="短链接项目总结">
+                      <a href="/2024/02/26/%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8/" title="布隆过滤器">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">短链接项目总结</span>
+                        <span class="hidden-mobile">布隆过滤器</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -450,8 +380,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/02/25/%E5%9F%BA%E4%BA%8E%E7%94%A8%E6%88%B7%E6%8A%95%E7%A5%A8%E7%9A%84%E6%8E%92%E5%90%8D%E7%AE%97%E6%B3%95/" title="基于用户投票的排名算法">
-                        <span class="hidden-mobile">基于用户投票的排名算法</span>
+                      <a href="/2024/02/25/go%E7%9A%84GC/" title="go的GC">
+                        <span class="hidden-mobile">go的GC</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
