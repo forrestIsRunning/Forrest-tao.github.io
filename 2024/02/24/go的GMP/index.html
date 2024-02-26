@@ -16,26 +16,29 @@
   <meta name="author" content="Forrest">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Go的协程栈的位置 Go的协程栈位于Go的堆内存上  Go堆内存位于操作系统的虚拟内存上  协程栈记录了协程的执行现场  协程栈负责记录局部变量，传递参数和返回值  Go使用参数拷贝传递   逃逸分析逃逸分析是编译器在编译阶段对变量的生命周期进行分析，判断变量是在栈上还是堆上分配空间。逃逸分析的主要目的是优化内存的分配和减少垃圾回收的压力  栈帧回收后，需要继续使用的变量  变量太大了，栈里面放不">
+    <meta name="description" content="进程&amp;线程&amp;协程进程  操作系统 的一个基本单位，OS通过进程来管理计算机的资源，提供服务和支持程序的运行 进程占用内存空间  线程  CPU调度的基本单位  每个进程可以拥有多个线程  线程占用CPU的时间  线程使用系统分配给进程的内存，线程之间共享内存   线程的问题  线程本身占用资源大 线程切换开销大 线程的操作开销大  协程将一段程序的运行状态打包，可以在线程之间调度">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Golang中的GC">
-<meta property="og:url" content="http://example.com/2023/09/22/Golang%E4%B8%AD%E7%9A%84GC/index.html">
+<meta property="og:title" content="go的GMP">
+<meta property="og:url" content="http://example.com/2024/02/24/go%E7%9A%84GMP/index.html">
 <meta property="og:site_name" content="Forrest’s blog">
-<meta property="og:description" content="Go的协程栈的位置 Go的协程栈位于Go的堆内存上  Go堆内存位于操作系统的虚拟内存上  协程栈记录了协程的执行现场  协程栈负责记录局部变量，传递参数和返回值  Go使用参数拷贝传递   逃逸分析逃逸分析是编译器在编译阶段对变量的生命周期进行分析，判断变量是在栈上还是堆上分配空间。逃逸分析的主要目的是优化内存的分配和减少垃圾回收的压力  栈帧回收后，需要继续使用的变量  变量太大了，栈里面放不">
+<meta property="og:description" content="进程&amp;线程&amp;协程进程  操作系统 的一个基本单位，OS通过进程来管理计算机的资源，提供服务和支持程序的运行 进程占用内存空间  线程  CPU调度的基本单位  每个进程可以拥有多个线程  线程占用CPU的时间  线程使用系统分配给进程的内存，线程之间共享内存   线程的问题  线程本身占用资源大 线程切换开销大 线程的操作开销大  协程将一段程序的运行状态打包，可以在线程之间调度">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2023/09/22/Golang%E4%B8%AD%E7%9A%84GC/image-20240225094832891.png">
-<meta property="article:published_time" content="2023-09-22T04:58:41.000Z">
-<meta property="article:modified_time" content="2024-02-25T03:00:39.583Z">
+<meta property="og:image" content="http://example.com/2024/02/24/go%E7%9A%84GMP/image-20240224151108486.png">
+<meta property="og:image" content="http://example.com/2024/02/24/go%E7%9A%84GMP/image-20240224153941032.png">
+<meta property="og:image" content="http://example.com/2024/02/24/go%E7%9A%84GMP/image-20240224155223636.png">
+<meta property="og:image" content="http://example.com/2024/02/24/go%E7%9A%84GMP/image-20240224160538300.png">
+<meta property="og:image" content="http://example.com/2024/02/24/go%E7%9A%84GMP/image-20240224174559462.png">
+<meta property="article:published_time" content="2024-02-24T06:35:50.000Z">
+<meta property="article:modified_time" content="2024-02-26T03:22:18.104Z">
 <meta property="article:author" content="Forrest">
-<meta property="article:tag" content="GC">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/2023/09/22/Golang%E4%B8%AD%E7%9A%84GC/image-20240225094832891.png">
+<meta name="twitter:image" content="http://example.com/2024/02/24/go%E7%9A%84GMP/image-20240224151108486.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>Golang中的GC - Forrest’s blog</title>
+  <title>go的GMP - Forrest’s blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -201,7 +204,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Golang中的GC"></span>
+            <span id="subtitle" data-typed-text="go的GMP"></span>
           
         </div>
 
@@ -212,8 +215,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-09-22 12:58" pubdate>
-          2023年9月22日 下午
+        <time datetime="2024-02-24 14:35" pubdate>
+          2024年2月24日 下午
         </time>
       </span>
     
@@ -224,7 +227,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          762 字
+          1.4k 字
         
       </span>
     
@@ -235,7 +238,7 @@
         
         
         
-          3 分钟
+          5 分钟
         
       </span>
     
@@ -280,97 +283,134 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Golang中的GC</h1>
+            <h1 id="seo-header">go的GMP</h1>
             
             
               <div class="markdown-body">
                 
-                <h3 id="Go的协程栈的位置"><a href="#Go的协程栈的位置" class="headerlink" title="Go的协程栈的位置"></a>Go的协程栈的位置</h3><ul>
-<li><p>Go的协程栈位于Go的堆内存上</p>
-</li>
-<li><p>Go堆内存位于操作系统的虚拟内存上</p>
-</li>
-<li><p>协程栈记录了协程的执行现场</p>
-</li>
-<li><p>协程栈负责记录局部变量，传递参数和返回值</p>
-</li>
-<li><p>Go使用参数拷贝传递</p>
-</li>
-</ul>
-<h3 id="逃逸分析"><a href="#逃逸分析" class="headerlink" title="逃逸分析"></a>逃逸分析</h3><p>逃逸分析是编译器在编译阶段对变量的生命周期进行分析，判断变量是在栈上还是堆上分配空间。逃逸分析的主要目的是优化内存的分配和减少垃圾回收的压力</p>
+                <h3 id="进程-线程-协程"><a href="#进程-线程-协程" class="headerlink" title="进程&amp;线程&amp;协程"></a>进程&amp;线程&amp;协程</h3><p>进程</p>
 <ul>
-<li><p>栈帧回收后，需要继续使用的变量</p>
-</li>
-<li><p>变量太大了，栈里面放不下，放到堆里面去</p>
-</li>
-<li><p>指针逃逸</p>
-</li>
-<li><p>空接口逃逸</p>
+<li>操作系统 的一个基本单位，OS通过进程来管理计算机的资源，提供服务和支持程序的运行</li>
+<li>进程占用内存空间</li>
+</ul>
+<p>线程</p>
 <ul>
-<li>如果函数的参数位interface{} </li>
-<li>函数的实参很可能会逃逸</li>
-<li>因为interface{}类型的函数往往会使用反射</li>
-</ul>
+<li><p>CPU调度的基本单位</p>
 </li>
-<li><p>大变量逃逸</p>
+<li><p>每个进程可以拥有多个线程</p>
 </li>
-</ul>
-<h3 id="串行GC"><a href="#串行GC" class="headerlink" title="串行GC"></a>串行GC</h3><p>Go使用 <strong>标记-删除</strong> ，找到有引用的对象，剩下的就是没有引用的</p>
-<h4 id="GC-root是什么"><a href="#GC-root是什么" class="headerlink" title="GC-root是什么"></a>GC-root是什么</h4><ul>
-<li>被栈上的指针引用</li>
-<li>被全局变量指针引用</li>
-<li>被寄存器中的指针引用</li>
-<li>上述为 GC-root</li>
-</ul>
-<h4 id="串行GC步骤"><a href="#串行GC步骤" class="headerlink" title="串行GC步骤"></a>串行GC步骤</h4><ul>
-<li>stop the world，暂停所有其他协程</li>
-<li>通过可达性分析，找到无用的堆内存</li>
-<li>释放无用的堆内存</li>
-<li>恢复所有其他协程</li>
-</ul>
-<p><img src="/2023/09/22/Golang%E4%B8%AD%E7%9A%84GC/image-20240225094832891.png" srcset="/img/loading.gif" lazyload alt="image-20240225094832891"></p>
-<h4 id="Mark-Sweep的缺点"><a href="#Mark-Sweep的缺点" class="headerlink" title="Mark Sweep的缺点"></a>Mark Sweep的缺点</h4><ul>
-<li>STW，stop the world；让程序暂停，程序出现卡顿 **(重要问题)**；</li>
-<li>标记需要扫描整个heap；</li>
-<li>清除数据会产生heap碎片。</li>
-</ul>
-<h3 id="三色标记法"><a href="#三色标记法" class="headerlink" title="三色标记法"></a>三色标记法</h3><ul>
-<li>黑色：有用，已经分析扫描</li>
-<li>灰色：有用，还未分析扫描</li>
-<li>白色：暂时无用</li>
-</ul>
-<h3 id="混合屏障"><a href="#混合屏障" class="headerlink" title="混合屏障"></a>混合屏障</h3><h4 id="删除屏障"><a href="#删除屏障" class="headerlink" title="删除屏障"></a>删除屏障</h4><ul>
-<li>并发标记时</li>
-<li>对指针释放的白色对象置灰</li>
-</ul>
-<p>防止释放的元素A被另一个元素B指向，但元素A被GC的情形</p>
-<h4 id="插入屏障"><a href="#插入屏障" class="headerlink" title="插入屏障"></a>插入屏障</h4><ul>
-<li>并发插入时</li>
-<li>对插入的白色标记置灰</li>
-</ul>
-<p>防止 新插入的元素被GC</p>
-<h3 id="GC的触发时机"><a href="#GC的触发时机" class="headerlink" title="GC的触发时机"></a>GC的触发时机</h3><ul>
-<li><p>系统定时触发</p>
+<li><p>线程占用CPU的时间</p>
 </li>
-<li><p>用户显示触发</p>
-</li>
-<li><p>申请内存时触发</p>
+<li><p>线程使用系统分配给进程的内存，线程之间共享内存</p>
 </li>
 </ul>
-<h3 id="GC的优化原则"><a href="#GC的优化原则" class="headerlink" title="GC的优化原则"></a>GC的优化原则</h3><ul>
-<li>尽量少在堆上产生垃圾<ul>
-<li>内存池化（类似channel的ring buffer）</li>
-<li>减少内存逃逸</li>
-<li>使用空结构体</li>
+<p>线程的问题</p>
+<ul>
+<li>线程本身占用资源大</li>
+<li>线程切换开销大</li>
+<li>线程的操作开销大</li>
 </ul>
+<p>协程将一段程序的运行状态打包，可以在线程之间调度</p>
+<p>协程的优点</p>
+<ul>
+<li>资源利用</li>
+<li>快速调度</li>
+<li>超高并发</li>
+</ul>
+<p>总结</p>
+<ul>
+<li>进程用来分配内存空间</li>
+<li>线程用来里分配CPU时间</li>
+<li>协程用来精细化利用线程（<strong>协程复用线程</strong>）</li>
+</ul>
+<h3 id="协程的本质"><a href="#协程的本质" class="headerlink" title="协程的本质"></a>协程的本质</h3><ul>
+<li>runtime中，协程的本质是 一个 g结构体</li>
+<li>stack：堆栈地址 （lo、hi）</li>
+<li>gobuf 目前程序运行现场</li>
+<li>atomicstatus：协程的状态</li>
+</ul>
+<p><img src="/2024/02/24/go%E7%9A%84GMP/image-20240224151108486.png" srcset="/img/loading.gif" lazyload alt="image-20240224151108486"></p>
+<h3 id="线程的抽象"><a href="#线程的抽象" class="headerlink" title="线程的抽象"></a>线程的抽象</h3><ul>
+<li>runtime中将 操作系统的线程抽象为 <strong>m</strong> 结构体</li>
+<li>g0：go协程，操作调度器</li>
+<li>curg： current g，目前 线程运行的g</li>
+<li>mOS：操作系统线程的信息</li>
+</ul>
+<h3 id="协程是如何执行的"><a href="#协程是如何执行的" class="headerlink" title="协程是如何执行的"></a>协程是如何执行的</h3><p><img src="/2024/02/24/go%E7%9A%84GMP/image-20240224153941032.png" srcset="/img/loading.gif" lazyload alt="image-20240224153941032"></p>
+<p>schedule-&gt;execute-&gt;gogo()汇编实现-&gt;业务方法-&gt;goexit-&gt;g0的 schedule-&gt;… 循环往复</p>
+<p> <img src="/2024/02/24/go%E7%9A%84GMP/image-20240224155223636.png" srcset="/img/loading.gif" lazyload alt="image-20240224155223636"></p>
+<ul>
+<li>操作系统并不知道Goroutine的存在</li>
+<li>操作系统线程执行一个调度循环，顺序执行Goroutine</li>
+</ul>
+<p>问题：</p>
+<ul>
+<li><p>顺序执行，无法并发，此时会引发协程的饥饿问题</p>
+</li>
+<li><p>多线程并发时，会发生抢夺协程队列的全局锁的情况（使用本地队列）</p>
 </li>
 </ul>
-<h3 id="GC的分析工具"><a href="#GC的分析工具" class="headerlink" title="GC的分析工具"></a>GC的分析工具</h3><ul>
-<li>go tool pprof</li>
-<li>go tool trace</li>
-<li>go build -gcflags&#x3D;” -m”</li>
-<li>GODEBUF&#x3D;” gctrace&#x3D;1”</li>
+<h3 id="G-M-P调度模型"><a href="#G-M-P调度模型" class="headerlink" title="G-M-P调度模型"></a>G-M-P调度模型</h3><p>GMP调度模型用来解决<strong>全局锁的争抢问题</strong>&amp;<strong>顺序执行引发的饥饿问题</strong></p>
+<h4 id="全局锁的争抢问题的解决"><a href="#全局锁的争抢问题的解决" class="headerlink" title="全局锁的争抢问题的解决"></a>全局锁的争抢问题的解决</h4><h5 id="p结构体-（processor-送料器）"><a href="#p结构体-（processor-送料器）" class="headerlink" title="p结构体 （processor 送料器）"></a>p结构体 （processor 送料器）</h5><ul>
+<li>M与G之间的中介</li>
+<li>p持有一些G，使得每次获取G的时候不用从全局中找</li>
+<li>大大减少了并发冲突问题</li>
 </ul>
+<p><img src="/2024/02/24/go%E7%9A%84GMP/image-20240224160538300.png" srcset="/img/loading.gif" lazyload alt="image-20240224160538300"></p>
+<p>本地全局都没有G，任务窃取，以增强线程的利用率</p>
+<p>新建协程</p>
+<ul>
+<li>随机寻找一个p</li>
+<li>将新协程放入 P的runnext（插队）</li>
+<li>若本地队列都满了，放入全局队列</li>
+</ul>
+<h4 id="顺序执行引发的饥饿问题的解决"><a href="#顺序执行引发的饥饿问题的解决" class="headerlink" title="顺序执行引发的饥饿问题的解决"></a>顺序执行引发的饥饿问题的解决</h4><ul>
+<li><p>如果协程顺序执行，会有饥饿问题</p>
+</li>
+<li><p>协程执行中间，将协程挂起，执行其他协程</p>
+</li>
+<li><p>完成<strong>系统调用</strong>时挂起，也可也<strong>主动</strong>(channel 锁。。)挂起</p>
+</li>
+<li><p>防止全局队列饥饿，<strong>本地队列随机抽取全局队列</strong> (每执行goroutine 61 次，从全局队列中取)</p>
+</li>
+</ul>
+<p>问题：</p>
+<ul>
+<li>永远不主动挂起</li>
+<li>永远不系统调用</li>
+</ul>
+<p>此时还是会造成协程的饥饿</p>
+<p>总结</p>
+<ul>
+<li>基于系统调用和主动挂起，协程可能无法调度</li>
+<li>基于协作的抢占式调度：业务主动调用 morestack()</li>
+<li>基于信号的抢占式调度：强制线程调用 doSigPreempt()</li>
+</ul>
+<h3 id="协程太多怎么办"><a href="#协程太多怎么办" class="headerlink" title="协程太多怎么办"></a>协程太多怎么办</h3><ul>
+<li>文件打开数限制</li>
+<li>内存限制</li>
+<li>调度开销过大</li>
+</ul>
+<h4 id="优化业务逻辑"><a href="#优化业务逻辑" class="headerlink" title="优化业务逻辑"></a>优化业务逻辑</h4><h4 id="利用-channel"><a href="#利用-channel" class="headerlink" title="利用 channel"></a>利用 channel</h4><ul>
+<li>利用 channel 的缓存机制</li>
+<li>启动协程前，向channel 发送一个空结构体</li>
+<li>协程结束，去除一个空结构体</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">do</span><span class="hljs-params">(i <span class="hljs-type">int</span>, ch <span class="hljs-keyword">chan</span> <span class="hljs-keyword">struct</span>&#123;&#125;)</span></span> &#123;<br>	fmt.Println(i)<br>	time.Sleep(time.Second)<br>	&lt;-ch<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	ch := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-keyword">struct</span>&#123;&#125;, <span class="hljs-number">3000</span>)<br>	<span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; math.MaxInt; i++ &#123;<br>		ch &lt;- <span class="hljs-keyword">struct</span>&#123;&#125;&#123;&#125;<br>		<span class="hljs-keyword">go</span> do(i, ch)<br>	&#125;<br>	<span class="hljs-keyword">select</span> &#123;&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="使用协程池"><a href="#使用协程池" class="headerlink" title="使用协程池"></a>使用协程池</h4><p><img src="/2024/02/24/go%E7%9A%84GMP/image-20240224174559462.png" srcset="/img/loading.gif" lazyload alt="image-20240224174559462"></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>进程、线程、协程</p>
+<p>协程的本质：</p>
+<ul>
+<li>runtime的角度</li>
+<li>线程的角度</li>
+</ul>
+<p>单线程模型</p>
+<p>多线程模型</p>
+<p>G-M-P模型</p>
+<p>并发问题</p>
+<p>饥饿问题</p>
+<p>协程太多怎么优化</p>
 
                 
               </div>
@@ -380,13 +420,6 @@
               <div class="post-metas my-3">
   
   
-    <div class="post-meta">
-      <i class="iconfont icon-tags"></i>
-      
-        <a href="/tags/GC/" class="print-no-link">#GC</a>
-      
-    </div>
-  
 </div>
 
 
@@ -395,8 +428,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Golang中的GC</div>
-      <div>http://example.com/2023/09/22/Golang中的GC/</div>
+      <div>go的GMP</div>
+      <div>http://example.com/2024/02/24/go的GMP/</div>
     </div>
     <div class="license-meta">
       
@@ -408,7 +441,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年9月22日</div>
+          <div>2024年2月24日</div>
         </div>
       
       
@@ -440,9 +473,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/09/23/Sort%E5%8C%85%E7%9A%84%E4%BD%BF%E7%94%A8/" title="Sort包的使用">
+                      <a href="/2024/02/24/go%E7%9A%84channel/" title="go的channel">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Sort包的使用</span>
+                        <span class="hidden-mobile">go的channel</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -450,8 +483,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/09/17/%E3%80%902023%E5%B9%B4%E7%9B%AE%E6%A0%87%E3%80%91/" title="【2023年目标】">
-                        <span class="hidden-mobile">【2023年目标】</span>
+                      <a href="/2024/02/24/go%E7%9A%84map/" title="go的map">
+                        <span class="hidden-mobile">go的map</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

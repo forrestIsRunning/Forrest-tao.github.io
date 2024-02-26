@@ -293,6 +293,46 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
+        <a href="/2024/02/25/go%E7%9A%84GC/" target="_self">
+          go的GC
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/02/25/go%E7%9A%84GC/" target="_self">
+        <div>
+          Go的协程栈的位置 Go的协程栈位于Go的堆内存上  Go堆内存位于操作系统的虚拟内存上  协程栈记录了协程的执行现场  协程栈负责记录局部变量，传递参数和返回值  Go使用参数拷贝传递   逃逸分析逃逸分析是编译器在编译阶段对变量的生命周期进行分析，判断变量是在栈上还是堆上分配空间。逃逸分析的主要目的是优化内存的分配和减少垃圾回收的压力  栈帧回收后，需要继续使用的变量  变量太大了，栈里面放不
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-02-25 23:05" pubdate>
+              2024-02-25
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/GC/">#GC</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
         <a href="/2024/02/25/%E5%9F%BA%E4%BA%8E%E7%94%A8%E6%88%B7%E6%8A%95%E7%A5%A8%E7%9A%84%E6%8E%92%E5%90%8D%E7%AE%97%E6%B3%95/" target="_self">
           基于用户投票的排名算法
         </a>
@@ -512,13 +552,13 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
-        <a href="/2024/02/24/go%E7%9A%84%E5%8D%8F%E7%A8%8B/" target="_self">
-          go的协程
+        <a href="/2024/02/24/go%E7%9A%84GMP/" target="_self">
+          go的GMP
         </a>
       </h2>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/02/24/go%E7%9A%84%E5%8D%8F%E7%A8%8B/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/02/24/go%E7%9A%84GMP/" target="_self">
         <div>
           进程&amp;线程&amp;协程进程  操作系统 的一个基本单位，OS通过进程来管理计算机的资源，提供服务和支持程序的运行 进程占用内存空间  线程  CPU调度的基本单位  每个进程可以拥有多个线程  线程占用CPU的时间  线程使用系统分配给进程的内存，线程之间共享内存   线程的问题  线程本身占用资源大 线程切换开销大 线程的操作开销大  协程将一段程序的运行状态打包，可以在线程之间调度
         </div>
@@ -553,7 +593,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2024/02/24/go%E7%9A%84map/" target="_self">
         <div>
-          map的结构  共有2^B 个桶 每个桶只能存放 8个 K*V，若多余8个，则放到溢出桶里面去  map的访问  read write 使用拉链法实现 hashmap 每个桶中存储键hash 的前8位 桶超出 8个数据后，就会存储在溢出桶这个i部分 map的扩容当 hash碰撞严重时，扩容桶会指向下一个扩容桶，此时变成了长链表，效率会变低；可以使用map的扩容来减缓压力。 发生扩容的场景  装载因
+          map的结构拉链法的hashMap   共有2^B 个桶 每个桶只能存放 8个 K*V，若多余8个，则放到溢出桶里面去  hash算法、B、oldBuckets map的访问  read write 使用拉链法实现 hashmap 每个桶中存储键hash 的前8位 桶超出 8个数据后，就会存储在溢出桶这个i部分 map的扩容当 hash碰撞严重时，扩容桶会指向下一个扩容桶，此时变成了长链表，效率会
         </div>
       </a>
 
@@ -718,7 +758,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2024/01/29/redis%E6%80%BB%E7%BB%93/" target="_self">
         <div>
-          redis的持久化RDBredis可以创建快照来获取存储在内存里的数据在某个时间点上的副本。 redis默认使用RDB来持久化，在redis.conf配置文件中默认由此配置 123456save 900 1           #在900秒(15分钟)之后，如果至少有1个key发生变化，Redis就会自动触发bgsave命令创建快照。save 300 10          #在300秒(5分钟)
+          redis为什么这么快 基于内存的存储：redis将数据存储到内存中，相比于传统的基于磁盘的存储系统，内存存储可以达到提高数据的访问 单线程模型：redis使用单线程模型来处理客户端的请求，不需要进行线程间的切换和同步，减少了系统开销；避免了了多线程的并发访问时锁的竞争问题 非阻塞I&#x2F;O 高度优化的数据结构和网络层  Zset的底层数据结构 跳跃表  哈希表   ​	充分利用 跳跃表的快
         </div>
       </a>
 
@@ -739,39 +779,6 @@
               <a href="/tags/redis-%E5%85%AB%E8%82%A1/">#redis,八股</a>
             
           </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/01/19/%E9%87%8D%E5%86%99redis%E7%BB%84%E4%BB%B6/" target="_self">
-          重写redis组件
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/01/19/%E9%87%8D%E5%86%99redis%E7%BB%84%E4%BB%B6/" target="_self">
-        <div>
-          GO的优点 直接编译为二进制。没有虚拟化损失  自带运行环境、无需处理GC问题  一次编码可以使用多种平台  超强的并发支持和并发易用性  Go没有对象、没有类、没有继承  Go通过组合匿名字段来达到类似继承的效果  去除了面向对象中复杂而冗余的部分  保留了基本的面向对象的特性   使用Modules   go get XXX go get &#x58;&#x58;&#x58;&#64;&#48
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-01-19 20:51" pubdate>
-              2024-01-19
-            </time>
-          </div>
-        
-        
         
       </div>
     </article>
