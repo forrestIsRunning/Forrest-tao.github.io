@@ -4,6 +4,108 @@
   
   
   <entry>
+    <title>安装软件</title>
+    <link href="/2024/03/04/%E5%AE%89%E8%A3%85%E8%BD%AF%E4%BB%B6/"/>
+    <url>/2024/03/04/%E5%AE%89%E8%A3%85%E8%BD%AF%E4%BB%B6/</url>
+    
+    <content type="html"><![CDATA[<ul><li><p><input checked disabled type="checkbox"> git</p></li><li><p><input checked disabled type="checkbox"> 飞书</p></li><li><p><input checked disabled type="checkbox"> 钉钉</p></li><li><p><input checked disabled type="checkbox"> wsl</p></li><li><p><input checked disabled type="checkbox"> docker</p></li><li><p><input checked disabled type="checkbox"> goland</p></li><li><p><input checked disabled type="checkbox"> golang环境</p></li><li><p><input checked disabled type="checkbox"> VPN</p></li><li><p><input disabled type="checkbox"> 文档</p></li><li><p><input checked disabled type="checkbox"> gitlab</p></li><li><p><input checked disabled type="checkbox"> 梯子</p></li><li><p><input checked disabled type="checkbox"> vscode</p></li><li><p><input checked disabled type="checkbox"> navicate</p></li><li><p><input checked disabled type="checkbox"> TAPD</p></li><li><p><input disabled type="checkbox"> go-z</p></li></ul><p>文档学习</p>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag></tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>第一周模拟面试准备</title>
+    <link href="/2024/03/03/%E7%AC%AC%E4%B8%80%E5%91%A8%E6%A8%A1%E6%8B%9F%E9%9D%A2%E8%AF%95%E5%87%86%E5%A4%87/"/>
+    <url>/2024/03/03/%E7%AC%AC%E4%B8%80%E5%91%A8%E6%A8%A1%E6%8B%9F%E9%9D%A2%E8%AF%95%E5%87%86%E5%A4%87/</url>
+    
+    <content type="html"><![CDATA[<h1 id="模拟面试"><a href="#模拟面试" class="headerlink" title="模拟面试"></a>模拟面试</h1><h2 id="go-基础"><a href="#go-基础" class="headerlink" title="go 基础"></a>go 基础</h2><ul><li><p>基本数据类型的长度</p><ul><li>int 取决于系统的字长</li><li>ptr 取决于系统的字长</li><li>struct{}的长度为0，指向同一个地址  zero-base</li></ul></li><li><p>空结构体的作用（节约内存）,用于map的v和channel的v</p></li><li><p>stringStruct的结构是什么？ Len+unsafe.Ptr</p></li><li><p>unicode、utf8</p></li><li><p>for i:&#x3D;0;i&lt;len(str);i++ 和 for range str 有什么区别（其中 len(str) 返回的是str的字节数,）</p></li><li><p><img src="/2024/03/03/%E7%AC%AC%E4%B8%80%E5%91%A8%E6%A8%A1%E6%8B%9F%E9%9D%A2%E8%AF%95%E5%87%86%E5%A4%87/image-20240303205114437.png" alt="image-20240303205114437"></p></li></ul><h2 id="mysql"><a href="#mysql" class="headerlink" title="mysql"></a>mysql</h2><ul><li>int1 和int10的区别（存储字节数量是一样的，但显示不一样，不存在的部分回以0的方式补充）</li><li>collate </li><li></li></ul><h3 id="kafka"><a href="#kafka" class="headerlink" title="kafka"></a>kafka</h3>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>模拟面试</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>日记</title>
+    <link href="/2024/03/03/%E6%97%A5%E8%AE%B0/"/>
+    <url>/2024/03/03/%E6%97%A5%E8%AE%B0/</url>
+    
+    <content type="html"><![CDATA[<h3 id="2024-3-3"><a href="#2024-3-3" class="headerlink" title="2024.3.3"></a>2024.3.3</h3><p>昨日2024.3.2 顺利到达上海。今日租到了房，2.1K &#x2F; mon</p><p>花销 2100*2(房租)+ 400（服务费）+ 100+的日常用品（洗发水+沐浴露+被子+饮用水+雨伞+面包+香蕉+垃圾桶） </p><p>共 4700+</p><p>预期：</p><p>​</p><ul><li><input disabled type="checkbox"> go原理</li><li><input disabled type="checkbox"> leetcode</li><li><input disabled type="checkbox"> 计网的八股</li><li><input disabled type="checkbox"> 沿着周边跑一跑</li></ul><h3 id="2024-3-4"><a href="#2024-3-4" class="headerlink" title="2024.3.4"></a>2024.3.4</h3><h4 id="mysql"><a href="#mysql" class="headerlink" title="mysql"></a>mysql</h4><p>B+树的优点（相比于 数组、二叉查找树、自平衡二叉树、B树）</p><ul><li><p>B树的缺点：查询IO不稳定，可能有时候多，有时候少；B树的节点中存储的是索引+节点的数据，当需要查询C节点时，需要经过A、B节点，其中A、B节点的索引对这次查询时有效的，但他们的节点数据是无效的，这部分的数据回加入内存，浪费了内存空间；B树采用中序遍历，这回涉及多个节点的磁盘IO问题</p></li><li><p>B+树的优点：叶子节点才存放数据，非叶子节点只会存放索引；叶子节点之间使用双向链表连接，方便使用范围查询</p></li></ul><p>忙碌的一天。</p><p>今天是实习的第一天</p><ul><li><p>安装软件和各种配置</p></li><li><p>leetcode两个题目</p></li><li><p>参与了第一次的组会，感受到了压力</p></li><li><p>明天的任务</p><ul><li><input disabled type="checkbox"> kafka</li><li><input disabled type="checkbox"> mysql的索引</li><li><input disabled type="checkbox"> leetcode</li></ul></li></ul>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>日记</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>日志收集项目总结</title>
+    <link href="/2024/03/01/%E6%97%A5%E5%BF%97%E6%94%B6%E9%9B%86%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93/"/>
+    <url>/2024/03/01/%E6%97%A5%E5%BF%97%E6%94%B6%E9%9B%86%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93/</url>
+    
+    <content type="html"><![CDATA[<ul><li><p>producer</p></li><li><p>kafka cluster</p><ul><li>brocker</li><li>topic</li><li>partition</li><li>replication</li></ul></li><li><p>consumer</p><ul><li>consumer group</li></ul></li></ul><p><img src="/2024/03/01/%E6%97%A5%E5%BF%97%E6%94%B6%E9%9B%86%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93/image-20240301110311912.png" alt="image-20240301110311912"></p><ol><li><p>生产者从kafka集群获取分区leader信息</p></li><li><p>生产者将消息发送给leader</p></li><li><p>leader 将消息写入本地磁盘</p></li><li><p>follower从leader拉去消息数据</p></li><li><p>follower将消息写入本地磁盘，向leader发送 ACK</p></li><li><p>leader收到所有的follower的ACK后，向生产者发送ACK</p></li></ol><h3 id="选择-partition-的原则"><a href="#选择-partition-的原则" class="headerlink" title="选择 partition 的原则"></a>选择 partition 的原则</h3><ol><li>指定partition</li><li>若没指定partition，但设置了数据的key，根据key的值hash出对应的partition</li><li>若partition和key都没有设置，采用轮询的方式，即每次取一小段时间的数据写入某一个partition，下个时间段写入下一个partition</li></ol><h3 id="ACK的应答机制"><a href="#ACK的应答机制" class="headerlink" title="ACK的应答机制"></a>ACK的应答机制</h3><ul><li>0 表示 producer不需要等到集群的ACK，就能继续发送数据给集群。这时的安全性最低</li><li>1 表示 producer 只需要等到Leader的ACK就能继续发送数据</li><li>all 表示  producer需要等待Leader和所有的followers的ACK，确保leader的数据和其副本数据同步。这时的安全性最好，但效率最低</li></ul><h3 id="partition的结构"><a href="#partition的结构" class="headerlink" title="partition的结构"></a>partition的结构</h3><p>partition在服务器上的表现形式就是一个个的文件夹。每个partition的文件夹下面会有多组 <strong>segment</strong>文件，每个segment文件包含了 <code>.index</code>、<code>,log</code>、<code>.timeindex</code> 文件。其中<code>.log</code>文件用于存储message，<code>.index</code>和<code>.timeindex</code>文件用于索引，检索消息</p><h3 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h3><p>消息队列</p><p>追踪网站活动</p><p>Metrics </p><h3 id="zookeeper"><a href="#zookeeper" class="headerlink" title="zookeeper"></a>zookeeper</h3><h3 id="ETCD"><a href="#ETCD" class="headerlink" title="ETCD"></a>ETCD</h3>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>go的context</title>
+    <link href="/2024/02/29/go%E7%9A%84context/"/>
+    <url>/2024/02/29/go%E7%9A%84context/</url>
+    
+    <content type="html"><![CDATA[<ul><li>在context中存储数据</li><li>使用context来管理协程</li></ul><p>context的本质</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> Context <span class="hljs-keyword">interface</span> &#123;<br>Deadline() (time.Time, <span class="hljs-type">bool</span>)<br>Err() <span class="hljs-type">error</span><br>value(key any) any<br>Done() &lt;-<span class="hljs-keyword">chan</span> <span class="hljs-keyword">struct</span>&#123;&#125;<br>&#125;<br></code></pre></td></tr></table></figure><p>emptyContext</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// An emptyCtx is never canceled, has no values, and has no deadline. It is not</span><br><span class="hljs-comment">// struct&#123;&#125;, since vars of this type must have distinct addresses.</span><br><span class="hljs-keyword">type</span> emptyCtx <span class="hljs-type">int</span><br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(*emptyCtx)</span></span> Deadline() (deadline time.Time, ok <span class="hljs-type">bool</span>) &#123;<br><span class="hljs-keyword">return</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(*emptyCtx)</span></span> Done() &lt;-<span class="hljs-keyword">chan</span> <span class="hljs-keyword">struct</span>&#123;&#125; &#123;<br><span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(*emptyCtx)</span></span> Err() <span class="hljs-type">error</span> &#123;<br><span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(*emptyCtx)</span></span> Value(key any) any &#123;<br><span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span><br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>go的锁</title>
+    <link href="/2024/02/29/go%E7%9A%84%E9%94%81/"/>
+    <url>/2024/02/29/go%E7%9A%84%E9%94%81/</url>
+    
+    <content type="html"><![CDATA[<p>并发操作对数据结果产生影响的本质</p><p><img src="/2024/02/29/go%E7%9A%84%E9%94%81/image-20240229191635300.png" alt="image-20240229191635300"></p><p>cas </p><p>正常状态</p><p>自旋多次，自旋获取锁失败后进入阻塞状态</p><p>锁饥饿</p><p>当前协程等待锁的时间超过1ms，切换为饥饿模式</p><p>饥饿模式下，不自旋，新来的协程直接sema休眠</p><p>被唤醒的协程直接获取锁</p><p>没有协程在队列中等待的时候，恢复为正常状态</p>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>锁</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>常见的排序方法</title>
     <link href="/2024/02/28/%E5%B8%B8%E8%A7%81%E7%9A%84%E6%8E%92%E5%BA%8F%E6%96%B9%E6%B3%95/"/>
     <url>/2024/02/28/%E5%B8%B8%E8%A7%81%E7%9A%84%E6%8E%92%E5%BA%8F%E6%96%B9%E6%B3%95/</url>
