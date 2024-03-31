@@ -16,15 +16,15 @@
   <meta name="author" content="Forrest">
   <meta name="keywords" content="">
   
-    <meta name="description" content="什么是内存逃逸：函数内部分配了一个变量或对象，并且该对象或变量在函数结束后仍然存在，这时就认为这个变量或对象是从函数中逃逸出去了. 这时编译器会将该变量或对象分配到堆上，而不是栈上。 为什么会关系内存逃逸： 性能优化：GC 代码优化：便于理解代码逻辑，提高可维护性 可以使用 -gcflags ，查看什么变量逃逸到了堆上 1go build -gcflags &quot;-m&quot;">
+    <meta name="description" content="什么是内存逃逸：函数内部分配了一个变量或对象，并且该对象或变量在函数结束后仍然存在，这时就认为这个变量或对象是从函数中逃逸出去了. 这时编译器会将该变量或对象分配到堆上，而不是栈上。 为什么会关心内存逃逸：性能优化：影响GC 代码优化：若无或少，便于理解代码逻辑，可提高可维护性 如何查看内存逃逸可以使用 -gcflags ，查看什么变量逃逸到了堆上 1go build -gcflags &amp;quot">
 <meta property="og:type" content="article">
 <meta property="og:title" content="内存逃逸">
 <meta property="og:url" content="http://example.com/2024/03/31/%E5%86%85%E5%AD%98%E9%80%83%E9%80%B8/index.html">
 <meta property="og:site_name" content="Forrest’s blog">
-<meta property="og:description" content="什么是内存逃逸：函数内部分配了一个变量或对象，并且该对象或变量在函数结束后仍然存在，这时就认为这个变量或对象是从函数中逃逸出去了. 这时编译器会将该变量或对象分配到堆上，而不是栈上。 为什么会关系内存逃逸： 性能优化：GC 代码优化：便于理解代码逻辑，提高可维护性 可以使用 -gcflags ，查看什么变量逃逸到了堆上 1go build -gcflags &quot;-m&quot;">
+<meta property="og:description" content="什么是内存逃逸：函数内部分配了一个变量或对象，并且该对象或变量在函数结束后仍然存在，这时就认为这个变量或对象是从函数中逃逸出去了. 这时编译器会将该变量或对象分配到堆上，而不是栈上。 为什么会关心内存逃逸：性能优化：影响GC 代码优化：若无或少，便于理解代码逻辑，可提高可维护性 如何查看内存逃逸可以使用 -gcflags ，查看什么变量逃逸到了堆上 1go build -gcflags &amp;quot">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-03-30T20:42:07.000Z">
-<meta property="article:modified_time" content="2024-03-30T20:49:13.875Z">
+<meta property="article:modified_time" content="2024-03-31T02:24:34.768Z">
 <meta property="article:author" content="Forrest">
 <meta property="article:tag" content="内存逃逸">
 <meta name="twitter:card" content="summary_large_image">
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          206 字
+          258 字
         
       </span>
     
@@ -283,24 +283,23 @@
             
               <div class="markdown-body">
                 
-                <p>什么是内存逃逸：函数内部分配了一个变量或对象，并且该对象或变量在函数结束后仍然存在，这时就认为这个变量或对象是从函数中<code>逃逸出去了</code>.</p>
+                <h3 id="什么是内存逃逸："><a href="#什么是内存逃逸：" class="headerlink" title="什么是内存逃逸："></a>什么是内存逃逸：</h3><p>函数内部分配了一个变量或对象，并且该对象或变量在函数结束后仍然存在，这时就认为这个变量或对象是从函数中<code>逃逸出去了</code>.</p>
 <p>这时编译器会将该变量或对象分配到堆上，而不是栈上。</p>
-<p>为什么会关系内存逃逸：</p>
-<p>性能优化：GC</p>
-<p>代码优化：便于理解代码逻辑，提高可维护性</p>
-<p>可以使用 <code>-gcflags</code> ，查看什么变量逃逸到了堆上</p>
+<h3 id="为什么会关心内存逃逸："><a href="#为什么会关心内存逃逸：" class="headerlink" title="为什么会关心内存逃逸："></a>为什么会关心内存逃逸：</h3><p>性能优化：影响GC</p>
+<p>代码优化：若无或少，便于理解代码逻辑，可提高可维护性</p>
+<h3 id="如何查看内存逃逸"><a href="#如何查看内存逃逸" class="headerlink" title="如何查看内存逃逸"></a>如何查看内存逃逸</h3><p>可以使用 <code>-gcflags</code> ，查看什么变量逃逸到了堆上</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">go build -gcflags <span class="hljs-string">&quot;-m&quot;</span><br></code></pre></td></tr></table></figure>
 
 
 
 
 
-<p>如何避免内存逃逸：</p>
-<ul>
+<h3 id="如何避免内存逃逸："><a href="#如何避免内存逃逸：" class="headerlink" title="如何避免内存逃逸："></a>如何避免内存逃逸：</h3><ul>
 <li>使用值传递</li>
 <li>避免闭包</li>
 <li>预分配内存</li>
 </ul>
+<h3 id="go-中的引用类型"><a href="#go-中的引用类型" class="headerlink" title="go 中的引用类型"></a>go 中的引用类型</h3><p>slice map channel func  interface</p>
 
                 
               </div>
@@ -369,6 +368,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2024/03/31/%E7%BF%BC%E5%81%A5%E9%9D%A2%E8%AF%95/" title="翼健面试">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">翼健面试</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
