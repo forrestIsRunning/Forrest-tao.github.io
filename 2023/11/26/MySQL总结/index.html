@@ -31,7 +31,7 @@
 <meta property="og:image" content="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/%E7%B4%A2%E5%BC%95/%E7%B4%A2%E5%BC%95%E6%80%BB%E7%BB%93.drawio.png">
 <meta property="og:image" content="https://static001.geekbang.org/resource/image/16/d4/16dbf8124ad529fec0066950446079d4.png">
 <meta property="article:published_time" content="2023-11-26T01:51:52.000Z">
-<meta property="article:modified_time" content="2024-02-28T12:56:57.823Z">
+<meta property="article:modified_time" content="2024-04-04T02:49:26.302Z">
 <meta property="article:author" content="Forrest">
 <meta property="article:tag" content="mysql,总结,八股">
 <meta name="twitter:card" content="summary_large_image">
@@ -230,7 +230,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          8.2k 字
+          9.3k 字
         
       </span>
     
@@ -241,7 +241,7 @@
         
         
         
-          28 分钟
+          32 分钟
         
       </span>
     
@@ -461,38 +461,36 @@
 <ul>
 <li>串行化</li>
 </ul>
-<p>☞ 对记录加上读写锁，多个事务对这条记录进行读写操作时，如果发送了冲突，后访问的事务必须等待前一个事务执行完成，阻塞，才能继续执行</p>
+<p>☞ 对记录加上读写锁，多 个事 务对这条记录进行读写操作时，如果发送了冲突，后访问的事务必须等待前一个事务执行完成，阻塞，才能继续执行</p>
 <p><img src="https://cdn.xiaolincoding.com//mysql/other/4e98ea2e60923b969790898565b4d643.png" srcset="/img/loading.gif" lazyload></p>
 <h4 id="undoLog"><a href="#undoLog" class="headerlink" title="undoLog"></a>undoLog</h4><ul>
 <li>是 Innodb 存储引擎层生成的日志，实现了事务中的<strong>原子性</strong>，主要<strong>用于事务回滚和 MVCC</strong>。</li>
 </ul>
 <p>每当 InnoDB 引擎对一条记录进行操作（修改、删除、新增）时，要把回滚时需要的信息都记录到 undo log 里，比如：</p>
 <ul>
-<li>在<strong>插入</strong>一条记录时，要把这条记录的主键值记下来，这样之后回滚时只需要把这个主键值对应的记录<strong>删掉</strong>就好了；</li>
-<li>在<strong>删除</strong>一条记录时，要把这条记录中的内容都记下来，这样之后回滚时再把由这些内容组成的记录<strong>插入</strong>到表中就好了；</li>
-<li>在<strong>更新</strong>一条记录时，要把被更新的列的旧值记下来，这样之后回滚时再把这些列<strong>更新为旧值</strong>就好了。</li>
+<li><p>在<strong>插入</strong>一条记录时，要把这条记录的主键值记下来，这样之后回滚时只需要把这个主键值对应的记录<strong>删掉</strong>就好了；</p>
+</li>
+<li><p>在<strong>删除</strong>一条记录时，要把这条记录中的内容都记下来，这样之后回滚时再把由这些内容组成的记录<strong>插入</strong>到表中就好了；</p>
+</li>
+<li><p>在<strong>更新</strong>一条记录时，要把被更新的列的旧值记下来，这样之后回滚时再把这些列<strong>更新为旧值</strong>就好了。</p>
+</li>
 </ul>
+<p><code>undo log</code> 记录的格式：</p>
+<p>Undo Log的物理格式在不同版本的MySQL中可能会有所不同，但它通常包含以下几个关键部分：</p>
 <ol>
-<li><p><strong><code>undo log</code> 记录的格式：</strong></p>
- <figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs asciidoc">sqlCopy code<span class="hljs-code">+------------------+</span>----------------------<span class="hljs-code">+-------------+</span>----------------<span class="hljs-code">+--------+</span><br><span class="hljs-section">| Transaction ID  | Transaction Pointer  | Table Space | Page Number    | Offset |</span><br><span class="hljs-section">+------------------+----------------------+-------------+----------------+--------+</span><br><span class="hljs-section">| 1234            | 0x00000123456789AB   | 5           | 123            | 45     |</span><br><span class="hljs-section">+------------------+----------------------+-------------+----------------+--------+</span><br></code></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>Transaction ID（事务标识）：</strong> 标识执行修改的事务的唯一标识符。</li>
-<li><strong>Transaction Pointer（事务指针）：</strong> 指向 <code>undo log</code> 页面的指针。</li>
-<li><strong>Table Space（表空间）：</strong> 表示 <code>undo log</code> 所属的表空间。</li>
-<li><strong>Page Number（页面编号）：</strong> 指向 <code>undo log</code> 存储位置的页码。</li>
-<li><strong>Offset（偏移量）：</strong> 在指定页内的偏移位置。</li>
-</ul>
-</li>
-<li><p><strong>示例的含义：</strong></p>
-<ul>
-<li>上述示例表示一个 <code>undo log</code> 记录，属于事务ID为 <code>1234</code> 的事务，存储在表空间 <code>5</code> 的页号 <code>123</code> 的偏移 <code>45</code> 处。</li>
-<li>这个记录中可能包含了被该事务修改的一些数据，以便在需要时可以撤销或回滚这些修改。</li>
-</ul>
-</li>
+<li><strong>事务ID（Transaction ID）</strong>：每个事务都会被分配一个唯一的事务ID。</li>
+<li><strong>记录类型（Record Type）</strong>：标识undo记录的类型，例如插入、更新或删除。</li>
+<li><strong>表ID（Table ID）</strong>：标识被修改的表。</li>
+<li><strong>行ID（Row ID）</strong>：标识被修改的行。</li>
+<li><strong>旧值（Old Value）</strong>：记录被修改之前的值。</li>
+<li><strong>新值（New Value）</strong>：记录被修改之后的值。</li>
+<li><strong>指针（Pointer）</strong>：指向下一个或前一个undo记录的指针。</li>
 </ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs bash">&#123;<br>  <span class="hljs-string">&quot;transaction_id&quot;</span>: 12345,<br>  <span class="hljs-string">&quot;records&quot;</span>: [<br>    &#123;<br>      <span class="hljs-string">&quot;record_type&quot;</span>: <span class="hljs-string">&quot;INSERT&quot;</span>,<br>      <span class="hljs-string">&quot;table_id&quot;</span>: 1,<br>      <span class="hljs-string">&quot;row_id&quot;</span>: 1,<br>      <span class="hljs-string">&quot;old_value&quot;</span>: null,<br>      <span class="hljs-string">&quot;new_value&quot;</span>: &#123;<span class="hljs-string">&quot;id&quot;</span>: 1, <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;John&quot;</span>&#125;<br>    &#125;,<br>    &#123;<br>      <span class="hljs-string">&quot;record_type&quot;</span>: <span class="hljs-string">&quot;UPDATE&quot;</span>,<br>      <span class="hljs-string">&quot;table_id&quot;</span>: 1,<br>      <span class="hljs-string">&quot;row_id&quot;</span>: 1,<br>      <span class="hljs-string">&quot;old_value&quot;</span>: &#123;<span class="hljs-string">&quot;id&quot;</span>: 1, <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;John&quot;</span>&#125;,<br>      <span class="hljs-string">&quot;new_value&quot;</span>: &#123;<span class="hljs-string">&quot;id&quot;</span>: 1, <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Jane&quot;</span>&#125;<br>    &#125;,<br>    &#123;<br>      <span class="hljs-string">&quot;record_type&quot;</span>: <span class="hljs-string">&quot;DELETE&quot;</span>,<br>      <span class="hljs-string">&quot;table_id&quot;</span>: 1,<br>      <span class="hljs-string">&quot;row_id&quot;</span>: 1,<br>      <span class="hljs-string">&quot;old_value&quot;</span>: &#123;<span class="hljs-string">&quot;id&quot;</span>: 1, <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Jane&quot;</span>&#125;,<br>      <span class="hljs-string">&quot;new_value&quot;</span>: null<br>    &#125;<br>  ]<br>&#125;<br></code></pre></td></tr></table></figure>
+
 <h4 id="redoLog"><a href="#redoLog" class="headerlink" title="redoLog"></a>redoLog</h4><ul>
 <li>redoLog 是Innodb引擎特有的日志，实现了事务的<strong>持久性</strong>，主要用于断电后的故障修复</li>
+<li>redo Log主要用于确保事务的持久性，即当系统崩溃时，能够通过Redo Log来恢复未完成的事务。</li>
 <li>redoLog 是物理日志，记录的是 <code>在某个数据页上做了什么修改</code> </li>
 <li>redo log是循环写的，空间固定会用完</li>
 </ul>
@@ -631,6 +629,39 @@
 <li>倒序存储，再创建前缀索引，用于绕过字符串本身前缀的区分度不够的问题；</li>
 <li>创建hash字段索引，查询性能稳定，有额外的存储和计算消耗，跟第三种方式一样，都不支持范围扫描</li>
 </ol>
+<h3 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h3><h4 id="全局锁"><a href="#全局锁" class="headerlink" title="全局锁"></a>全局锁</h4><blockquote>
+<p>全局锁(主要用于<strong>全库逻辑备份</strong>)</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mysql">flush tables with read lock<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mysql">unlock tables<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>既然备份数据库数据的时候，使用全局锁会影响业务，那有什么其他方式可以避免？</p>
+</blockquote>
+<p>有的，如果数据库的引擎支持的事务支持<strong>可重复读的隔离级别</strong>，那么在备份数据库之前先开启事务，会先创建 Read View，然后整个事务执行期间都在用这个 Read View，而且由于 MVCC 的支持，备份期间业务依然可以对数据进行更新操作。</p>
+<p>因为在可重复读的隔离级别下，即使其他事务更新了表的数据，也不会影响备份数据库时的 Read View，这就是事务四大特性中的隔离性，这样备份期间备份的数据一直是在开启事务时的数据。</p>
+<p>备份数据库的工具是 mysqldump，在使用 mysqldump 时加上 <code>–single-transaction</code> 参数的时候，就会在备份数据库之前先开启事务。这种方法只适用于支持「可重复读隔离级别的事务」的存储引擎。</p>
+<p>InnoDB 存储引擎默认的事务隔离级别正是可重复读，因此可以采用这种方式来备份数据库。</p>
+<p>但是，对于 MyISAM 这种不支持事务的引擎，在备份数据库时就要使用全局锁的方法。</p>
+<blockquote>
+<p>表锁</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-operator">/</span><span class="hljs-operator">/</span>表级别的共享锁，也就是读锁；<br>lock tables t_student read;<br><br><span class="hljs-operator">/</span><span class="hljs-operator">/</span>表级别的独占锁，也就是写锁；<br>lock tables t_stuent write;<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<p>行锁</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select ... lock in share mode; # 对读取的记录加共享锁 S型锁<br> <br>select ... for update; #对读取的记录加独占锁 X锁<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+
+
 
                 
               </div>

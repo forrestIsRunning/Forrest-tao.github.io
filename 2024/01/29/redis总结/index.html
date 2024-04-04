@@ -24,7 +24,7 @@
 <meta property="og:description" content="《我们一起进大厂》系列-Redis常见面试题（带答案） - 掘金 (juejin.cn) redis为什么这么快 基于内存 单线程模型 非阻塞IO 优化过的数据结构和底层模型  基本的数据结构Stringhashlist朋友圈的点赞的人的显示是有顺序的，可以使用list来实现顺序；如果有人点赞rpush；如果有人取消点赞lrem setZset 跳跃表  哈希表   ​	充分利用 跳跃表的快速查找">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-01-29T11:55:49.000Z">
-<meta property="article:modified_time" content="2024-03-23T06:27:57.144Z">
+<meta property="article:modified_time" content="2024-04-02T03:38:11.467Z">
 <meta property="article:author" content="Forrest">
 <meta property="article:tag" content="redis,八股">
 <meta name="twitter:card" content="summary_large_image">
@@ -418,6 +418,9 @@
 <li>使用消息队列，比如 Kafka，来异步地进行缓存预热，将数据库中的热点数据的主键或者 ID 发送到消息队列中，然后由缓存服务消费消息队列中的数据，根据主键或者 ID 查询数据库并更新缓存</li>
 </ol>
 <p>、</p>
+<p>技术栈</p>
+<p>加班</p>
+<p>阻力的人	</p>
 <h3 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h3><h3 id="主从数据同步"><a href="#主从数据同步" class="headerlink" title="主从数据同步"></a>主从数据同步</h3><p>启动一台slave的时候，发送psycn命令给master，触发全量复制。slave将master的RDB写入本地磁盘，加载进内存</p>
 <h3 id="redis的分布式锁"><a href="#redis的分布式锁" class="headerlink" title="redis的分布式锁"></a>redis的分布式锁</h3><p>1 2 3 4 5 6 7 8</p>
 
