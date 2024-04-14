@@ -16,23 +16,24 @@
   <meta name="author" content="Forrest">
   <meta name="keywords" content="">
   
-    <meta name="description" content="布隆过滤器(Bloom Filter)的原理和实现 - cpselvis - 博客园 (cnblogs.com) 6.2 分布式锁 · Go语言高级编程 (studygolang.com) 优点：  有良好的空间利用率和查询效率  缺点：  假阳性误判问题 删除困难  工程实践 基于 murmur hash + redis的bitmap 实现bloomFilter Forrest-Tao&amp;#x2F">
+    <meta name="description" content="在并发场景下，为保证临界区资源的数据一致性，这时需要使用锁，让混乱的并发访问有序化 本地：多进程间通过共享进程资源，使用本地锁 分布式：分布式锁 分布式锁应当具备如下几项核心性质：  独占性：对于同一把锁，在同一时刻只能被一个取锁方占有，这是作为“锁”工具最基础的一项性质 健壮性：即不能产生死锁（dead lock）. 假如某个占有锁的使用方因为宕机而无法主动执行解锁动作，锁也应该能够被正常传承下">
 <meta property="og:type" content="article">
-<meta property="og:title" content="布隆过滤器">
-<meta property="og:url" content="http://example.com/2024/02/26/%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8/index.html">
+<meta property="og:title" content="分布式锁">
+<meta property="og:url" content="http://example.com/2024/04/14/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/index.html">
 <meta property="og:site_name" content="Forrest’s blog">
-<meta property="og:description" content="布隆过滤器(Bloom Filter)的原理和实现 - cpselvis - 博客园 (cnblogs.com) 6.2 分布式锁 · Go语言高级编程 (studygolang.com) 优点：  有良好的空间利用率和查询效率  缺点：  假阳性误判问题 删除困难  工程实践 基于 murmur hash + redis的bitmap 实现bloomFilter Forrest-Tao&amp;#x2F">
+<meta property="og:description" content="在并发场景下，为保证临界区资源的数据一致性，这时需要使用锁，让混乱的并发访问有序化 本地：多进程间通过共享进程资源，使用本地锁 分布式：分布式锁 分布式锁应当具备如下几项核心性质：  独占性：对于同一把锁，在同一时刻只能被一个取锁方占有，这是作为“锁”工具最基础的一项性质 健壮性：即不能产生死锁（dead lock）. 假如某个占有锁的使用方因为宕机而无法主动执行解锁动作，锁也应该能够被正常传承下">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-02-26T13:11:04.000Z">
-<meta property="article:modified_time" content="2024-04-14T14:13:30.004Z">
+<meta property="article:published_time" content="2024-04-14T09:54:28.000Z">
+<meta property="article:modified_time" content="2024-04-14T12:59:34.326Z">
 <meta property="article:author" content="Forrest">
+<meta property="article:tag" content="分布式锁">
 <meta name="twitter:card" content="summary_large_image">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>布隆过滤器 - Forrest’s blog</title>
+  <title>分布式锁 - Forrest’s blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -198,7 +199,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="布隆过滤器"></span>
+            <span id="subtitle" data-typed-text="分布式锁"></span>
           
         </div>
 
@@ -209,8 +210,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-02-26 21:11" pubdate>
-          2024年2月26日 晚上
+        <time datetime="2024-04-14 17:54" pubdate>
+          2024年4月14日 下午
         </time>
       </span>
     
@@ -221,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          232 字
+          747 字
         
       </span>
     
@@ -232,7 +233,7 @@
         
         
         
-          1 分钟
+          3 分钟
         
       </span>
     
@@ -277,25 +278,50 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">布隆过滤器</h1>
+            <h1 id="seo-header">分布式锁</h1>
             
             
               <div class="markdown-body">
                 
-                <p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/cpselvis/p/6265825.html">布隆过滤器(Bloom Filter)的原理和实现 - cpselvis - 博客园 (cnblogs.com)</a></p>
-<p><a target="_blank" rel="noopener" href="https://books.studygolang.com/advanced-go-programming-book/ch6-cloud/ch6-02-lock.html">6.2 分布式锁 · Go语言高级编程 (studygolang.com)</a></p>
-<p>优点：</p>
+                <p>在并发场景下，为保证临界区资源的数据一致性，这时需要使用锁，让混乱的并发访问有序化</p>
+<p>本地：多进程间通过共享进程资源，使用本地锁</p>
+<p>分布式：分布式锁</p>
+<p>分布式锁应当具备如下几项核心性质：</p>
 <ul>
-<li>有良好的空间利用率和查询效率</li>
+<li>独占性：对于同一把锁，在同一时刻只能被一个取锁方占有，这是作为“锁”工具最基础的一项性质</li>
+<li>健壮性：即不能产生死锁（dead lock）. 假如某个占有锁的使用方因为宕机而无法主动执行解锁动作，锁也应该能够被正常传承下去，被其他使用方所延续使用</li>
+<li>对称性：加锁和解锁的使用方必须为同一身份. 不允许非法释放他人持有的分布式锁</li>
+<li>高可用：当提供分布式锁服务的基础组件中存在少量节点发生故障时，不应该影响到分布式锁服务的稳定性</li>
 </ul>
-<p>缺点：</p>
+<p>阻塞&#x2F;唤醒 （适合并发竞争严重）</p>
 <ul>
-<li>假阳性误判问题</li>
-<li>删除困难</li>
+<li>优点: 精准打击，不浪费CPU时间片。</li>
+<li>劣势：需要挂起协程，进行上下文切换，操作较重</li>
 </ul>
-<p>工程实践</p>
-<p>基于 murmur hash + redis的bitmap 实现bloomFilter</p>
-<p><a target="_blank" rel="noopener" href="https://github.com/Forrest-Tao/bloomFileter">Forrest-Tao&#x2F;bloomFileter: 基于murmur+redis bitmap实现的bloomFilter (github.com)</a></p>
+<p>自旋+CAS （适合并发强度低）</p>
+<ul>
+<li>优点：无需阻塞协程，短期来看操作较轻</li>
+<li>劣势：长期来看，浪费CPU时间片</li>
+</ul>
+<h3 id="分类："><a href="#分类：" class="headerlink" title="分类："></a>分类：</h3><h4 id="主动轮询"><a href="#主动轮询" class="headerlink" title="主动轮询"></a>主动轮询</h4><p>适用于 并发竞争较低的场景</p>
+<blockquote>
+<p>redis 中使用 SETNX 加锁</p>
+</blockquote>
+<p>使用lua脚本 自定义 组装同一个redis节点下的形成操作具备原子性的事务</p>
+<p>使用过期机制，避免死锁</p>
+<h5 id="一锁多持问题"><a href="#一锁多持问题" class="headerlink" title="一锁多持问题"></a>一锁多持问题</h5><ul>
+<li>过期机制带来了新的问题：若实际需要处理时长大于过期时间，这时，事务还未完成，锁就释放了。</li>
+<li>redis使用 的是AP（可用性+分区容错性）-&gt;数据弱一致性。为保证服务的可用性和吞吐量，redis在进行数据的主从同步时，采用的时异步执行。若master挂了，数据也没同步到从结点，某个follower成为了master的情形。</li>
+</ul>
+<p>使用redis红锁（redis distribution lock）解决</p>
+<h4 id="监听回调"><a href="#监听回调" class="headerlink" title="监听回调"></a>监听回调</h4><p>适用于并发竞争激烈</p>
+<p>etcd</p>
+<p>zk</p>
+<p>ref：</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Pm4y1b76u?p=3&vd_source=7e55f4c87cf718e9cce051dc48d89bb7">主动轮询型思路_哔哩哔哩_bilibili</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/KYiZvFRX0CddJVCwyfkLfQ">Golang 分布式锁技术攻略 (qq.com)</a></li>
+</ol>
 
                 
               </div>
@@ -305,6 +331,13 @@
               <div class="post-metas my-3">
   
   
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" class="print-no-link">#分布式锁</a>
+      
+    </div>
+  
 </div>
 
 
@@ -313,8 +346,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>布隆过滤器</div>
-      <div>http://example.com/2024/02/26/布隆过滤器/</div>
+      <div>分布式锁</div>
+      <div>http://example.com/2024/04/14/分布式锁/</div>
     </div>
     <div class="license-meta">
       
@@ -326,7 +359,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年2月26日</div>
+          <div>2024年4月14日</div>
         </div>
       
       
@@ -358,18 +391,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/02/26/singleflight/" title="singleflight">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">singleflight</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/02/26/%E7%9F%AD%E9%93%BE%E6%8E%A5%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93/" title="短链接项目总结">
-                        <span class="hidden-mobile">短链接项目总结</span>
+                      <a href="/2024/04/09/es%E6%80%BB%E7%BB%93/" title="es总结">
+                        <span class="hidden-mobile">es总结</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
