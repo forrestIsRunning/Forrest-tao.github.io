@@ -16,16 +16,17 @@
   <meta name="author" content="Forrest">
   <meta name="keywords" content="">
   
-    <meta name="description" content="站在巨人的肩膀上">
+    <meta name="description" content="优点：  应用解耦，提高系统的容错性 异步通讯，提高系统的吞吐量 流量消锋，提高系统的并发能力  缺点：  系统的可用性降低，系统引入的外部依赖越多，系统的稳定性越差，一旦MQ宕机，就会对业务造成影响 系统更多复杂度提高  rabbitMQ的架构： producer：负责消息的发送 exchange：交换机，负责转发消息 queue：队列，负责存储消息 binding：把交换机和队列进行关联 co">
 <meta property="og:type" content="article">
 <meta property="og:title" content="mq总结">
 <meta property="og:url" content="http://example.com/2024/04/06/mq%E6%80%BB%E7%BB%93/index.html">
 <meta property="og:site_name" content="Forrest’s blog">
-<meta property="og:description" content="站在巨人的肩膀上">
+<meta property="og:description" content="优点：  应用解耦，提高系统的容错性 异步通讯，提高系统的吞吐量 流量消锋，提高系统的并发能力  缺点：  系统的可用性降低，系统引入的外部依赖越多，系统的稳定性越差，一旦MQ宕机，就会对业务造成影响 系统更多复杂度提高  rabbitMQ的架构： producer：负责消息的发送 exchange：交换机，负责转发消息 queue：队列，负责存储消息 binding：把交换机和队列进行关联 co">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-04-06T06:44:53.000Z">
-<meta property="article:modified_time" content="2024-04-06T06:44:53.722Z">
+<meta property="article:modified_time" content="2024-04-29T02:27:12.000Z">
 <meta property="article:author" content="Forrest">
+<meta property="article:tag" content="mq">
 <meta name="twitter:card" content="summary_large_image">
   
   
@@ -221,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          0 字
+          571 字
         
       </span>
     
@@ -232,7 +233,7 @@
         
         
         
-          1 分钟
+          2 分钟
         
       </span>
     
@@ -282,7 +283,45 @@
             
               <div class="markdown-body">
                 
-                
+                <p>优点：</p>
+<ol>
+<li>应用解耦，提高系统的容错性</li>
+<li>异步通讯，提高系统的吞吐量</li>
+<li>流量消锋，提高系统的并发能力</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>系统的可用性降低，系统引入的外部依赖越多，系统的稳定性越差，一旦MQ宕机，就会对业务造成影响</li>
+<li>系统更多复杂度提高</li>
+</ol>
+<p>rabbitMQ的架构：</p>
+<p>producer：负责消息的发送</p>
+<p>exchange：交换机，负责转发消息</p>
+<p>queue：队列，负责存储消息</p>
+<p>binding：把交换机和队列进行关联</p>
+<p>consumer：负责消费消息</p>
+<p>virtual host:虚拟主机，在一个rabbitMQ中可以有多个虚拟主机，虚拟主机中有exchange、binding、queue；每个虚拟主机之间相互隔离</p>
+<h4 id="如何保障消息的可靠性"><a href="#如何保障消息的可靠性" class="headerlink" title="如何保障消息的可靠性"></a>如何保障消息的可靠性</h4><p>可能发生消息丢失的三个阶段：</p>
+<ol>
+<li>生产者发送消息的阶段<ul>
+<li>exchangeName有误</li>
+<li>routingKey有误</li>
+</ul>
+</li>
+</ol>
+<p>生产者确认机制：确保消息正常发送给了交换机</p>
+<p>生产者回退机制：确保消息正常发给了队列；其中，若队列返回nack，可以将异常数据写入mysql，兜底处理</p>
+<ol>
+<li>rabbitMQ存储消息的阶段<ul>
+<li>默认情况下，消息存储于内存中，如果rabbitMQ宕机，内存中的消息就会丢失</li>
+</ul>
+</li>
+<li>消费者消费消息的阶段<ul>
+<li>消费者获得消息后，会自动给rabbitMQ返回ACK，rabbitMQ服务端此时会把这个消息从队列中删除。若获取消息后，业务逻辑处理完前，rabbitMQ宕机，消息丢失。</li>
+</ul>
+</li>
+</ol>
+<h4 id="死信队列"><a href="#死信队列" class="headerlink" title="死信队列"></a>死信队列</h4><h4 id="消息的重复消费问题"><a href="#消息的重复消费问题" class="headerlink" title="消息的重复消费问题"></a>消息的重复消费问题</h4>
                 
               </div>
             
@@ -290,6 +329,13 @@
             <div>
               <div class="post-metas my-3">
   
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/mq/" class="print-no-link">#mq</a>
+      
+    </div>
   
 </div>
 

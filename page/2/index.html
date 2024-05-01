@@ -228,6 +228,46 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
+        <a href="/2024/03/31/%E5%86%85%E5%AD%98%E9%80%83%E9%80%B8/" target="_self">
+          内存逃逸
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/03/31/%E5%86%85%E5%AD%98%E9%80%83%E9%80%B8/" target="_self">
+        <div>
+          什么是内存逃逸：函数内部分配了一个变量或对象，并且该对象或变量在函数结束后仍然存在，这时就认为这个变量或对象是从函数中逃逸出去了. 这时编译器会将该变量或对象分配到堆上，而不是栈上。 为什么会关心内存逃逸：性能优化：影响GC 代码优化：若无或少，便于理解代码逻辑，可提高可维护性 如何查看内存逃逸可以使用 -gcflags ，查看什么变量逃逸到了堆上 1go build -gcflags &quot
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-03-31 04:42" pubdate>
+              2024-03-31
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E5%86%85%E5%AD%98%E9%80%83%E9%80%B8/">#内存逃逸</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
         <a href="/2024/03/23/%E4%B8%AD%E8%BD%AC%E7%AB%99/" target="_self">
           中转站
         </a>
@@ -726,46 +766,6 @@
             <i class="iconfont icon-tags"></i>
             
               <a href="/tags/%E8%BD%AC%E9%93%BE%E6%9C%8D%E5%8A%A1%E6%80%BB%E7%BB%93/">#转链服务总结</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/02/25/go%E7%9A%84GC/" target="_self">
-          go的GC
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/02/25/go%E7%9A%84GC/" target="_self">
-        <div>
-          Go的协程栈的位置 Go的协程栈位于Go的堆内存上  Go堆内存位于操作系统的虚拟内存上  协程栈记录了协程的执行现场  协程栈负责记录局部变量，传递参数和返回值  Go使用参数拷贝传递   逃逸分析逃逸分析是编译器在编译阶段对变量的生命周期进行分析，判断变量是在栈上还是堆上分配空间。逃逸分析的主要目的是优化内存的分配和减少垃圾回收的压力  栈帧回收后，需要继续使用的变量  变量太大了，栈里面放不
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-02-25 23:05" pubdate>
-              2024-02-25
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/GC/">#GC</a>
             
           </div>
         
