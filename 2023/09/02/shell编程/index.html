@@ -23,13 +23,13 @@
 <meta property="og:site_name" content="Forrest’s blog">
 <meta property="og:description" content="#!&#x2F;bin&#x2F;bash。这是一个典型的Bash脚本的开头，指定了脚本要使用的解释器，即Bash。 12345678#!&#x2F;bin&#x2F;bash# Author : Forrestpwdlsmkdir testDir    添加执行权限  1chmod +x filename    用read命令来获取keyboard的输入，并将输入结果赋值给变量 The following script uses t">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="c:\Users\Forrest\AppData\Roaming\Typora\typora-user-images\image-20230830201146754.png">
+<meta property="og:image" content="http://example.com/2023/09/02/shell%E7%BC%96%E7%A8%8B/Users/Forrest/AppData/Roaming/Typora/typora-user-images/image-20230830201146754.png">
 <meta property="article:published_time" content="2023-09-02T02:13:08.000Z">
-<meta property="article:modified_time" content="2023-09-02T02:15:38.795Z">
+<meta property="article:modified_time" content="2023-09-02T02:15:40.000Z">
 <meta property="article:author" content="Forrest">
 <meta property="article:tag" content="shell">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="c:\Users\Forrest\AppData\Roaming\Typora\typora-user-images\image-20230830201146754.png">
+<meta name="twitter:image" content="http://example.com/2023/09/02/shell%E7%BC%96%E7%A8%8B/Users/Forrest/AppData/Roaming/Typora/typora-user-images/image-20230830201146754.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -331,7 +331,7 @@
 <h2 id="Using-Shell-Arrays"><a href="#Using-Shell-Arrays" class="headerlink" title="Using Shell Arrays"></a>Using Shell Arrays</h2><p>查看shell是 ksh 还是bash</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-built_in">echo</span> <span class="hljs-variable">$SHELL</span><br></code></pre></td></tr></table></figure>
 
-<p><img src="C:\Users\Forrest\AppData\Roaming\Typora\typora-user-images\image-20230830201146754.png" srcset="/img/loading.gif" lazyload alt="image-20230830201146754"></p>
+<p><img src="/2023/09/02/shell%E7%BC%96%E7%A8%8B/Users\Forrest\AppData\Roaming\Typora\typora-user-images\image-20230830201146754.png" srcset="/img/loading.gif" lazyload alt="image-20230830201146754"></p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-meta">#!/bin/bash</span><br><br>Arr[0]=<span class="hljs-string">&quot;0&quot;</span><br>Arr[1]=<span class="hljs-string">&quot;1&quot;</span><br>Arr[2]=<span class="hljs-string">&quot;2&quot;</span><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;first item <span class="hljs-variable">$&#123;Arr[0]&#125;</span>&quot;</span><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;first method <span class="hljs-variable">$&#123;Arr[*]&#125;</span>&quot;</span><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;second method <span class="hljs-variable">$&#123;Arr[@]&#125;</span>&quot;</span><br></code></pre></td></tr></table></figure>
 
 
@@ -350,7 +350,7 @@
 
 
 <h2 id="IO-Redirection"><a href="#IO-Redirection" class="headerlink" title="IO Redirection"></a>IO Redirection</h2><h3 id="Output"><a href="#Output" class="headerlink" title="Output"></a>Output</h3><p><strong>who</strong> command which redirects the complete output of the command in the users file.</p>
-<h3 id=""><a href="#" class="headerlink" title=""></a></h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-built_in">who</span> &gt; <span class="hljs-built_in">users</span><br></code></pre></td></tr></table></figure>
+<h3 id><a href="#" class="headerlink" title></a></h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-built_in">who</span> &gt; <span class="hljs-built_in">users</span><br></code></pre></td></tr></table></figure>
 
 
 
