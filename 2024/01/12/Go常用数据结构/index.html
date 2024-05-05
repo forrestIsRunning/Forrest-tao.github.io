@@ -24,7 +24,7 @@
 <meta property="og:description" content="高效拼接字符串拼接字符串的方式     fmt.Sprintf bytes.buffer strings.builder  1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859const letterBytes &#x3D; &quot;abc">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-01-12T01:19:42.000Z">
-<meta property="article:modified_time" content="2024-01-12T03:38:08.000Z">
+<meta property="article:modified_time" content="2024-05-04T03:06:23.037Z">
 <meta property="article:author" content="Forrest">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -221,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3k 字
+          3.5k 字
         
       </span>
     
@@ -232,7 +232,7 @@
         
         
         
-          10 分钟
+          12 分钟
         
       </span>
     
@@ -309,6 +309,32 @@
 <p>运行结果</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash">Forrest@LAPTOP-32G4HDVI MINGW64 /d/Go_WorkSpace/面经/connectStrings (main)<br>$ go <span class="hljs-built_in">test</span> -v<br>=== RUN   TestBuilderConcat<br>16 32 64 128 256 512 896 1408 2048 3072 4096 5376 6912 9472 12288 16384 21760 28672 40960 57344 73728 98304 131072 --- PASS: TestBuilderConcat (0.00s)<br>PASS<br>ok      demo    0.709s<br></code></pre></td></tr></table></figure>
 
+
+
+
+
+
+
+
+
+<p>go 中的slice是 可变长的数据序列。 </p>
+<p>go 是值传递，其中func中的 参数也是值传递，只是传递的是 pointer，同一个pointer，所以更改后会对原slice的值造成影响</p>
+<p>其中由 指向array的指针+len+cap 三个字段构成slice。</p>
+<p>扩容策略：</p>
+<ul>
+<li>若容量超过系统限制，直接panic</li>
+<li>若容量为0，返回 zerobase <code>slice&#123;unsafe.Pointer($zerobase),old.len,size&#125;</code></li>
+<li>当cap小于 256时，扩容机制为：直接翻倍；<ul>
+<li>当cap大于256时，扩容策	略为：在原容量 n 的基础上循环执行 n +&#x3D; (n+3*256)&#x2F;4,直到 n 大于等于预期新容量，并取 n 作为新容量。即：扩容1&#x2F;4 +192 的固定值</li>
+</ul>
+</li>
+<li>计算相应的数据结构所需的内存大小，分配内存</li>
+<li>数据迁移</li>
+<li>返回新slice</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">Test_slice</span><span class="hljs-params">(t *testing.T)</span></span>&#123;<br>    s := <span class="hljs-built_in">make</span>([]<span class="hljs-type">int</span>,<span class="hljs-number">512</span>)  <br>    s = <span class="hljs-built_in">append</span>(s,<span class="hljs-number">1</span>)<br>    t.Logf(<span class="hljs-string">&quot;len of s: %d, cap of s: %d&quot;</span>,<span class="hljs-built_in">len</span>(s),<span class="hljs-built_in">cap</span>(s))<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">len: 513, <span class="hljs-built_in">cap</span>: 848<br></code></pre></td></tr></table></figure>
 
                 
               </div>

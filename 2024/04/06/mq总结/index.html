@@ -16,18 +16,22 @@
   <meta name="author" content="Forrest">
   <meta name="keywords" content="">
   
-    <meta name="description" content="优点：  应用解耦，提高系统的容错性 异步通讯，提高系统的吞吐量 流量消锋，提高系统的并发能力  缺点：  系统的可用性降低，系统引入的外部依赖越多，系统的稳定性越差，一旦MQ宕机，就会对业务造成影响 系统更多复杂度提高  rabbitMQ的架构： producer：负责消息的发送 exchange：交换机，负责转发消息 queue：队列，负责存储消息 binding：把交换机和队列进行关联 co">
+    <meta name="description" content="rabbitMQ的分析优点： 应用解耦，提高系统的容错性 异步通讯，提高系统的吞吐量 流量消锋，提高系统的并发能力  缺点： 系统的可用性降低，系统引入的外部依赖越多，系统的稳定性越差，一旦MQ宕机，就会对业务造成影响 系统更多复杂度提高  rabbitMQ的架构producer：负责消息的发送 exchange：交换机，负责转发消息 queue：队列，负责存储消息 binding：把交换机和队列">
 <meta property="og:type" content="article">
 <meta property="og:title" content="mq总结">
 <meta property="og:url" content="http://example.com/2024/04/06/mq%E6%80%BB%E7%BB%93/index.html">
 <meta property="og:site_name" content="Forrest’s blog">
-<meta property="og:description" content="优点：  应用解耦，提高系统的容错性 异步通讯，提高系统的吞吐量 流量消锋，提高系统的并发能力  缺点：  系统的可用性降低，系统引入的外部依赖越多，系统的稳定性越差，一旦MQ宕机，就会对业务造成影响 系统更多复杂度提高  rabbitMQ的架构： producer：负责消息的发送 exchange：交换机，负责转发消息 queue：队列，负责存储消息 binding：把交换机和队列进行关联 co">
+<meta property="og:description" content="rabbitMQ的分析优点： 应用解耦，提高系统的容错性 异步通讯，提高系统的吞吐量 流量消锋，提高系统的并发能力  缺点： 系统的可用性降低，系统引入的外部依赖越多，系统的稳定性越差，一旦MQ宕机，就会对业务造成影响 系统更多复杂度提高  rabbitMQ的架构producer：负责消息的发送 exchange：交换机，负责转发消息 queue：队列，负责存储消息 binding：把交换机和队列">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2024/04/06/mq%E6%80%BB%E7%BB%93/Users/forrest-tao/AppData/Roaming/Typora/typora-user-images/image-20240503100502904.png">
+<meta property="og:image" content="http://example.com/2024/04/06/mq%E6%80%BB%E7%BB%93/Users/forrest-tao/AppData/Roaming/Typora/typora-user-images/image-20240503100602528.png">
+<meta property="og:image" content="http://example.com/2024/04/06/mq%E6%80%BB%E7%BB%93/Users/forrest-tao/AppData/Roaming/Typora/typora-user-images/image-20240503162436164.png">
 <meta property="article:published_time" content="2024-04-06T06:44:53.000Z">
-<meta property="article:modified_time" content="2024-04-29T02:27:12.000Z">
+<meta property="article:modified_time" content="2024-05-05T03:00:28.432Z">
 <meta property="article:author" content="Forrest">
 <meta property="article:tag" content="mq">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2024/04/06/mq%E6%80%BB%E7%BB%93/Users/forrest-tao/AppData/Roaming/Typora/typora-user-images/image-20240503100502904.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -222,7 +226,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          571 字
+          1.2k 字
         
       </span>
     
@@ -233,7 +237,7 @@
         
         
         
-          2 分钟
+          4 分钟
         
       </span>
     
@@ -283,25 +287,32 @@
             
               <div class="markdown-body">
                 
-                <p>优点：</p>
-<ol>
+                <h3 id="rabbitMQ的分析"><a href="#rabbitMQ的分析" class="headerlink" title="rabbitMQ的分析"></a>rabbitMQ的分析</h3><h4 id="优点："><a href="#优点：" class="headerlink" title="优点："></a>优点：</h4><ol>
 <li>应用解耦，提高系统的容错性</li>
 <li>异步通讯，提高系统的吞吐量</li>
 <li>流量消锋，提高系统的并发能力</li>
 </ol>
-<p>缺点：</p>
-<ol>
+<h4 id="缺点："><a href="#缺点：" class="headerlink" title="缺点："></a>缺点：</h4><ol>
 <li>系统的可用性降低，系统引入的外部依赖越多，系统的稳定性越差，一旦MQ宕机，就会对业务造成影响</li>
 <li>系统更多复杂度提高</li>
 </ol>
-<p>rabbitMQ的架构：</p>
-<p>producer：负责消息的发送</p>
+<h3 id="rabbitMQ的架构"><a href="#rabbitMQ的架构" class="headerlink" title="rabbitMQ的架构"></a>rabbitMQ的架构</h3><p>producer：负责消息的发送</p>
 <p>exchange：交换机，负责转发消息</p>
 <p>queue：队列，负责存储消息</p>
 <p>binding：把交换机和队列进行关联</p>
 <p>consumer：负责消费消息</p>
 <p>virtual host:虚拟主机，在一个rabbitMQ中可以有多个虚拟主机，虚拟主机中有exchange、binding、queue；每个虚拟主机之间相互隔离</p>
-<h4 id="如何保障消息的可靠性"><a href="#如何保障消息的可靠性" class="headerlink" title="如何保障消息的可靠性"></a>如何保障消息的可靠性</h4><p>可能发生消息丢失的三个阶段：</p>
+<h3 id="队列模型"><a href="#队列模型" class="headerlink" title="队列模型"></a>队列模型</h3><h5 id="simpe-queue简单队列模型"><a href="#simpe-queue简单队列模型" class="headerlink" title="simpe queue简单队列模型"></a>simpe queue简单队列模型</h5><h5 id="work-queue工作队列模型-distribute-tasks-among-workers"><a href="#work-queue工作队列模型-distribute-tasks-among-workers" class="headerlink" title="work queue工作队列模型:distribute tasks among workers"></a>work queue工作队列模型:distribute tasks among workers</h5><p><img src="/2024/04/06/mq%E6%80%BB%E7%BB%93/Users\forrest-tao\AppData\Roaming\Typora\typora-user-images\image-20240503100502904.png" srcset="/img/loading.gif" lazyload alt="image-20240503100502904"></p>
+<h5 id="发布订阅模型"><a href="#发布订阅模型" class="headerlink" title="发布订阅模型:"></a>发布订阅模型:</h5><ul>
+<li><p>fanout：广播</p>
+</li>
+<li><p>direct：路由，指定具体的routing key</p>
+</li>
+<li><p>topic：主题，可以使用通配符，来简化routing key的填写。其中 <code>#</code> 代表0个或多个单词； <code>*</code>表示一个单词</p>
+</li>
+</ul>
+<p><img src="/2024/04/06/mq%E6%80%BB%E7%BB%93/Users\forrest-tao\AppData\Roaming\Typora\typora-user-images\image-20240503100602528.png" srcset="/img/loading.gif" lazyload alt="image-20240503100602528"></p>
+<h3 id="如何保障消息的可靠性"><a href="#如何保障消息的可靠性" class="headerlink" title="如何保障消息的可靠性"></a>如何保障消息的可靠性</h3><p>可能发生消息丢失的三个阶段：</p>
 <ol>
 <li>生产者发送消息的阶段<ul>
 <li>exchangeName有误</li>
@@ -321,7 +332,33 @@
 </ul>
 </li>
 </ol>
-<h4 id="死信队列"><a href="#死信队列" class="headerlink" title="死信队列"></a>死信队列</h4><h4 id="消息的重复消费问题"><a href="#消息的重复消费问题" class="headerlink" title="消息的重复消费问题"></a>消息的重复消费问题</h4>
+<h3 id="死信队列"><a href="#死信队列" class="headerlink" title="死信队列"></a>死信队列</h3><p>DLQ <code>dead letter queue</code> 消息无法被消费者成功消费而被重新投递到另一个队列中</p>
+<ol>
+<li>消息被拒绝</li>
+<li>消息过期</li>
+<li>队列满了</li>
+<li>消息路由失败</li>
+</ol>
+<h3 id="延迟队列"><a href="#延迟队列" class="headerlink" title="延迟队列"></a>延迟队列</h3><p>rabbitMQ中没有真正意义上的延迟队列。可以使用ttl（<code>time to live</code>）+死信队列实现</p>
+<p>适用场景：</p>
+<ul>
+<li>10min内未支付，则关闭订单</li>
+<li>用户注册后，三日未上线，则短信提醒</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://learnku.com/articles/64960">Golang 实现 RabbitMQ 的延迟队列 | Go 技术论坛 (learnku.com)</a></p>
+<p><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000040714810">go - 高可用延迟队列设计与实现 - 个人文章 - SegmentFault 思否</a></p>
+<h3 id="消息的重复消费问题"><a href="#消息的重复消费问题" class="headerlink" title="消息的重复消费问题"></a>消息的重复消费问题</h3><p>为保证消息百分百被消费成功，可能出现消息重复消费的情况。</p>
+<p><img src="/2024/04/06/mq%E6%80%BB%E7%BB%93/Users\forrest-tao\AppData\Roaming\Typora\typora-user-images\image-20240503162436164.png" srcset="/img/loading.gif" lazyload alt="image-20240503162436164"></p>
+<p>生产端：无法解决</p>
+<p>消费端：保证消息的幂等性，就算多次消费，也不会影响最终的效果</p>
+<p>使用数据库唯一约束保证幂等性</p>
+<h3 id="Kafka"><a href="#Kafka" class="headerlink" title="Kafka"></a>Kafka</h3><h4 id="为何读写速度极快"><a href="#为何读写速度极快" class="headerlink" title="为何读写速度极快"></a>为何读写速度极快</h4><ul>
+<li>使用批量处理的方式来提升系统吞吐能力。 网络IO 速度</li>
+<li>基于磁盘文件高性能顺序读写的特性来设计的存储结构。磁盘IO 速度</li>
+<li>利用操作系统的PageCache来缓存数据，减少IO并提升读性能。</li>
+<li>使用零拷贝技术加速消费流程。</li>
+</ul>
+
                 
               </div>
             
