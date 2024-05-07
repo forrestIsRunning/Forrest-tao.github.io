@@ -16,22 +16,23 @@
   <meta name="author" content="Forrest">
   <meta name="keywords" content="">
   
-    <meta name="description" content="​	  ​	 MySQL 执行一条查询语句的流程  客户端与服务端连接建立  建立连接 管理连接 校验用户身份   Serve层  查询缓存  查询语句如果命中查询缓存则直接返回，否则继续往下执行。MySQL 8.0 已删除该模块；   进行词法分析  进行语法分析  构建语法树  执行SQL  prepare 预处理 检查 SQL 查询语句中的表或者字段是否存在； 将 select * 中的 *">
+    <meta name="description" content="​	  ​	 MySQL 执行一条查询语句的流程  连接建立  建立连接 管理连接 校验用户身份   Serve层  查询缓存  查询语句如果命中查询缓存则直接返回，否则继续往下执行。MySQL 8.0 已删除该模块；   进行词法分析  进行语法分析  构建语法树  执行SQL  prepare 预处理 检查 SQL 查询语句中的表或者字段是否存在； 将 select * 中的 * 符号，扩展为">
 <meta property="og:type" content="article">
 <meta property="og:title" content="MySQL总结">
 <meta property="og:url" content="http://example.com/2023/11/26/MySQL%E6%80%BB%E7%BB%93/index.html">
 <meta property="og:site_name" content="Forrest’s blog">
-<meta property="og:description" content="​	  ​	 MySQL 执行一条查询语句的流程  客户端与服务端连接建立  建立连接 管理连接 校验用户身份   Serve层  查询缓存  查询语句如果命中查询缓存则直接返回，否则继续往下执行。MySQL 8.0 已删除该模块；   进行词法分析  进行语法分析  构建语法树  执行SQL  prepare 预处理 检查 SQL 查询语句中的表或者字段是否存在； 将 select * 中的 *">
+<meta property="og:description" content="​	  ​	 MySQL 执行一条查询语句的流程  连接建立  建立连接 管理连接 校验用户身份   Serve层  查询缓存  查询语句如果命中查询缓存则直接返回，否则继续往下执行。MySQL 8.0 已删除该模块；   进行词法分析  进行语法分析  构建语法树  执行SQL  prepare 预处理 检查 SQL 查询语句中的表或者字段是否存在； 将 select * 中的 * 符号，扩展为">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2023/11/26/MySQL%E6%80%BB%E7%BB%93/image-20231126095209387.png">
 <meta property="og:image" content="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/sql%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B/mysql%E6%9F%A5%E8%AF%A2%E6%B5%81%E7%A8%8B.png">
+<meta property="og:image" content="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/row_format/%E8%A1%A8%E7%A9%BA%E9%97%B4%E7%BB%93%E6%9E%84.drawio.png">
 <meta property="og:image" content="https://cdn.xiaolincoding.com//mysql/other/4e98ea2e60923b969790898565b4d643.png">
 <meta property="og:image" content="https://static001.geekbang.org/resource/image/dc/8d/dcda101051f28502bd5c4402b292e38d.png">
 <meta property="og:image" content="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/%E7%B4%A2%E5%BC%95/%E8%81%94%E5%90%88%E7%B4%A2%E5%BC%95.drawio.png">
 <meta property="og:image" content="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/%E7%B4%A2%E5%BC%95/%E7%B4%A2%E5%BC%95%E6%80%BB%E7%BB%93.drawio.png">
 <meta property="og:image" content="https://static001.geekbang.org/resource/image/16/d4/16dbf8124ad529fec0066950446079d4.png">
 <meta property="article:published_time" content="2023-11-26T01:51:52.000Z">
-<meta property="article:modified_time" content="2024-04-18T14:05:18.000Z">
+<meta property="article:modified_time" content="2024-05-07T14:52:31.410Z">
 <meta property="article:author" content="Forrest">
 <meta property="article:tag" content="mysql,总结,八股">
 <meta name="twitter:card" content="summary_large_image">
@@ -230,7 +231,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          9.3k 字
+          9.8k 字
         
       </span>
     
@@ -241,7 +242,7 @@
         
         
         
-          32 分钟
+          33 分钟
         
       </span>
     
@@ -296,7 +297,7 @@
 <p>​	</p>
 <h3 id="MySQL-执行一条查询语句的流程"><a href="#MySQL-执行一条查询语句的流程" class="headerlink" title="MySQL 执行一条查询语句的流程"></a>MySQL 执行一条查询语句的流程</h3><p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/sql%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B/mysql%E6%9F%A5%E8%AF%A2%E6%B5%81%E7%A8%8B.png" srcset="/img/loading.gif" lazyload></p>
 <ul>
-<li><p>客户端与服务端连接建立</p>
+<li><p>连接建立</p>
 <ul>
 <li>建立连接</li>
 <li>管理连接</li>
@@ -343,13 +344,36 @@
 </ul>
 </li>
 </ul>
-<p>sno </p>
+<h3 id="mysql中的一行记录是如何存储的"><a href="#mysql中的一行记录是如何存储的" class="headerlink" title="mysql中的一行记录是如何存储的"></a>mysql中的一行记录是如何存储的</h3><p>其中，库的数据存储于<code>/var/lib/mysql/databaseName</code></p>
+<ul>
+<li><p><code>.opt</code>文件用来存储当前数据库的默认字符集和字符校验规则</p>
+</li>
+<li><p><code>.frm</code>文件用来保存表的结构</p>
+</li>
+<li><p><code>.ibd</code>文件用来存储表中的数据</p>
+</li>
+</ul>
+<h4 id="表中间的文件的结构"><a href="#表中间的文件的结构" class="headerlink" title="表中间的文件的结构"></a>表中间的文件的结构</h4><p><img src="https://cdn.xiaolincoding.com/gh/xiaolincoder/mysql/row_format/%E8%A1%A8%E7%A9%BA%E9%97%B4%E7%BB%93%E6%9E%84.drawio.png" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li><p>innodb 的数据是以页为单位来读写的。默认的页大小为 16KB；page是innoDB存储引擎磁盘管理的最小单位</p>
+</li>
+<li><p>为了保证链表中相邻的物理位置也相邻，按照extent为单位进行分配，其大小为1M，对于16KB的page来说，连续的64个page为一个extent</p>
+</li>
+<li><p>表空间是由各个段（segment）组成的，段是由多个区（extent）组成的。段一般分为数据段、索引段和回滚段等。</p>
+<ul>
+<li>索引段：存放 B + 树的非叶子节点的区的集合；</li>
+<li>数据段：存放 B + 树的叶子节点的区的集合；</li>
+<li>回滚段：存放的是回滚数据的区的集合，之前讲<a target="_blank" rel="noopener" href="https://xiaolincoding.com/mysql/transaction/mvcc.html">事务隔离 (opens new window)</a>的时候就介绍到了 MVCC 利用了回滚段实现了多版本查询数据。</li>
+</ul>
+</li>
+</ul>
 <h3 id="mysql的写操作的执行流程"><a href="#mysql的写操作的执行流程" class="headerlink" title="mysql的写操作的执行流程"></a>mysql的写操作的执行流程</h3><h3 id="mysql如何分库分表"><a href="#mysql如何分库分表" class="headerlink" title="mysql如何分库分表"></a>mysql如何分库分表</h3><p>分库分表是一种常见的数据库水平扩展的技术，用于解决单一数据库性能瓶颈问题。提高数据库的并发处理能力和性能</p>
 <ul>
 <li>按照地域分</li>
 <li>按照业务模块分</li>
 <li>按时间分表</li>
 </ul>
+<h3 id="B-树"><a href="#B-树" class="headerlink" title="B+ 树"></a>B+ 树</h3><p>B+树是一个多叉树，存储千万级别的数据只需要3<del>4层就可以满足。这意味着查询一个数据只需要3</del>4次的磁盘IO</p>
 <h3 id="三范式"><a href="#三范式" class="headerlink" title="三范式"></a>三范式</h3><p>数据库范式有 3 种：</p>
 <ul>
 <li>1NF(第一范式)：属性不可再分。</li>
