@@ -37,7 +37,7 @@
 <meta property="og:image" content="http://example.com/2024/04/05/%E8%AE%A1%E7%BD%91%E6%80%BB%E7%BB%93/Users/forrest-tao/AppData/Roaming/Typora/typora-user-images/image-20240510084335812.png">
 <meta property="og:image" content="http://example.com/2024/04/05/%E8%AE%A1%E7%BD%91%E6%80%BB%E7%BB%93/Users/forrest-tao/AppData/Roaming/Typora/typora-user-images/image-20240512104528483.png">
 <meta property="article:published_time" content="2024-04-05T02:20:38.000Z">
-<meta property="article:modified_time" content="2024-05-14T13:00:50.562Z">
+<meta property="article:modified_time" content="2024-05-20T03:20:16.183Z">
 <meta property="article:author" content="Forrest">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://example.com/2024/04/05/%E8%AE%A1%E7%BD%91%E6%80%BB%E7%BB%93/image-20240405102338579.png">
@@ -235,7 +235,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.9k 字
+          3.5k 字
         
       </span>
     
@@ -246,7 +246,7 @@
         
         
         
-          10 分钟
+          12 分钟
         
       </span>
     
@@ -403,6 +403,12 @@
 <h4 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h4><p>syn、syn-ack、ack来连接建立</p>
 <h4 id="数据传输阶段"><a href="#数据传输阶段" class="headerlink" title="数据传输阶段"></a>数据传输阶段</h4><p>使用确认和重传机制来保证数据丶完整性和顺序性</p>
 <h4 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h4><p>FIN、ACK、FIN、ACK ，这个过程确保了连接的彻底关闭，数据的完整性。</p>
+<h4 id="为什么需要-2MSL"><a href="#为什么需要-2MSL" class="headerlink" title="为什么需要 2MSL"></a>为什么需要 2MSL</h4><p><code>MSL</code> 是 <strong>max segment lifetime</strong> 。是网络中TCP报文段能够存活的最大时间。他表示一个报文被发送到网络中，到他被认为已经失效的最大时间。</p>
+<h4 id="TIME-WAIT状态的作用"><a href="#TIME-WAIT状态的作用" class="headerlink" title="TIME_WAIT状态的作用"></a>TIME_WAIT状态的作用</h4><ol>
+<li><strong>确保所有报文段的正确交付：</strong> TCP是一种可靠的传输协议，保证数据的准确传输。在四次挥手中，最后一个ACK报文段可能会丢失。如果服务器没有收到这个ACK，它会重传它的FIN报文段。如果客户端不处于TIME_WAIT状态，它可能已经释放了相关资源，无法处理重传的FIN报文段。这会导致服务器无法正常关闭连接，可能导致资源泄漏。TIME_WAIT状态确保客户端在一定时间内保持连接资源以处理可能的重传报文段。</li>
+<li><strong>避免旧连接的数据干扰新连接：</strong> 在网络环境中，延迟和路由问题可能导致旧的TCP报文段在网络中滞留。如果一个新的连接使用了相同的IP地址和端口对，这些滞留的报文段可能被误认为是新的连接的数据，导致数据混乱。通过让连接在TIME_WAIT状态下保持2MSL的时间，可以确保所有旧的报文段在这个时间内都已经失效，不会干扰新的连接。</li>
+</ol>
+<p><strong>TIME_WAIT状态的2MSL时间是TCP协议设计中的一个关键因素，旨在保证连接的优雅关闭和数据的正确交付。通过等待2MSL时间，可以确保所有旧的报文段在网络中失效，防止数据混乱，并且提供足够的时间来处理可能的FIN重传，确保双方都能正常关闭连接。</strong></p>
 <h3 id="TCP的流量控制"><a href="#TCP的流量控制" class="headerlink" title="TCP的流量控制"></a>TCP的流量控制</h3><h3 id="TCP的拥塞控制"><a href="#TCP的拥塞控制" class="headerlink" title="TCP的拥塞控制"></a>TCP的拥塞控制</h3><p>表现：分组丢失、分组延迟过大</p>
 <h3 id="TLS连接建立"><a href="#TLS连接建立" class="headerlink" title="TLS连接建立"></a>TLS连接建立</h3><ol>
 <li>clientHello<ol>
