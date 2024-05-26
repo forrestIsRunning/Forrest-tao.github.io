@@ -30,8 +30,10 @@
 <meta property="og:image" content="http://example.com/2024/04/04/k8s%E8%AE%B0%E5%BD%95/Users/forrest-tao/AppData/Roaming/Typora/typora-user-images/image-20240516150047675.png">
 <meta property="og:image" content="https://picdn.youdianzhishi.com/images/1662384295453.jpg">
 <meta property="og:image" content="http://example.com/2024/04/04/k8s%E8%AE%B0%E5%BD%95/Users/forrest-tao/AppData/Roaming/Typora/typora-user-images/image-20240521224642758.png">
+<meta property="og:image" content="http://example.com/2024/04/04/k8s%E8%AE%B0%E5%BD%95/Users/forrest-tao/AppData/Roaming/Typora/typora-user-images/image-20240524144203655.png">
+<meta property="og:image" content="http://example.com/2024/04/04/k8s%E8%AE%B0%E5%BD%95/Users/forrest-tao/AppData/Roaming/Typora/typora-user-images/image-20240524212331300.png">
 <meta property="article:published_time" content="2024-04-04T13:16:17.000Z">
-<meta property="article:modified_time" content="2024-05-21T15:09:12.748Z">
+<meta property="article:modified_time" content="2024-05-24T13:55:25.290Z">
 <meta property="article:author" content="Forrest">
 <meta property="article:tag" content="k8s">
 <meta name="twitter:card" content="summary_large_image">
@@ -230,7 +232,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          8.3k 字
+          18k 字
         
       </span>
     
@@ -241,7 +243,7 @@
         
         
         
-          28 分钟
+          62 分钟
         
       </span>
     
@@ -445,7 +447,21 @@
 
 
 
-<h3 id="金丝雀发布"><a href="#金丝雀发布" class="headerlink" title="金丝雀发布"></a>金丝雀发布</h3><h3 id="label和selector"><a href="#label和selector" class="headerlink" title="label和selector"></a>label和selector</h3><h3 id="K8S-的资源清单"><a href="#K8S-的资源清单" class="headerlink" title="K8S 的资源清单"></a>K8S 的资源清单</h3><table>
+<h3 id="金丝雀发布"><a href="#金丝雀发布" class="headerlink" title="金丝雀发布"></a>金丝雀发布</h3><h3 id="label和selector"><a href="#label和selector" class="headerlink" title="label和selector"></a>label和selector</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs bash">➜  pods kubectl label po nginx-po author=xxx  <span class="hljs-comment"># 添加标签</span><br>pod/nginx-po labeled<br><br><br>➜  pods kubectl get pods  --show-labels <span class="hljs-comment"># 显示标签</span><br>NAME                         READY   STATUS    RESTARTS      AGE   LABELS<br>nginx-po                     1/1     Running   2 (11h ago)   11h   author=xxx,<span class="hljs-built_in">type</span>=app,version=1.0.1<br>nginx-pod-59dc7f9d89-sk4sh   1/1     Running   0             12h   app=nginx-pod,pod-template-hash=59dc7f9d89<br><br><br>➜  pods kubectl label po nginx-po author=yxt --overwrite <span class="hljs-comment">#重写 label</span><br>pod/nginx-po labeled<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash">➜  pods kubectl get po --show-labels -A -l <span class="hljs-built_in">type</span>=app <span class="hljs-comment"># select 标签为 type=java的</span><br>NAMESPACE   NAME       READY   STATUS    RESTARTS      AGE   LABELS<br>default     nginx-po   1/1     Running   2 (11h ago)   11h   author=yxt,<span class="hljs-built_in">type</span>=app,version=1.0.1<br><br>➜  pods kubectl get po --show-labels -A -l <span class="hljs-string">&#x27;version in (1.0.0,1.1.2,1.0.1)&#x27;</span><br>NAMESPACE   NAME       READY   STATUS    RESTARTS      AGE   LABELS<br>default     nginx-po   1/1     Running   2 (11h ago)   11h   author=yxt,<span class="hljs-built_in">type</span>=app,version=1.0.1<br><br>➜  pods kubectl get po --show-labels -A -l version!=1.2.0,<span class="hljs-built_in">type</span>=app<br>NAMESPACE   NAME       READY   STATUS    RESTARTS      AGE   LABELS<br>default     nginx-po   1/1     Running   2 (11h ago)   11h   author=yxt,<span class="hljs-built_in">type</span>=app,version=1.0.1<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h3 id="K8S-的资源清单"><a href="#K8S-的资源清单" class="headerlink" title="K8S 的资源清单"></a>K8S 的资源清单</h3><table>
 <thead>
 <tr>
 <th>参数名</th>
@@ -634,6 +650,160 @@
 <td>定义是否使用主机网络模式，默认值为 false。设置 true 表示使用宿主机网络，不使用 docker 网桥，同时设置了 true将无法在同一台宿主机上启动第二个副本</td>
 </tr>
 </tbody></table>
+<h3 id="Deployment"><a href="#Deployment" class="headerlink" title="Deployment"></a>Deployment</h3><h4 id="创建一个pod"><a href="#创建一个pod" class="headerlink" title="创建一个pod"></a>创建一个pod</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br></pre></td><td class="code"><pre><code class="hljs bash">➜  deployment kubectl create deploy nginx--deploy --image=nginx:latest <span class="hljs-comment"># 创建deploy</span><br>deployment.apps/nginx--deploy created<br><br>➜  deployment kubectl get deploy <span class="hljs-comment">#获取deploy</span><br>NAME            READY   UP-TO-DATE   AVAILABLE   AGE<br>nginx--deploy   1/1     1            1           9s<br><br>➜  deployment kubectl get rs <span class="hljs-comment"># 可以看出 deploy和 rs是关联的</span><br>NAME                       DESIRED   CURRENT   READY   AGE<br>nginx--deploy-6b56887c44   1         1         1       92s<br><br>➜  deployment kubectl get deploy -o yaml <span class="hljs-comment"># 查看对应deploy的 yaml文件</span><br>apiVersion: v1<br>items:<br>- apiVersion: apps/v1<br>  kind: Deployment<br>  metadata:<br>    annotations:<br>      deployment.kubernetes.io/revision: <span class="hljs-string">&quot;1&quot;</span><br>    creationTimestamp: <span class="hljs-string">&quot;2024-05-22T01:27:04Z&quot;</span><br>    generation: 1<br>    labels:<br>      app: nginx--deploy<br>    name: nginx--deploy<br>    namespace: default<br>    resourceVersion: <span class="hljs-string">&quot;62846&quot;</span><br>    uid: 1cd8f0d0-a27f-4451-8d56-2ce533e5d4ae<br>  spec:<br>    progressDeadlineSeconds: 600<br>    replicas: 1<br>    revisionHistoryLimit: 10<br>    selector:<br>      matchLabels:<br>        app: nginx--deploy<br>    strategy:<br>      rollingUpdate:<br>        maxSurge: 25%<br>        maxUnavailable: 25%<br>      <span class="hljs-built_in">type</span>: RollingUpdate<br>    template:<br>      metadata:<br>        creationTimestamp: null<br>        labels:<br>          app: nginx--deploy<br>      spec:<br>        containers:<br>        - image: nginx:latest<br>          imagePullPolicy: Always<br>          name: nginx<br>          resources: &#123;&#125;<br>          terminationMessagePath: /dev/termination-log<br>          terminationMessagePolicy: File<br>        dnsPolicy: ClusterFirst<br>        restartPolicy: Always<br>        schedulerName: default-scheduler<br>        securityContext: &#123;&#125;<br>        terminationGracePeriodSeconds: 30<br>  status:<br>    availableReplicas: 1<br>    conditions:<br>    - lastTransitionTime: <span class="hljs-string">&quot;2024-05-22T01:27:08Z&quot;</span><br>      lastUpdateTime: <span class="hljs-string">&quot;2024-05-22T01:27:08Z&quot;</span><br>      message: Deployment has minimum availability.<br>      reason: MinimumReplicasAvailable<br>      status: <span class="hljs-string">&quot;True&quot;</span><br>      <span class="hljs-built_in">type</span>: Available<br>    - lastTransitionTime: <span class="hljs-string">&quot;2024-05-22T01:27:04Z&quot;</span><br>      lastUpdateTime: <span class="hljs-string">&quot;2024-05-22T01:27:08Z&quot;</span><br>      message: ReplicaSet <span class="hljs-string">&quot;nginx--deploy-6b56887c44&quot;</span> has successfully progressed.<br>      reason: NewReplicaSetAvailable<br>      status: <span class="hljs-string">&quot;True&quot;</span><br>      <span class="hljs-built_in">type</span>: Progressing<br>    observedGeneration: 1<br>    readyReplicas: 1<br>    replicas: 1<br>    updatedReplicas: 1<br>- apiVersion: apps/v1<br>  kind: Deployment<br>  metadata:<br>    annotations:<br>      deployment.kubernetes.io/revision: <span class="hljs-string">&quot;1&quot;</span><br>    creationTimestamp: <span class="hljs-string">&quot;2024-05-13T11:22:16Z&quot;</span><br>    generation: 1<br>    labels:<br>      app: nginx-pod<br>    name: nginx-pod<br>    namespace: default<br>    resourceVersion: <span class="hljs-string">&quot;51281&quot;</span><br>    uid: f1825899-e36d-4552-a06b-cf7f066e624e<br>  spec:<br>    progressDeadlineSeconds: 600<br>    replicas: 1<br>    revisionHistoryLimit: 10<br>    selector:<br>      matchLabels:<br>        app: nginx-pod<br>    strategy:<br>      rollingUpdate:<br>        maxSurge: 25%<br>        maxUnavailable: 25%<br>      <span class="hljs-built_in">type</span>: RollingUpdate<br>    template:<br>      metadata:<br>        creationTimestamp: null<br>        labels:<br>          app: nginx-pod<br>      spec:<br>        containers:<br>        - image: nginx<br>          imagePullPolicy: Always<br>          name: nginx<br>          ports:<br>          - containerPort: 80<br>            protocol: TCP<br>          resources: &#123;&#125;<br>          terminationMessagePath: /dev/termination-log<br>          terminationMessagePolicy: File<br>        dnsPolicy: ClusterFirst<br>        restartPolicy: Always<br>        schedulerName: default-scheduler<br>        securityContext: &#123;&#125;<br>        terminationGracePeriodSeconds: 30<br>  status:<br>    availableReplicas: 1<br>    conditions:<br>    - lastTransitionTime: <span class="hljs-string">&quot;2024-05-13T11:33:09Z&quot;</span><br>      lastUpdateTime: <span class="hljs-string">&quot;2024-05-13T11:33:09Z&quot;</span><br>      message: ReplicaSet <span class="hljs-string">&quot;nginx-pod-59dc7f9d89&quot;</span> has successfully progressed.<br>      reason: NewReplicaSetAvailable<br>      status: <span class="hljs-string">&quot;True&quot;</span><br>      <span class="hljs-built_in">type</span>: Progressing<br>    - lastTransitionTime: <span class="hljs-string">&quot;2024-05-21T12:31:18Z&quot;</span><br>      lastUpdateTime: <span class="hljs-string">&quot;2024-05-21T12:31:18Z&quot;</span><br>      message: Deployment has minimum availability.<br>      reason: MinimumReplicasAvailable<br>      status: <span class="hljs-string">&quot;True&quot;</span><br>      <span class="hljs-built_in">type</span>: Available<br>    observedGeneration: 1<br>    readyReplicas: 1<br>    replicas: 1<br>    updatedReplicas: 1<br>kind: List<br>metadata:<br>  resourceVersion: <span class="hljs-string">&quot;&quot;</span><br></code></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+<h5 id="yaml"><a href="#yaml" class="headerlink" title="yaml"></a>yaml</h5><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps/v1</span><br>  <span class="hljs-attr">kind:</span> <span class="hljs-string">Deployment</span><br>  <span class="hljs-attr">metadata:</span><br>    <span class="hljs-attr">labels:</span><br>      <span class="hljs-attr">app:</span> <span class="hljs-string">nginx--deploy</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">nginx--deploy</span><br>    <span class="hljs-attr">namespace:</span> <span class="hljs-string">default</span><br>  <span class="hljs-attr">spec:</span><br>    <span class="hljs-attr">replicas:</span> <span class="hljs-number">1</span><br>    <span class="hljs-attr">revisionHistoryLimit:</span> <span class="hljs-number">10</span> <span class="hljs-comment">#滚动更新后，保留的历史版本数量</span><br>    <span class="hljs-attr">selector:</span> <span class="hljs-comment">#选择器，用于找到匹配的rs</span><br>      <span class="hljs-attr">matchLabels:</span> <span class="hljs-comment"># 按照标签匹配</span><br>        <span class="hljs-attr">app:</span> <span class="hljs-string">nginx--deploy</span><br>    <span class="hljs-attr">strategy:</span> <span class="hljs-comment">#更新策略</span><br>      <span class="hljs-attr">rollingUpdate:</span>  <span class="hljs-comment">#滚动更新配置</span><br>        <span class="hljs-attr">maxSurge:</span> <span class="hljs-number">25</span><span class="hljs-string">%</span><br>        <span class="hljs-attr">maxUnavailable:</span> <span class="hljs-number">25</span><span class="hljs-string">%</span><br>      <span class="hljs-attr">type:</span> <span class="hljs-string">RollingUpdate</span> <span class="hljs-comment">#滚动更新策略</span><br>    <span class="hljs-attr">template:</span> <span class="hljs-comment">#pod 模板</span><br>      <span class="hljs-attr">metadata:</span><br>        <span class="hljs-attr">labels:</span><br>          <span class="hljs-attr">app:</span> <span class="hljs-string">nginx--deploy</span><br>      <span class="hljs-attr">spec:</span><br>        <span class="hljs-attr">containers:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">image:</span> <span class="hljs-string">nginx:latest</span><br>          <span class="hljs-attr">imagePullPolicy:</span> <span class="hljs-string">Always</span><br>          <span class="hljs-attr">name:</span> <span class="hljs-string">nginx</span><br>        <span class="hljs-attr">restartPolicy:</span> <span class="hljs-string">Always</span><br>        <span class="hljs-attr">terminationGracePeriodSeconds:</span> <span class="hljs-number">30</span><br><span class="hljs-string">~</span>                                            <br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<p>kubectl edit deploy </p>
+<h4 id="滚动更新"><a href="#滚动更新" class="headerlink" title="滚动更新"></a>滚动更新</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">➜  deployment kubectl rollout status deploy<br>deployment <span class="hljs-string">&quot;nginx--deploy&quot;</span> successfully rolled out<br>deployment <span class="hljs-string">&quot;nginx-pod&quot;</span> successfully rolled out<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<h4 id="回滚版本"><a href="#回滚版本" class="headerlink" title="回滚版本"></a>回滚版本</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs bash">➜  deployment kubectl rollout <span class="hljs-built_in">history</span> deploy nginx--deploy   <span class="hljs-comment">#查看版本号</span><br>deployment.apps/nginx--deploy<br>REVISION  CHANGE-CAUSE<br>1         &lt;none&gt;<br><br>➜  deployment kubectl rollout <span class="hljs-built_in">history</span> deployment/nginx--deploy --revision=1 <span class="hljs-comment">#回滚版本</span><br>deployment.apps/nginx--deploy with revision <span class="hljs-comment">#1</span><br>Pod Template:<br>  Labels:       app=nginx--deploy<br>        pod-template-hash=6b56887c44<br>  Containers:<br>   nginx:<br>    Image:      nginx:latest<br>    Port:       &lt;none&gt;<br>    Host Port:  &lt;none&gt;<br>    Environment:        &lt;none&gt;<br>    Mounts:     &lt;none&gt;<br>  Volumes:      &lt;none&gt;<br>  Node-Selectors:       &lt;none&gt;<br>  Tolerations:  &lt;none&gt;<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="扩缩容"><a href="#扩缩容" class="headerlink" title="扩缩容"></a>扩缩容</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">➜  deployment kubectl scale --replicas=5 deploy/nginx--deploy  <span class="hljs-comment">#扩容，并且发现 rs没有增加</span><br>deployment.apps/nginx--deploy scaled<br></code></pre></td></tr></table></figure>
+
+<p>​	</p>
+<h3 id="statefulSet"><a href="#statefulSet" class="headerlink" title="statefulSet"></a>statefulSet</h3><p>无状态应用是 对本地环境没有依赖，可以随意扩容</p>
+<p>todo 报错了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs bash">--- <br>apiVersion: v1<br>kind: Service<br>metadata: <br>  name: nginx<br>  labels: <br>    app: nginx<br>spec:<br>  ports:<br>  - port: 80<br>    name: web<br>  clusterIP: none<br>  selector:<br>    app: nginx<br><br>--- <br>apiVersion: apps/v1<br>kind: StatufulSet<br>metadata:<br>  name: web<br>spec:<br>  serviceName: <span class="hljs-string">&#x27;nginx&#x27;</span><br>  replicas: 2<br>  selector:<br>    matchlabels:<br>      app: nginx<br>  template:<br>    metadata:<br>      labels:<br>        app: nginx<br>    spec:<br>      containers:<br>      - name: nginx<br>        image: nginx:latest<br>        ports:<br>        - containerPort: 80<br>          name: web<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">kubectl run -it --image busybox dns-test --restart=Never --<span class="hljs-built_in">rm</span> /bin/sh<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h4 id="金丝雀发布-1"><a href="#金丝雀发布-1" class="headerlink" title="金丝雀发布"></a>金丝雀发布</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">updateStrategy:</span><br>   <span class="hljs-attr">rollingUpdate:</span><br>     <span class="hljs-attr">partition:</span> <span class="hljs-number">3</span><br>   <span class="hljs-attr">type:</span> <span class="hljs-string">RollingUpdate</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p>设置 rollout 中的partition</p>
+<h3 id="deaonSet"><a href="#deaonSet" class="headerlink" title="deaonSet"></a>deaonSet</h3><p>deamonSet为每个匹配到的 node 部署一个守护进程</p>
+<p>案例：</p>
+<p>电商场景中多个微服务的调用链可能出现 问题。需要检查日志时，需要登录到每个node节点上，查看相应pod的日志信息。此时，我们可以为每个node部署一个守护进程，例如 <code>flunted</code>来收集日志信息，最后可以发送给 es进行存储。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps/v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">DaemonSet</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">fluentd</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">template:</span><br>    <span class="hljs-attr">metadata:</span><br>      <span class="hljs-attr">labels:</span><br>        <span class="hljs-attr">app:</span> <span class="hljs-string">logging</span><br>        <span class="hljs-attr">id:</span> <span class="hljs-string">fluentd</span><br>      <span class="hljs-attr">name:</span> <span class="hljs-string">fluentd</span><br>    <span class="hljs-attr">spec:</span><br>      <span class="hljs-attr">containers:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">fluentd-es</span><br>        <span class="hljs-attr">image:</span> <span class="hljs-string">agilestacks/fluentd-elasticsearch:v1.3.0</span><br>        <span class="hljs-attr">env:</span><br>         <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">FLUENTD_ARGS</span><br>           <span class="hljs-attr">value:</span> <span class="hljs-string">-qq</span><br>        <span class="hljs-attr">volumeMounts:</span><br>         <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">containers</span><br>           <span class="hljs-attr">mountPath:</span> <span class="hljs-string">/var/lib/docker/containers</span><br>         <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">varlog</span><br>           <span class="hljs-attr">mountPath:</span> <span class="hljs-string">/varlog</span><br>      <span class="hljs-attr">volumes:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">hostPath:</span><br>        <span class="hljs-attr">path:</span> <span class="hljs-string">/var/lib/docker/containers</span><br>          <span class="hljs-attr">name:</span> <span class="hljs-string">containers</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">hostPath:</span><br>        <span class="hljs-attr">path:</span> <span class="hljs-string">/var/log</span><br>          <span class="hljs-attr">name:</span> <span class="hljs-string">varlog</span><br></code></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h3 id="HPA"><a href="#HPA" class="headerlink" title="HPA"></a>HPA</h3><p>horizontal-pod-autoScaler-sync-period </p>
+<h3 id="service"><a href="#service" class="headerlink" title="service"></a>service</h3><h3 id="ingress"><a href="#ingress" class="headerlink" title="ingress"></a>ingress</h3><p>外部服务的统一入口</p>
+<p>安装 helm</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#获取脚本</span><br>curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3<br><span class="hljs-comment">#运行脚本</span><br><span class="hljs-built_in">chmod</span> 700 get_helm.sh<br>./get_helm.sh<br><span class="hljs-comment">#添加helm仓库</span><br>helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx<br>helm repo update<br><span class="hljs-comment">#创建ns</span><br>kubectl create namespace ingress-nginx<br><span class="hljs-comment">#安装 ingress</span><br>helm install ingress-nginx ingress-nginx/ingress-nginx -n ingress-nginx<br><span class="hljs-comment">#校验</span><br>kubectl get pods -n ingress-nginx<br>kubectl get svc -n ingress-nginx<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="流量的转发过程"><a href="#流量的转发过程" class="headerlink" title="流量的转发过程"></a>流量的转发过程</h3><ul>
+<li>客户端发起请求</li>
+<li>DNS解析<ul>
+<li><strong>SSL&#x2F;TLS 终止</strong>：如果 Ingress 控制器配置了 SSL&#x2F;TLS 终止，即在 Ingress 控制器上进行 SSL&#x2F;TLS 解密操作，那么请求将被解密并转发给后端服务。这个步骤在 Ingress 控制器接收到请求后，但在路由请求到后端服务之前。</li>
+<li><strong>Ingress 控制器的健康检查</strong>：有时候 Ingress 控制器会对后端服务进行健康检查，以确保只有健康的后端服务才会接收流量。这个检查通常是通过发送健康检查请求并检查响应来完成的。</li>
+<li><strong>DNS 缓存</strong>：在进行 DNS 解析之前，系统可能会先查找本地 DNS 缓存，以查找以前解析过的域名对应的 IP 地址。如果找到了缓存，就不需要再进行 DNS 解析，直接使用缓存的 IP 地址。</li>
+<li><strong>DNS 解析器选择</strong>：在进行 DNS 解析时，系统可能会选择使用不同的 DNS 解析器。这可能是本地操作系统的默认解析器，也可能是特定的 DNS 服务器（如 Google Public DNS、Cloudflare DNS 等）。</li>
+<li><strong>DNS 请求转发</strong>：如果本地解析器无法解析域名，它可能会将 DNS 请求转发给其他上游 DNS 服务器，直到找到能够解析域名的服务器为止。</li>
+<li><strong>域名搜索列表</strong>：在进行 DNS 解析时，系统可能会使用域名搜索列表（Search Domain List），将未指定完全限定域名的主机名转换为完整的域名。这个列表通常包含了本地域和其他配置的域名。</li>
+</ul>
+</li>
+<li>发送请求到集群</li>
+<li>ingress控制器处理请求</li>
+<li>匹配到合适的service</li>
+<li>找到合适的pod</li>
+<li>后端处理</li>
+<li>结果响应</li>
+</ul>
+<h3 id="配置和存储"><a href="#配置和存储" class="headerlink" title="配置和存储"></a>配置和存储</h3><h4 id="configMap"><a href="#configMap" class="headerlink" title="configMap"></a>configMap</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># Create a new config map named my-config based on folder bar</span><br> kubectl create configmap my-config --from-file=path/to/bar<br><br> <span class="hljs-comment"># Create a new config map named my-config with specified keys instead of file basenames on disk</span><br> kubectl create configmap my-config --from-file=key1=/path/to/bar/file1.txt --from-file=key2=/path/to/bar/file2.txt<br><br> <span class="hljs-comment"># Create a new config map named my-config with key1=config1 and key2=config2</span><br> kubectl create configmap my-config --from-literal=key1=config1 --from-literal=key2=config2<br><br> <span class="hljs-comment"># Create a new config map named my-config from the key=value pairs in the file</span><br> kubectl create configmap my-config --from-file=path/to/bar<br><br> <span class="hljs-comment"># Create a new config map named my-config from an env file</span><br> kubectl create configmap my-config --from-env-file=path/to/foo.env --from-env-file=path/to/bar.env<br></code></pre></td></tr></table></figure>
+
+
+
+<p>example</p>
+<ul>
+<li><p>创建一个 db.txt &amp;&amp; redis.txt</p>
+</li>
+<li></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">kubectl create configmap my-config --from-file=db.txt=/home/forrest/minikube/config/test/db.txt --from-file=redis.txt=/home/forrest/minikube/config/test/redis.txt<br></code></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Pod</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">test-configfile-po</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">containers:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">config-test</span><br>      <span class="hljs-attr">image:</span> <span class="hljs-string">alpine</span><br>      <span class="hljs-attr">command:</span> [<span class="hljs-string">&quot;/bin/sh&quot;</span>, <span class="hljs-string">&quot;-c&quot;</span>, <span class="hljs-string">&quot;sleep 3600&quot;</span>]<br>      <span class="hljs-attr">imagePullPolicy:</span> <span class="hljs-string">IfNotPresent</span><br>      <span class="hljs-attr">volumeMounts:</span> <span class="hljs-comment"># 加载数据卷</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">db-config</span> <span class="hljs-comment"># 表示加载 volumes 属性中哪个数据卷</span><br>        <span class="hljs-attr">mountPath:</span> <span class="hljs-string">&quot;/usr/local/mysql/conf&quot;</span> <span class="hljs-comment"># 想要将数据卷中的文件加载到哪个目录下</span><br>        <span class="hljs-attr">readOnly:</span> <span class="hljs-literal">true</span> <span class="hljs-comment"># 是否只读</span><br>  <span class="hljs-attr">volumes:</span> <span class="hljs-comment"># 数据卷挂载 configmap、secret</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">db-config</span> <span class="hljs-comment"># 数据卷的名字，随意设置</span><br>      <span class="hljs-attr">configMap:</span> <span class="hljs-comment"># 数据卷类型为 CofngiMap</span><br>        <span class="hljs-attr">name:</span> <span class="hljs-string">my-config-test</span> <span class="hljs-comment"># configMap 的名字，必须跟想要加载的 configmap 相同</span><br>        <span class="hljs-attr">items:</span> <span class="hljs-comment"># 对 configmap 中的 key 进行映射，如果不指定，默认会讲 configmap 中所有 key 全部转换为一个个同名 的文件</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">key:</span> <span class="hljs-string">&quot;db.txt&quot;</span> <span class="hljs-comment"># configMap 中的 key</span><br>          <span class="hljs-attr">path:</span> <span class="hljs-string">&quot;db.txt&quot;</span> <span class="hljs-comment"># 将该 key 的值转换为文件</span><br>  <span class="hljs-attr">restartPolicy:</span> <span class="hljs-string">Never</span><br></code></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+<p>gitlab的安装</p>
+<p>harbor</p>
+<p>docker的镜像仓库</p>
+<p>sonarQube</p>
+<p>代码检查</p>
+<p>jekins</p>
+<p>自动化构建、测试、部署和发布软件。</p>
+<p>代码检查；Jenkins 可以在构建或部署过程中发送通知（如邮件、Slack 消息），及时告知团队成员构建和部署的状态·</p>
+<ul>
+<li>插件安装<ul>
+<li>token</li>
+<li>gitlab</li>
+<li>sonarQube</li>
+<li>node and label parameter</li>
+<li>kubernetes</li>
+</ul>
+</li>
+</ul>
+<p><img src="/2024/04/04/k8s%E8%AE%B0%E5%BD%95/Users\forrest-tao\AppData\Roaming\Typora\typora-user-images\image-20240524144203655.png" srcset="/img/loading.gif" lazyload alt="image-20240524144203655"></p>
+<h3 id="实战"><a href="#实战" class="headerlink" title="实战"></a>实战</h3><p>cicd流程</p>
+<p>![ab2a7ce694e881c7f8f9d4938287d48](D:\wechat\WeChat Files\wxid_nl9rso6iorm822\FileStorage\Temp\ab2a7ce694e881c7f8f9d4938287d48.png)</p>
+<p>项目架构</p>
+<p><img src="/2024/04/04/k8s%E8%AE%B0%E5%BD%95/Users\forrest-tao\AppData\Roaming\Typora\typora-user-images\image-20240524212331300.png" srcset="/img/loading.gif" lazyload alt="image-20240524212331300"></p>
+<p>安装 redis</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs livecodeserver">kubectl <span class="hljs-built_in">create</span> ns redis <span class="hljs-comment">#创建namespace</span><br><br>helm install redis ./redis/ -n redis <br><br>kubectl <span class="hljs-built_in">get</span> po -n redis<br><br>kubectl <span class="hljs-built_in">get</span> svc -n redis<br><br><br><br></code></pre></td></tr></table></figure>
+
+
+
+<p>安装rocketMQ</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs"><br></code></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
 <h3 id="ref"><a href="#ref" class="headerlink" title="ref"></a>ref</h3><ul>
 <li><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/654758109">如何在 Ubuntu 22.04 LTS Linux 上安装 Minikube - 知乎 (zhihu.com)</a></p>
 </li>

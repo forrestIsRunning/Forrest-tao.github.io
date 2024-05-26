@@ -16,18 +16,18 @@
   <meta name="author" content="Forrest">
   <meta name="keywords" content="">
   
-    <meta name="description" content="rabbitMQ的分析优点： 应用解耦，提高系统的容错性 异步通讯，提高系统的吞吐量 流量消锋，提高系统的并发能力  缺点： 系统的可用性降低，系统引入的外部依赖越多，系统的稳定性越差，一旦MQ宕机，就会对业务造成影响 系统更多复杂度提高  rabbitMQ的架构producer：负责消息的发送 exchange：交换机，负责转发消息 queue：队列，负责存储消息 binding：把交换机和队列">
+    <meta name="description" content="docker 安装 rabbitMQ 123456docker pull rabbitmq:managementdocker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rannitmq:management键入 http:&#x2F;&#x2F;localhost:15672其中账号密码均为 guest         rabbitMQ的分析优点： 应用解耦">
 <meta property="og:type" content="article">
 <meta property="og:title" content="mq总结">
 <meta property="og:url" content="http://example.com/2024/04/06/mq%E6%80%BB%E7%BB%93/index.html">
 <meta property="og:site_name" content="Forrest’s blog">
-<meta property="og:description" content="rabbitMQ的分析优点： 应用解耦，提高系统的容错性 异步通讯，提高系统的吞吐量 流量消锋，提高系统的并发能力  缺点： 系统的可用性降低，系统引入的外部依赖越多，系统的稳定性越差，一旦MQ宕机，就会对业务造成影响 系统更多复杂度提高  rabbitMQ的架构producer：负责消息的发送 exchange：交换机，负责转发消息 queue：队列，负责存储消息 binding：把交换机和队列">
+<meta property="og:description" content="docker 安装 rabbitMQ 123456docker pull rabbitmq:managementdocker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rannitmq:management键入 http:&#x2F;&#x2F;localhost:15672其中账号密码均为 guest         rabbitMQ的分析优点： 应用解耦">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2024/04/06/mq%E6%80%BB%E7%BB%93/Users/forrest-tao/AppData/Roaming/Typora/typora-user-images/image-20240503100502904.png">
 <meta property="og:image" content="http://example.com/2024/04/06/mq%E6%80%BB%E7%BB%93/Users/forrest-tao/AppData/Roaming/Typora/typora-user-images/image-20240503100602528.png">
 <meta property="og:image" content="http://example.com/2024/04/06/mq%E6%80%BB%E7%BB%93/Users/forrest-tao/AppData/Roaming/Typora/typora-user-images/image-20240503162436164.png">
 <meta property="article:published_time" content="2024-04-06T06:44:53.000Z">
-<meta property="article:modified_time" content="2024-05-05T03:00:28.432Z">
+<meta property="article:modified_time" content="2024-05-25T12:12:06.788Z">
 <meta property="article:author" content="Forrest">
 <meta property="article:tag" content="mq">
 <meta name="twitter:card" content="summary_large_image">
@@ -226,7 +226,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.2k 字
+          5k 字
         
       </span>
     
@@ -237,7 +237,7 @@
         
         
         
-          4 分钟
+          17 分钟
         
       </span>
     
@@ -287,7 +287,16 @@
             
               <div class="markdown-body">
                 
-                <h3 id="rabbitMQ的分析"><a href="#rabbitMQ的分析" class="headerlink" title="rabbitMQ的分析"></a>rabbitMQ的分析</h3><h4 id="优点："><a href="#优点：" class="headerlink" title="优点："></a>优点：</h4><ol>
+                <p>docker 安装 rabbitMQ</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker pull rabbitmq:management<br><br>docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rannitmq:management<br><br>键入 http://localhost:15672<br>其中账号密码均为 guest <br></code></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h3 id="rabbitMQ的分析"><a href="#rabbitMQ的分析" class="headerlink" title="rabbitMQ的分析"></a>rabbitMQ的分析</h3><h4 id="优点："><a href="#优点：" class="headerlink" title="优点："></a>优点：</h4><ol>
 <li>应用解耦，提高系统的容错性</li>
 <li>异步通讯，提高系统的吞吐量</li>
 <li>流量消锋，提高系统的并发能力</li>
@@ -312,6 +321,31 @@
 </li>
 </ul>
 <p><img src="/2024/04/06/mq%E6%80%BB%E7%BB%93/Users\forrest-tao\AppData\Roaming\Typora\typora-user-images\image-20240503100602528.png" srcset="/img/loading.gif" lazyload alt="image-20240503100602528"></p>
+<h3 id="当有多个队列和一个交换机绑定时"><a href="#当有多个队列和一个交换机绑定时" class="headerlink" title="当有多个队列和一个交换机绑定时"></a>当有多个队列和一个交换机绑定时</h3><h4 id="consumer"><a href="#consumer" class="headerlink" title="consumer"></a>consumer</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;awesomeProject1/utils&quot;</span><br>	<span class="hljs-string">&quot;github.com/streadway/amqp&quot;</span><br>	<span class="hljs-string">&quot;log&quot;</span><br>	<span class="hljs-string">&quot;strconv&quot;</span><br>)<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	conn, err := amqp.Dial(<span class="hljs-string">&quot;amqp://guest:guest@localhost:5672&quot;</span>)<br>	utils.FailOnErr(err, <span class="hljs-string">&quot;failed to create connection&quot;</span>)<br>	<span class="hljs-keyword">defer</span> conn.Close()<br><br>	ch, err := conn.Channel()<br>	utils.FailOnErr(err, <span class="hljs-string">&quot;failed to create channel&quot;</span>)<br>	<span class="hljs-keyword">defer</span> ch.Close()<br><br>	err = ch.ExchangeDeclare(<span class="hljs-string">&quot;complex_topic_logs&quot;</span>, <span class="hljs-string">&quot;topic&quot;</span>, <span class="hljs-literal">true</span>,<br>		<span class="hljs-literal">false</span>, <span class="hljs-literal">false</span>, <span class="hljs-literal">false</span>, <span class="hljs-literal">nil</span>)<br>	utils.FailOnErr(err, <span class="hljs-string">&quot;failed to declare an exchange&quot;</span>)<br><br>	queues := <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>][]<span class="hljs-type">string</span>&#123;<br>		<span class="hljs-string">&quot;queue_orange&quot;</span>: &#123;<span class="hljs-string">&quot;*.orange.*&quot;</span>&#125;,<br>		<span class="hljs-string">&quot;queue_lazy&quot;</span>:   &#123;<span class="hljs-string">&quot;lazy.#&quot;</span>&#125;,<br>		<span class="hljs-string">&quot;queue_all&quot;</span>:    &#123;<span class="hljs-string">&quot;#&quot;</span>&#125;,<br>	&#125;<br>	index := <span class="hljs-number">0</span><br>    <span class="hljs-comment">//！！！</span><br>	<span class="hljs-keyword">for</span> queueName, bindingKeys := <span class="hljs-keyword">range</span> queues &#123;<br>		q, err := ch.QueueDeclare(queueName, <span class="hljs-literal">true</span>, <span class="hljs-literal">false</span>, <span class="hljs-literal">false</span>, <span class="hljs-literal">false</span>, <span class="hljs-literal">nil</span>)<br>		utils.FailOnErr(err, <span class="hljs-string">&quot;failed to declare a queue&quot;</span>)<br><br>		<span class="hljs-keyword">for</span> _, bindingKey := <span class="hljs-keyword">range</span> bindingKeys &#123;<br>			err = ch.QueueBind(q.Name, bindingKey, <span class="hljs-string">&quot;complex_topic_logs&quot;</span>, <span class="hljs-literal">false</span>, <span class="hljs-literal">nil</span>)<br>			utils.FailOnErr(err, <span class="hljs-string">&quot;failed to bind queue&quot;</span>)<br>		&#125;<br>		msgs, err := ch.Consume(q.Name, <span class="hljs-string">&quot;consumer&quot;</span>+strconv.Itoa(index), <span class="hljs-literal">false</span>,<br>			<span class="hljs-literal">false</span>, <span class="hljs-literal">false</span>, <span class="hljs-literal">false</span>, <span class="hljs-literal">nil</span>)<br>		index++<br>		<span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(queueName <span class="hljs-type">string</span>, msgs &lt;-<span class="hljs-keyword">chan</span> amqp.Delivery)</span></span> &#123;<br>			<span class="hljs-keyword">for</span> d := <span class="hljs-keyword">range</span> msgs &#123;<br>				log.Printf(<span class="hljs-string">&quot; [%s] Received a message: %s&quot;</span>, queueName, d.Body)<br>			&#125;<br>		&#125;(queueName, msgs)<br>	&#125;<br>	log.Printf(<span class="hljs-string">&quot; [*] Waiting for messages. To exit press CTRL+C&quot;</span>)<br>	<span class="hljs-keyword">select</span> &#123;&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="producer"><a href="#producer" class="headerlink" title="producer"></a>producer</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;awesomeProject1/utils&quot;</span><br>	<span class="hljs-string">&quot;github.com/streadway/amqp&quot;</span><br>	<span class="hljs-string">&quot;log&quot;</span><br>	<span class="hljs-string">&quot;time&quot;</span><br>)<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	conn, err := amqp.Dial(<span class="hljs-string">&quot;amqp://guest:guest@localhost:5672/&quot;</span>)<br>	utils.FailOnErr(err, <span class="hljs-string">&quot;Failed to connect to RabbitMQ&quot;</span>)<br>	<span class="hljs-keyword">defer</span> conn.Close()<br><br>	ch, err := conn.Channel()<br>	utils.FailOnErr(err, <span class="hljs-string">&quot;Failed to open a channel&quot;</span>)<br>	<span class="hljs-keyword">defer</span> ch.Close()<br><br>	err = ch.ExchangeDeclare(<br>		<span class="hljs-string">&quot;complex_topic_logs&quot;</span>, <span class="hljs-comment">// name</span><br>		<span class="hljs-string">&quot;topic&quot;</span>,              <span class="hljs-comment">// type</span><br>		<span class="hljs-literal">true</span>,                 <span class="hljs-comment">// durable</span><br>		<span class="hljs-literal">false</span>,                <span class="hljs-comment">// auto-deleted</span><br>		<span class="hljs-literal">false</span>,                <span class="hljs-comment">// internal</span><br>		<span class="hljs-literal">false</span>,                <span class="hljs-comment">// no-wait</span><br>		<span class="hljs-literal">nil</span>,                  <span class="hljs-comment">// arguments</span><br>	)<br>	messages := <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]<span class="hljs-type">string</span>&#123;<br>		<span class="hljs-string">&quot;quick.orange.rabbit&quot;</span>:  <span class="hljs-string">&quot;Message for quick.orange.rabbit&quot;</span>,<br>		<span class="hljs-string">&quot;lazy.orange.elephant&quot;</span>: <span class="hljs-string">&quot;Message for lazy.orange.elephant&quot;</span>,<br>		<span class="hljs-string">&quot;quick.brown.fox&quot;</span>:      <span class="hljs-string">&quot;Message for quick.brown.fox&quot;</span>,<br>		<span class="hljs-string">&quot;lazy.brown.dog&quot;</span>:       <span class="hljs-string">&quot;Message for lazy.brown.dog&quot;</span>,<br>		<span class="hljs-string">&quot;quick.orange.fox&quot;</span>:     <span class="hljs-string">&quot;Message for quick.orange.fox&quot;</span>,<br>		<span class="hljs-string">&quot;lazy.orange.rabbit&quot;</span>:   <span class="hljs-string">&quot;Message for lazy.orange.rabbit&quot;</span>,<br>	&#125;<br><br>	<span class="hljs-keyword">for</span> routingKey, body := <span class="hljs-keyword">range</span> messages &#123;<br>		err = ch.Publish(<br>			<span class="hljs-string">&quot;complex_topic_logs&quot;</span>, <span class="hljs-comment">// exchange</span><br>			routingKey,           <span class="hljs-comment">// routing key</span><br>			<span class="hljs-literal">false</span>,                <span class="hljs-comment">// mandatory</span><br>			<span class="hljs-literal">false</span>,                <span class="hljs-comment">// immediate</span><br>			amqp.Publishing&#123;<br>				ContentType: <span class="hljs-string">&quot;text/plain&quot;</span>,<br>				Body:        []<span class="hljs-type">byte</span>(body),<br>			&#125;)<br>		utils.FailOnErr(err, <span class="hljs-string">&quot;Failed to publish a message&quot;</span>)<br>		log.Printf(<span class="hljs-string">&quot; [x] Sent %s: %s&quot;</span>, routingKey, body)<br>		time.Sleep(<span class="hljs-number">1</span> * time.Second) <span class="hljs-comment">// 模拟发送消息的时间间隔</span><br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="rabbitMQ中设置-qos的作用"><a href="#rabbitMQ中设置-qos的作用" class="headerlink" title="rabbitMQ中设置 qos的作用"></a>rabbitMQ中设置 qos的作用</h3><p><code>Qos</code> 方法来设置 Quality of Service（QoS），可以控制消息的分发方式。</p>
+<ul>
+<li><strong>prefetch count</strong>: 指定在收到确认之前，消费者可以同时预取的最大消息数目。</li>
+<li><strong>prefetch size</strong>: 指定在收到确认之前，消费者可以同时预取的最大消息大小（以字节为单位）。通常设置为 <code>0</code> 表示忽略此限制。</li>
+<li><strong>global</strong>: 如果设置为 <code>true</code>，则 Qos 设置会对所有消费者生效。如果设置为 <code>false</code>，则 Qos 设置只对当前的消费者生效。</li>
+</ul>
+<h4 id="QoS-的作用和优点"><a href="#QoS-的作用和优点" class="headerlink" title="QoS 的作用和优点"></a>QoS 的作用和优点</h4><ol>
+<li><strong>避免消息淹没消费者</strong>: 通过设置 <code>prefetch count</code>，可以确保在处理当前消息之前不会向消费者发送更多消息。例如，在上面的代码中，<code>prefetch count</code> 设置为 <code>1</code>，意味着消费者在处理并确认当前消息之前不会接收更多消息。这可以防止消费者在无法及时处理消息时被淹没。</li>
+<li><strong>公平调度</strong>: 使用 QoS 可以实现公平调度。假设有多个消费者并且 <code>prefetch count</code> 设置为 <code>1</code>，那么 RabbitMQ 会确保每个消费者在处理并确认当前消息之前不会收到更多消息，从而实现消息的公平分配。</li>
+<li><strong>减少未确认消息的积压</strong>: 通过限制未确认消息的数量，可以减少消息积压的风险，从而提高系统的稳定性和可靠性。</li>
+</ol>
+<h4 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h4><ul>
+<li><strong>适当设置 <code>prefetch count</code></strong>: 根据消费者处理消息的能力，合理设置 <code>prefetch count</code>，可以平衡消息处理的吞吐量和消费者的负载。</li>
+<li><strong>全局与非全局</strong>: 全局（<code>global</code>）设置会影响到所有的消费者，而非全局设置只影响当前的消费者。根据实际需求选择合适的设置</li>
+</ul>
 <h3 id="如何保障消息的可靠性"><a href="#如何保障消息的可靠性" class="headerlink" title="如何保障消息的可靠性"></a>如何保障消息的可靠性</h3><p>可能发生消息丢失的三个阶段：</p>
 <ol>
 <li>生产者发送消息的阶段<ul>

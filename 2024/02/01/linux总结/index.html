@@ -16,16 +16,16 @@
   <meta name="author" content="Forrest">
   <meta name="keywords" content="">
   
-    <meta name="description" content="tar 压缩文件  1tar -zcvf 打包压缩后的文件名 要打包的文件      解压文件  123tar [-xvf] 压缩文件 -C 指定的路径tar -xvf test.tar.gz -C &#x2F;usr    文件权限 chmod1chmod +x zookeeper          lsof top ps sed">
+    <meta name="description" content="tar 压缩文件  1tar -zcvf 打包压缩后的文件名 要打包的文件      解压文件  123tar [-xvf] 压缩文件 -C 指定的路径tar -xvf test.tar.gz -C &#x2F;usr    文件权限 chmod1chmod +x zookeeper      常用的 系统资源查看命令网络  ifconfig&#x2F;ip：ifconfig（在新版本中被 ip 替代）命令">
 <meta property="og:type" content="article">
 <meta property="og:title" content="linux总结">
 <meta property="og:url" content="http://example.com/2024/02/01/linux%E6%80%BB%E7%BB%93/index.html">
 <meta property="og:site_name" content="Forrest’s blog">
-<meta property="og:description" content="tar 压缩文件  1tar -zcvf 打包压缩后的文件名 要打包的文件      解压文件  123tar [-xvf] 压缩文件 -C 指定的路径tar -xvf test.tar.gz -C &#x2F;usr    文件权限 chmod1chmod +x zookeeper          lsof top ps sed">
+<meta property="og:description" content="tar 压缩文件  1tar -zcvf 打包压缩后的文件名 要打包的文件      解压文件  123tar [-xvf] 压缩文件 -C 指定的路径tar -xvf test.tar.gz -C &#x2F;usr    文件权限 chmod1chmod +x zookeeper      常用的 系统资源查看命令网络  ifconfig&#x2F;ip：ifconfig（在新版本中被 ip 替代）命令">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2024/02/01/linux%E6%80%BB%E7%BB%93/image-20240201205026709.png">
 <meta property="article:published_time" content="2024-02-01T12:47:14.000Z">
-<meta property="article:modified_time" content="2024-04-04T02:25:28.000Z">
+<meta property="article:modified_time" content="2024-05-25T14:21:18.581Z">
 <meta property="article:author" content="Forrest">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://example.com/2024/02/01/linux%E6%80%BB%E7%BB%93/image-20240201205026709.png">
@@ -223,7 +223,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          120 字
+          618 字
         
       </span>
     
@@ -234,7 +234,7 @@
         
         
         
-          1 分钟
+          3 分钟
         
       </span>
     
@@ -305,14 +305,27 @@
 
 
 
-
-
-
-
-<p>lsof</p>
-<p>top</p>
-<p>ps</p>
-<p>sed</p>
+<h3 id="常用的-系统资源查看命令"><a href="#常用的-系统资源查看命令" class="headerlink" title="常用的 系统资源查看命令"></a>常用的 系统资源查看命令</h3><p>网络</p>
+<ul>
+<li>ifconfig&#x2F;ip：ifconfig（在新版本中被 ip 替代）命令用于显示网络接口的配置信息，包括 IP 地址、子网掩码、网关等。</li>
+<li>netstat：netstat 命令用于显示网络状态和统计信息，包括网络连接、路由表、接口统计等。</li>
+</ul>
+<p>cpu</p>
+<ul>
+<li>top：top 命令用于实时查看系统资源使用情况，包括 CPU、内存、进程等。它以交互式的方式显示信息，并且可以动态地刷新。</li>
+<li>htop：htop 是 top 的增强版，提供了更多的功能和信息显示，包括更友好的界面、可定制性更强等。</li>
+<li>ps：ps 命令用于显示当前系统进程的信息，可以查看进程的 PID、状态、CPU 使用情况等。<strong>它和top不一样，是一个快照，不是动态显示的。</strong>常见的参数包括 -aux、-ef 等</li>
+</ul>
+<p>内存</p>
+<ul>
+<li>free：free 命令用于显示系统内存使用情况，包括总内存、已使用内存、空闲内存等。</li>
+<li>vmstat：vmstat 命令用于显示系统的虚拟内存统计信息，包括内存、磁盘、CPU 等方面的使用情况</li>
+</ul>
+<p>磁盘</p>
+<ul>
+<li>df：df 命令用于显示磁盘空间使用情况，可以查看文件系统的挂载点、总空间、已用空间、剩余空间等信息。</li>
+<li>du：du 命令用于显示目录或文件的磁盘使用情况，可以查看指定目录或文件的大小。</li>
+</ul>
 
                 
               </div>

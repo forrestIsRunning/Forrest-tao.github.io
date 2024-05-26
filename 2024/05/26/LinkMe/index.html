@@ -16,15 +16,15 @@
   <meta name="author" content="Forrest">
   <meta name="keywords" content="">
   
-    <meta name="description" content="第一章 1946年2月，在美国宾夕法尼亚大学诞生了世界上第一台电子数字计算机，它的名字叫　　ENIAC  在具有四级层次结构的计算机系统中，位于最底层的是微程序机器。">
+    <meta name="description" content="1go build -o linkme . &amp;&amp; .&#x2F;linkme        长短token的设置 长token用来刷新短token  Access Token：有效期设置为 15 分钟。 Refresh Token：有效期设置为 1 个月。 实现方式：在用户每次访问 API 时，首先验证 Access Token。如果 Access Token 过期且 Refresh Tok">
 <meta property="og:type" content="article">
-<meta property="og:title" content="计组期末">
-<meta property="og:url" content="http://example.com/2023/12/27/%E8%AE%A1%E7%BB%84%E6%9C%9F%E6%9C%AB/index.html">
+<meta property="og:title" content="LinkMe">
+<meta property="og:url" content="http://example.com/2024/05/26/LinkMe/index.html">
 <meta property="og:site_name" content="Forrest’s blog">
-<meta property="og:description" content="第一章 1946年2月，在美国宾夕法尼亚大学诞生了世界上第一台电子数字计算机，它的名字叫　　ENIAC  在具有四级层次结构的计算机系统中，位于最底层的是微程序机器。">
+<meta property="og:description" content="1go build -o linkme . &amp;&amp; .&#x2F;linkme        长短token的设置 长token用来刷新短token  Access Token：有效期设置为 15 分钟。 Refresh Token：有效期设置为 1 个月。 实现方式：在用户每次访问 API 时，首先验证 Access Token。如果 Access Token 过期且 Refresh Tok">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-12-27T01:15:47.000Z">
-<meta property="article:modified_time" content="2023-12-27T01:19:52.000Z">
+<meta property="article:published_time" content="2024-05-26T02:09:53.000Z">
+<meta property="article:modified_time" content="2024-05-26T09:13:57.071Z">
 <meta property="article:author" content="Forrest">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -32,7 +32,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>计组期末 - Forrest’s blog</title>
+  <title>LinkMe - Forrest’s blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -198,7 +198,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="计组期末"></span>
+            <span id="subtitle" data-typed-text="LinkMe"></span>
           
         </div>
 
@@ -209,8 +209,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-12-27 09:15" pubdate>
-          2023年12月27日 上午
+        <time datetime="2024-05-26 10:09" pubdate>
+          2024年5月26日 上午
         </time>
       </span>
     
@@ -221,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          78 字
+          313 字
         
       </span>
     
@@ -232,7 +232,7 @@
         
         
         
-          1 分钟
+          2 分钟
         
       </span>
     
@@ -277,17 +277,35 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">计组期末</h1>
+            <h1 id="seo-header">LinkMe</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="第一章"><a href="#第一章" class="headerlink" title="第一章"></a>第一章</h2><ul>
-<li><p>1946年2月，在美国宾夕法尼亚大学诞生了世界上第一台电子数字计算机，它的名字叫　　<strong>ENIAC</strong></p>
-</li>
-<li><p>在具有四级层次结构的计算机系统中，位于最底层的是<strong>微程序</strong>机器。</p>
-</li>
+                <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">go build -o linkme . &amp;&amp; ./linkme<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<p>长短token的设置</p>
+<p>长token用来刷新短token</p>
+<ul>
+<li><strong>Access Token</strong>：有效期设置为 15 分钟。</li>
+<li><strong>Refresh Token</strong>：有效期设置为 1 个月。</li>
+<li><strong>实现方式</strong>：在用户每次访问 API 时，首先验证 Access Token。如果 Access Token 过期且 Refresh Token 还有效，则使用 Refresh Token 获取新的 Access Token。如果 Refresh Token 也过期，要求用户重新登录。</li>
 </ul>
+<p>refesh token设置为 7</p>
+<p>短 token 为 5 min</p>
+<p>问题：</p>
+<ul>
+<li>userAgent有什么作用</li>
+<li>为什么要引入 会话检查</li>
+</ul>
+<p>mongo 中只存储状态为公开的 post</p>
+<p>mysql存储全量数据</p>
 
                 
               </div>
@@ -305,8 +323,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>计组期末</div>
-      <div>http://example.com/2023/12/27/计组期末/</div>
+      <div>LinkMe</div>
+      <div>http://example.com/2024/05/26/LinkMe/</div>
     </div>
     <div class="license-meta">
       
@@ -318,7 +336,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年12月27日</div>
+          <div>2024年5月26日</div>
         </div>
       
       
@@ -350,9 +368,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/12/29/Go%E8%BF%9B%E9%98%B6%E8%AE%AD%E7%BB%83%E8%90%A5%E7%AC%AC%E4%BA%94%E6%9C%9F%E7%AC%94%E8%AE%B0/" title="Go进阶训练营第五期笔记">
+                      <a href="/2024/05/26/ddd%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1/" title="ddd领域驱动设计">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Go进阶训练营第五期笔记</span>
+                        <span class="hidden-mobile">ddd领域驱动设计</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -360,8 +378,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/12/26/2023%E6%80%BB%E7%BB%93-2024%E7%9C%BA%E6%9C%9B/" title="2023总结+2024眺望">
-                        <span class="hidden-mobile">2023总结+2024眺望</span>
+                      <a href="/2024/05/18/go%E7%9A%84%E5%8F%8D%E5%B0%84/" title="go的反射">
+                        <span class="hidden-mobile">go的反射</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
