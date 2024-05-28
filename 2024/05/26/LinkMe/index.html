@@ -16,15 +16,15 @@
   <meta name="author" content="Forrest">
   <meta name="keywords" content="">
   
-    <meta name="description" content="1go build -o linkme . &amp;&amp; .&#x2F;linkme        长短token的设置 长token用来刷新短token  Access Token：有效期设置为 15 分钟。 Refresh Token：有效期设置为 1 个月。 实现方式：在用户每次访问 API 时，首先验证 Access Token。如果 Access Token 过期且 Refresh Tok">
+    <meta name="description" content="项目构建1go build -o linkme . &amp;&amp; .&#x2F;linkme      token长短token的设置 长token用来刷新短token  Access Token：有效期设置为 15 分钟。  Refresh Token：有效期设置为 1 个月。  实现方式：在用户每次访问 API 时，首先验证 Access Token。如果 Access Token 过期且 Re">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LinkMe">
 <meta property="og:url" content="http://example.com/2024/05/26/LinkMe/index.html">
 <meta property="og:site_name" content="Forrest’s blog">
-<meta property="og:description" content="1go build -o linkme . &amp;&amp; .&#x2F;linkme        长短token的设置 长token用来刷新短token  Access Token：有效期设置为 15 分钟。 Refresh Token：有效期设置为 1 个月。 实现方式：在用户每次访问 API 时，首先验证 Access Token。如果 Access Token 过期且 Refresh Tok">
+<meta property="og:description" content="项目构建1go build -o linkme . &amp;&amp; .&#x2F;linkme      token长短token的设置 长token用来刷新短token  Access Token：有效期设置为 15 分钟。  Refresh Token：有效期设置为 1 个月。  实现方式：在用户每次访问 API 时，首先验证 Access Token。如果 Access Token 过期且 Re">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-05-26T02:09:53.000Z">
-<meta property="article:modified_time" content="2024-05-26T09:13:57.071Z">
+<meta property="article:modified_time" content="2024-05-28T15:23:48.608Z">
 <meta property="article:author" content="Forrest">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -221,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          313 字
+          655 字
         
       </span>
     
@@ -232,7 +232,7 @@
         
         
         
-          2 分钟
+          3 分钟
         
       </span>
     
@@ -282,30 +282,44 @@
             
               <div class="markdown-body">
                 
-                <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">go build -o linkme . &amp;&amp; ./linkme<br></code></pre></td></tr></table></figure>
+                <h3 id="项目构建"><a href="#项目构建" class="headerlink" title="项目构建"></a>项目构建</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">go build -o linkme . &amp;&amp; ./linkme<br></code></pre></td></tr></table></figure>
 
 
 
 
 
-
-
-<p>长短token的设置</p>
+<h3 id="token"><a href="#token" class="headerlink" title="token"></a>token</h3><p>长短token的设置</p>
 <p>长token用来刷新短token</p>
 <ul>
-<li><strong>Access Token</strong>：有效期设置为 15 分钟。</li>
-<li><strong>Refresh Token</strong>：有效期设置为 1 个月。</li>
-<li><strong>实现方式</strong>：在用户每次访问 API 时，首先验证 Access Token。如果 Access Token 过期且 Refresh Token 还有效，则使用 Refresh Token 获取新的 Access Token。如果 Refresh Token 也过期，要求用户重新登录。</li>
+<li><p><strong>Access Token</strong>：有效期设置为 15 分钟。</p>
+</li>
+<li><p><strong>Refresh Token</strong>：有效期设置为 1 个月。</p>
+</li>
+<li><p><strong>实现方式</strong>：在用户每次访问 API 时，首先验证 Access Token。如果 Access Token 过期且 Refresh Token 还有效，则使用 Refresh Token 获取新的 Access Token。如果 Refresh Token 也过期，要求用户重新登录。</p>
+</li>
 </ul>
-<p>refesh token设置为 7</p>
+<p>refesh token设置为 7 天</p>
 <p>短 token 为 5 min</p>
-<p>问题：</p>
-<ul>
+<h3 id="问题："><a href="#问题：" class="headerlink" title="问题："></a>问题：</h3><ul>
 <li>userAgent有什么作用</li>
 <li>为什么要引入 会话检查</li>
 </ul>
 <p>mongo 中只存储状态为公开的 post</p>
 <p>mysql存储全量数据</p>
+<p>对于 点赞 、 收藏这些高频需求，redis存储数据后，数据如何落入db</p>
+<p>mock的机制</p>
+<p>wire的机制</p>
+<p>项目中k8s的 deployment、svc、pv、pvc</p>
+<p>mongoDB 和mysql</p>
+<p>token和refreshToken</p>
+<p>事务的处理</p>
+<p>gorm的熟悉</p>
+<h3 id="消息队列"><a href="#消息队列" class="headerlink" title="消息队列"></a>消息队列</h3><p>消息不丢失</p>
+<p>消息不重复消费</p>
+<h3 id="推送代码"><a href="#推送代码" class="headerlink" title="推送代码"></a>推送代码</h3><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-comment"># 查看现有的远程仓库</span><br>git remote -v<br><br><span class="hljs-comment"># 如果需要，删除并重新添加 upstream</span><br>git remote remove upstream<br>git remote add upstream https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/GoSimplicity/</span>LinkMe.git<br><br><span class="hljs-comment"># 获取上游仓库的更新</span><br>git fetch upstream demo<br><br>git commit -am <span class="hljs-string">&#x27;&#x27;</span><br></code></pre></td></tr></table></figure>
+
+
+
 
                 
               </div>

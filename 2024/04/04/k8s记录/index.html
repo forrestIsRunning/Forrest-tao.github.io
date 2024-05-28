@@ -33,7 +33,7 @@
 <meta property="og:image" content="http://example.com/2024/04/04/k8s%E8%AE%B0%E5%BD%95/Users/forrest-tao/AppData/Roaming/Typora/typora-user-images/image-20240524144203655.png">
 <meta property="og:image" content="http://example.com/2024/04/04/k8s%E8%AE%B0%E5%BD%95/Users/forrest-tao/AppData/Roaming/Typora/typora-user-images/image-20240524212331300.png">
 <meta property="article:published_time" content="2024-04-04T13:16:17.000Z">
-<meta property="article:modified_time" content="2024-05-24T13:55:25.290Z">
+<meta property="article:modified_time" content="2024-05-27T09:06:56.050Z">
 <meta property="article:author" content="Forrest">
 <meta property="article:tag" content="k8s">
 <meta name="twitter:card" content="summary_large_image">
@@ -232,7 +232,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          18k 字
+          19k 字
         
       </span>
     
@@ -243,7 +243,7 @@
         
         
         
-          62 分钟
+          64 分钟
         
       </span>
     
@@ -315,7 +315,20 @@
 <p>尽管你可以在容器里通过Mount Namespace单独挂载其他不同版本的操作系统文件，比如CentOS或者Ubuntu，但这并不能改变共享宿主机内核的事实。这意味着，如果你要在Windows宿主机上运行Linux容器，或者在低版本的Linux宿主机上运行高版本的Linux容器，都是行不通的。</p>
 <p>而相比之下，拥有硬件虚拟化技术和独立Guest OS的虚拟机就要方便得多了。最极端的例子是，Microsoft的云计算平台Azure，实际上就是运行在Windows服务器集群上的，但这并不妨碍你在它上面创建各种Linux虚拟机出来。</p>
 <h4 id="cgroups"><a href="#cgroups" class="headerlink" title="cgroups"></a><strong>cgroups</strong></h4><p>control group 实现了资源的限制</p>
-<h4 id="rootfs"><a href="#rootfs" class="headerlink" title="rootfs"></a>rootfs</h4><h3 id="kubernetes"><a href="#kubernetes" class="headerlink" title="kubernetes"></a>kubernetes</h3><p>google 开源的，用go实现的，用于管理多主机上的容器，用于自动部署、扩展和管理的应用程序。</p>
+<h4 id="rootfs"><a href="#rootfs" class="headerlink" title="rootfs"></a>rootfs</h4><h4 id="docker-的网络模式"><a href="#docker-的网络模式" class="headerlink" title="docker 的网络模式"></a>docker 的网络模式</h4><ul>
+<li><strong>bridge</strong>: docker 的默认网络模式是bridge；容器通过虚拟的桥和<code>docker0</code>相连，<code>docker0</code>和主机相连</li>
+</ul>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs vim">➜  ~ docker exec -it test-<span class="hljs-number">1</span> /bin/<span class="hljs-keyword">sh</span><br>/ # ifconfig<br>eth0      Link encap:Ethernet  HWaddr <span class="hljs-number">02</span>:<span class="hljs-number">42</span>:AC:<span class="hljs-number">11</span>:<span class="hljs-number">00</span>:<span class="hljs-number">04</span><br>          inet addr:<span class="hljs-number">172.17</span>.<span class="hljs-number">0.4</span>  Bcas<span class="hljs-variable">t:172</span>.<span class="hljs-number">17.255</span>.<span class="hljs-number">255</span>  Mask:<span class="hljs-number">255.255</span>.<span class="hljs-number">0.0</span><br>          inet6 addr: fe80::<span class="hljs-number">42</span>:acff:fe11:<span class="hljs-number">4</span>/<span class="hljs-number">64</span> Scope:Link<br>          UP BROADCAST RUNNING MULTICAST  MTU:<span class="hljs-number">1500</span>  Metric:<span class="hljs-number">1</span><br>          RX packet<span class="hljs-variable">s:56</span> error<span class="hljs-variable">s:0</span> dropped:<span class="hljs-number">0</span> overrun<span class="hljs-variable">s:0</span> frame:<span class="hljs-number">0</span><br>          TX packet<span class="hljs-variable">s:20</span> error<span class="hljs-variable">s:0</span> dropped:<span class="hljs-number">0</span> overrun<span class="hljs-variable">s:0</span> carrier:<span class="hljs-number">0</span><br>          collision<span class="hljs-variable">s:0</span> txqueuelen:<span class="hljs-number">0</span><br>          RX byte<span class="hljs-variable">s:4264</span> (<span class="hljs-number">4.1</span> KiB)  TX byte<span class="hljs-variable">s:1552</span> (<span class="hljs-number">1.5</span> KiB)<br><br><span class="hljs-keyword">lo</span>        Link encap:Local Loopback<br>          inet addr:<span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>  Mask:<span class="hljs-number">255.0</span>.<span class="hljs-number">0.0</span><br>          inet6 addr: ::<span class="hljs-number">1</span>/<span class="hljs-number">128</span> Scope:Host<br>          UP LOOPBACK RUNNING  MTU:<span class="hljs-number">65536</span>  Metric:<span class="hljs-number">1</span><br>          RX packet<span class="hljs-variable">s:0</span> error<span class="hljs-variable">s:0</span> dropped:<span class="hljs-number">0</span> overrun<span class="hljs-variable">s:0</span> frame:<span class="hljs-number">0</span><br>          TX packet<span class="hljs-variable">s:0</span> error<span class="hljs-variable">s:0</span> dropped:<span class="hljs-number">0</span> overrun<span class="hljs-variable">s:0</span> carrier:<span class="hljs-number">0</span><br>          collision<span class="hljs-variable">s:0</span> txqueuelen:<span class="hljs-number">1000</span><br>          RX byte<span class="hljs-variable">s:0</span> (<span class="hljs-number">0.0</span> B)  TX byte<span class="hljs-variable">s:0</span> (<span class="hljs-number">0.0</span> B)<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+<h3 id="kubernetes"><a href="#kubernetes" class="headerlink" title="kubernetes"></a>kubernetes</h3><p>google 开源的，用go实现的，用于管理多主机上的容器，用于自动部署、扩展和管理的应用程序。</p>
 <p>运行在大规模集群中的各种任务之间，实际上存在着各种各样的关系。这些关系的处理，才是作业编排和管理系统中最终重要的</p>
 <p>编排、调度、容器云、集群管理</p>
 <p>路由网关、水平扩展、监控、备份、灾难恢复</p>
