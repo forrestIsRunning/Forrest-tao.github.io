@@ -1,0 +1,707 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Forrest">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="同源策略（Same-Origin Policy）同源策略是浏览器的一种安全机制，用于防止不同源的资源互相访问，从而避免安全隐患。所谓“同源”，是指以下三个属性完全相同：  协议（Protocol），如 http 或 https。 域名（Domain），如 example.com。 端口（Port），如 80、443。  例如，http:&#x2F;&#x2F;example.com&#x2F;page 和 http:&#x2F;&#x2F;exa">
+<meta property="og:type" content="article">
+<meta property="og:title" content="cors">
+<meta property="og:url" content="http://example.com/2024/06/01/cors/index.html">
+<meta property="og:site_name" content="Forrest’s blog">
+<meta property="og:description" content="同源策略（Same-Origin Policy）同源策略是浏览器的一种安全机制，用于防止不同源的资源互相访问，从而避免安全隐患。所谓“同源”，是指以下三个属性完全相同：  协议（Protocol），如 http 或 https。 域名（Domain），如 example.com。 端口（Port），如 80、443。  例如，http:&#x2F;&#x2F;example.com&#x2F;page 和 http:&#x2F;&#x2F;exa">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-06-01T10:18:53.000Z">
+<meta property="article:modified_time" content="2024-06-01T10:35:20.013Z">
+<meta property="article:author" content="Forrest">
+<meta property="article:tag" content="-[cors]">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>cors - Forrest’s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Forrest</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="cors"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-06-01 18:18" pubdate>
+          2024年6月1日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          9 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">cors</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h3 id="同源策略（Same-Origin-Policy）"><a href="#同源策略（Same-Origin-Policy）" class="headerlink" title="同源策略（Same-Origin Policy）"></a>同源策略（Same-Origin Policy）</h3><p>同源策略是浏览器的一种安全机制，用于防止不同源的资源互相访问，从而避免安全隐患。所谓“同源”，是指以下三个属性完全相同：</p>
+<ol>
+<li>协议（Protocol），如 <code>http</code> 或 <code>https</code>。</li>
+<li>域名（Domain），如 <code>example.com</code>。</li>
+<li>端口（Port），如 <code>80</code>、<code>443</code>。</li>
+</ol>
+<p>例如，<code>http://example.com/page</code> 和 <code>http://example.com/other-page</code> 是同源的，但 <code>http://example.com</code> 和 <code>http://another-example.com</code> 是不同源的。</p>
+<h3 id="跨域请求"><a href="#跨域请求" class="headerlink" title="跨域请求"></a>跨域请求</h3><p>当一个网页试图从另一个域（不同的协议、域名或端口）加载资源（如图片、CSS、脚本、AJAX请求等）时，就会发生跨域请求。如果没有特殊处理，浏览器会阻止这种请求，以保护用户信息安全。</p>
+<h3 id="为什么会产生跨域问题？"><a href="#为什么会产生跨域问题？" class="headerlink" title="为什么会产生跨域问题？"></a>为什么会产生跨域问题？</h3><p>跨域问题是由于浏览器的同源策略引起的。浏览器出于以下几种考虑，默认阻止跨域请求：</p>
+<ol>
+<li><strong>防止XSS攻击</strong>：跨站脚本攻击（Cross-Site Scripting，XSS）是指攻击者注入恶意脚本到另一个网页中。浏览器的同源策略可以防止这种攻击。</li>
+<li><strong>防止CSRF攻击</strong>：跨站请求伪造（Cross-Site Request Forgery，CSRF）是指攻击者诱导用户在已认证的会话中执行非预期的操作。同源策略也可以防止这种攻击。</li>
+<li><strong>数据安全性</strong>：同源策略确保一个网页不能随意读取另一个网页的敏感数据，从而保护用户隐私。</li>
+</ol>
+<h4 id="CORS请求的类型"><a href="#CORS请求的类型" class="headerlink" title="CORS请求的类型"></a>CORS请求的类型</h4><ol>
+<li><p><strong>简单请求（Simple Requests）</strong>：</p>
+<ul>
+<li>使用以下方法之一：<code>GET</code>、<code>POST</code>、<code>HEAD</code>。</li>
+<li>头部仅限于：<code>Accept</code>、<code>Accept-Language</code>、<code>Content-Language</code>、<code>Content-Type</code>（且值限于 <code>application/x-www-form-urlencoded</code>、<code>multipart/form-data</code>、<code>text/plain</code>）。</li>
+</ul>
+<p>这种请求会直接发送，但浏览器会检查响应头中的 <code>Access-Control-Allow-Origin</code> 来决定是否允许跨域。</p>
+</li>
+<li><p><strong>预检请求（Preflight Requests）</strong>：</p>
+<ul>
+<li>使用除 <code>GET</code>、<code>POST</code>、<code>HEAD</code> 之外的方法，或自定义头部，或 <code>Content-Type</code> 值不在上述范围内。</li>
+<li>浏览器会先发送一个 <code>OPTIONS</code> 请求，询问服务器是否允许跨域。如果服务器允许，浏览器才会发送实际请求。</li>
+</ul>
+</li>
+</ol>
+<h4 id="CORS响应头"><a href="#CORS响应头" class="headerlink" title="CORS响应头"></a>CORS响应头</h4><p>服务器通过设置以下头部来控制跨域请求：</p>
+<ul>
+<li><code>Access-Control-Allow-Origin</code>：指定允许哪些源访问资源。例如，<code>*</code> 表示允许所有源。</li>
+<li><code>Access-Control-Allow-Methods</code>：指定允许的HTTP方法。</li>
+<li><code>Access-Control-Allow-Headers</code>：指定允许的自定义头部。</li>
+<li><code>Access-Control-Allow-Credentials</code>：指示是否允许发送Cookie和HTTP认证信息。</li>
+<li><code>Access-Control-Max-Age</code>：指示预检请求的结果可以被缓存多长时间。</li>
+</ul>
+<h3 id="CORS-请求的完整示例"><a href="#CORS-请求的完整示例" class="headerlink" title="CORS 请求的完整示例"></a>CORS 请求的完整示例</h3><p>以下是一个完整的CORS请求示例，包含预检请求和实际请求：</p>
+<h4 id="预检请求（Preflight-Request）"><a href="#预检请求（Preflight-Request）" class="headerlink" title="预检请求（Preflight Request）"></a>预检请求（Preflight Request）</h4><figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs oxygene">http复制代码OPTIONS /api/data HTTP/<span class="hljs-number">1.1</span><br>Host: api.example.com<br>Origin: http:<span class="hljs-comment">//example.com</span><br>Access-Control-Request-<span class="hljs-keyword">Method</span>: POST<br>Access-Control-Request-Headers: Content-<span class="hljs-keyword">Type</span>, X-Custom-Header<br></code></pre></td></tr></table></figure>
+
+<h4 id="预检响应（Preflight-Response）"><a href="#预检响应（Preflight-Response）" class="headerlink" title="预检响应（Preflight Response）"></a>预检响应（Preflight Response）</h4><figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">http复制代码HTTP/<span class="hljs-number">1.1</span> <span class="hljs-number">204</span> <span class="hljs-keyword">No</span> Content<br><span class="hljs-keyword">Access</span>-Control-Allow-Origin: http://example.com<br><span class="hljs-keyword">Access</span>-Control-Allow-Methods: POST, <span class="hljs-keyword">GET</span>, <span class="hljs-keyword">OPTIONS</span><br><span class="hljs-keyword">Access</span>-Control-Allow-Headers: Content-<span class="hljs-keyword">Type</span>, X-Custom-<span class="hljs-keyword">Header</span><br><span class="hljs-keyword">Access</span>-Control-Max-Age: <span class="hljs-number">3600</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="实际请求（Actual-Request）"><a href="#实际请求（Actual-Request）" class="headerlink" title="实际请求（Actual Request）"></a>实际请求（Actual Request）</h4><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs awk">http复制代码POST <span class="hljs-regexp">/api/</span>data HTTP/<span class="hljs-number">1.1</span><br>Host: api.example.com<br>Origin: http:<span class="hljs-regexp">//</span>example.com<br>Content-Type: application/json<br>X-Custom-Header: CustomValue<br><br>&#123;<br>  <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;John&quot;</span>,<br>  <span class="hljs-string">&quot;email&quot;</span>: <span class="hljs-string">&quot;john@example.com&quot;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="实际响应（Actual-Response）"><a href="#实际响应（Actual-Response）" class="headerlink" title="实际响应（Actual Response）"></a>实际响应（Actual Response）</h4><figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">http复制代码HTTP/<span class="hljs-number">1.1</span> <span class="hljs-number">200</span> OK<br>Content-<span class="hljs-keyword">Type</span>: application/<span class="hljs-type">json</span><br><span class="hljs-keyword">Access</span>-Control-Allow-Origin: http://example.com<br><br>&#123;<br>  &quot;message&quot;: &quot;Data received successfully&quot;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="详细解释"><a href="#详细解释" class="headerlink" title="详细解释"></a>详细解释</h3><ol>
+<li><strong>预检请求（Preflight Request）</strong>：<ul>
+<li>浏览器发送 <code>OPTIONS</code> 请求，询问服务器是否允许实际的跨域请求。</li>
+<li>包含 <code>Access-Control-Request-Method</code> 和 <code>Access-Control-Request-Headers</code>，告知服务器实际请求的 HTTP 方法和自定义头部。</li>
+</ul>
+</li>
+<li><strong>预检响应（Preflight Response）</strong>：<ul>
+<li>服务器响应中包含 <code>Access-Control-Allow-Origin</code> 以允许的源。</li>
+<li><code>Access-Control-Allow-Methods</code> 列出允许的 HTTP 方法。</li>
+<li><code>Access-Control-Allow-Headers</code> 列出允许的自定义头部。</li>
+<li><code>Access-Control-Max-Age</code> 指示预检请求的结果可以被缓存的时间（以秒为单位）。</li>
+</ul>
+</li>
+<li><strong>实际请求（Actual Request）</strong>：<ul>
+<li>浏览器在预检通过后发送实际的请求。</li>
+<li>包含 <code>Origin</code> 头部指示请求的源。</li>
+<li>可能包含自定义头部和请求体。</li>
+</ul>
+</li>
+<li><strong>实际响应（Actual Response）</strong>：<ul>
+<li>服务器处理实际请求并返回响应。</li>
+<li>响应中包含 <code>Access-Control-Allow-Origin</code> 头部以指示允许的源。</li>
+</ul>
+</li>
+</ol>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/cors/" class="print-no-link">#-[cors]</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>cors</div>
+      <div>http://example.com/2024/06/01/cors/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Forrest</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年6月1日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/06/01/xss/" title="xss">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">xss</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/06/01/lua/" title="lua">
+                        <span class="hidden-mobile">lua</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -24,7 +24,7 @@
 <meta property="og:description" content="《我们一起进大厂》系列-Redis常见面试题（带答案） - 掘金 (juejin.cn) redis为什么这么快 基于内存 单线程模型 非阻塞IO 优化过的数据结构和底层模型  基本的数据结构Stringhashlist朋友圈的点赞的人的显示是有顺序的，可以使用list来实现顺序；如果有人点赞rpush；如果有人取消点赞lrem setZset 跳跃表  哈希表   ​	充分利用 跳跃表的快速查找">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-01-29T11:55:49.000Z">
-<meta property="article:modified_time" content="2024-05-17T00:49:14.625Z">
+<meta property="article:modified_time" content="2024-05-29T03:41:43.480Z">
 <meta property="article:author" content="Forrest">
 <meta property="article:tag" content="redis,八股">
 <meta name="twitter:card" content="summary_large_image">
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.9k 字
+          3.1k 字
         
       </span>
     
@@ -233,7 +233,7 @@
         
         
         
-          10 分钟
+          11 分钟
         
       </span>
     
@@ -417,7 +417,26 @@
 <li>使用定时任务，比如 xxl-job，来定时触发缓存预热的逻辑，将数据库中的热点数据查询出来并存入缓存中。</li>
 <li>使用消息队列，比如 Kafka，来异步地进行缓存预热，将数据库中的热点数据的主键或者 ID 发送到消息队列中，然后由缓存服务消费消息队列中的数据，根据主键或者 ID 查询数据库并更新缓存</li>
 </ol>
-<h3 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h3><h3 id="主从数据同步"><a href="#主从数据同步" class="headerlink" title="主从数据同步"></a>主从数据同步</h3><p>启动一台slave的时候，发送psycn命令给master，触发全量复制。slave将master的RDB写入本地磁盘，加载进内存</p>
+<h3 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h3><h3 id="redis的回滚机制"><a href="#redis的回滚机制" class="headerlink" title="redis的回滚机制"></a>redis的回滚机制</h3><p>redis不支持事务</p>
+<p>大概的意思是，作者不支持事务回滚的原因有以下两个：</p>
+<ul>
+<li>他认为 Redis 事务的执行时，错误通常都是编程错误造成的，这种错误通常只会出现在开发环境中，而很少会在实际的生产环境中出现，所以他认为没有必要为 Redis 开发事务回滚功能；</li>
+<li>不支持事务回滚是因为这种复杂的功能和 Redis 追求的简单高效的设计主旨不符合。</li>
+</ul>
+<p>这里指的不支持事务的运行回滚是指 运行时错误的事务回滚</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">muti <span class="hljs-comment"># 开始事务</span><br><br>EXEC <span class="hljs-comment">#执行事务</span><br></code></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+<h3 id="主从数据同步"><a href="#主从数据同步" class="headerlink" title="主从数据同步"></a>主从数据同步</h3><p>启动一台slave的时候，发送psycn命令给master，触发全量复制。slave将master的RDB写入本地磁盘，加载进内存</p>
 <h3 id="redis的分布式锁"><a href="#redis的分布式锁" class="headerlink" title="redis的分布式锁"></a>redis的分布式锁</h3><h3 id="缓存不一致问题"><a href="#缓存不一致问题" class="headerlink" title="缓存不一致问题"></a>缓存不一致问题</h3><p>[常见的缓存更新策略剖析 - 知乎 (zhihu.com)](<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/86396877#:~:text=%E5%B8%B8%E8%A7%81%E7%9A%84%E7%BC%93%E5%AD%98%E6%9B%B4%E6%96%B0%E7%AD%96%E7%95%A5%E5%89%96%E6%9E%90">https://zhuanlan.zhihu.com/p/86396877#:~:text=常见的缓存更新策略剖析</a> 1 一、先删缓存再更新数据库 2 二、先更新数据库，再删缓存 3,三、先更新数据库，再更新缓存 4 四、read%2Fwrite through 缓存代理 5 五、写回)</p>
 <p><a target="_blank" rel="noopener" href="https://www.nowcoder.com/discuss/597757010251214848">百度后端 春招 24届一二三面_牛客网 (nowcoder.com)</a></p>
 <p><a target="_blank" rel="noopener" href="https://xiaolincoding.com/redis/architecture/mysql_redis_consistency.html#%E5%85%88%E6%9B%B4%E6%96%B0%E6%95%B0%E6%8D%AE%E5%BA%93-%E8%BF%98%E6%98%AF%E5%85%88%E6%9B%B4%E6%96%B0%E7%BC%93%E5%AD%98">数据库和缓存如何保证一致性？ | 小林coding (xiaolincoding.com)</a></p>
