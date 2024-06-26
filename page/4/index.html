@@ -228,6 +228,39 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
+        <a href="/2024/02/29/go%E7%9A%84context/" target="_self">
+          go的context
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/02/29/go%E7%9A%84context/" target="_self">
+        <div>
+          在context中存储数据 使用context来管理协程  context的本质 123456type Context interface &#123;	Deadline() (time.Time, bool)	Err() error	value(key any) any	Done() &lt;-chan struct&#123;&#125;&#125;    emptyContext 1234
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-02-29 22:16" pubdate>
+              2024-02-29
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
         <a href="/2024/02/29/go%E7%9A%84%E9%94%81/" target="_self">
           go的锁
         </a>
@@ -730,39 +763,6 @@
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
             <time datetime="2024-02-24 14:35" pubdate>
-              2024-02-24
-            </time>
-          </div>
-        
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/02/24/go%E7%9A%84map/" target="_self">
-          go的map
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/02/24/go%E7%9A%84map/" target="_self">
-        <div>
-          map的结构拉链法的hashMap   共有2^B 个桶 每个桶只能存放 8个 K*V，若多余8个，则放到溢出桶里面去  hash算法、B、oldBuckets map的访问  read write 使用拉链法实现 hashmap 每个桶中存储键hash 的前8位 桶超出 8个数据后，就会存储在溢出桶这个i部分 map的扩容当 hash碰撞严重时，扩容桶会指向下一个扩容桶，此时变成了长链表，效率会
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-02-24 08:42" pubdate>
               2024-02-24
             </time>
           </div>

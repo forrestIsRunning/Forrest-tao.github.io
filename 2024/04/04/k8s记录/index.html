@@ -16,12 +16,12 @@
   <meta name="author" content="Forrest">
   <meta name="keywords" content="">
   
-    <meta name="description" content="先留一个坑 01.你为什么需要学习K8S - 掘金 (juejin.cn) dockernamespace做隔离、cgroups做限制、rootfs做文件系统 容器的核心技术，就是通过约束和修改进程的动态表现，从而为其创造一个“边界” 对于docker 等大多数linux容器来说，cgroups是用制造约束的主要手段；namespace是用来修改进程视图的主要方法。 namespace使用 doc">
+    <meta name="description" content="先留一个坑 01.你为什么需要学习K8S - 掘金 (juejin.cn) docker 基于linux的cgroup、namespace以及union FS 等技术，对进程进行封装隔离，属于操作系统层面的虚拟技术，由于隔离隔离的进程独立于宿主机和其他的隔离进程，因此也成为容器 docker在容器的基础上，进行了进一步的封装，从文件系统、网络互连到进程隔离等等，极大的简化了容器的创建和维护，使得d">
 <meta property="og:type" content="article">
 <meta property="og:title" content="k8s记录">
 <meta property="og:url" content="http://example.com/2024/04/04/k8s%E8%AE%B0%E5%BD%95/index.html">
 <meta property="og:site_name" content="Forrest’s blog">
-<meta property="og:description" content="先留一个坑 01.你为什么需要学习K8S - 掘金 (juejin.cn) dockernamespace做隔离、cgroups做限制、rootfs做文件系统 容器的核心技术，就是通过约束和修改进程的动态表现，从而为其创造一个“边界” 对于docker 等大多数linux容器来说，cgroups是用制造约束的主要手段；namespace是用来修改进程视图的主要方法。 namespace使用 doc">
+<meta property="og:description" content="先留一个坑 01.你为什么需要学习K8S - 掘金 (juejin.cn) docker 基于linux的cgroup、namespace以及union FS 等技术，对进程进行封装隔离，属于操作系统层面的虚拟技术，由于隔离隔离的进程独立于宿主机和其他的隔离进程，因此也成为容器 docker在容器的基础上，进行了进一步的封装，从文件系统、网络互连到进程隔离等等，极大的简化了容器的创建和维护，使得d">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2024/04/04/k8s%E8%AE%B0%E5%BD%95/Users/forrest-tao/AppData/Roaming/Typora/typora-user-images/image-20240516082007336.png">
 <meta property="og:image" content="http://example.com/2024/04/04/k8s%E8%AE%B0%E5%BD%95/Users/forrest-tao/AppData/Roaming/Typora/typora-user-images/image-20240516091130601.png">
@@ -33,7 +33,7 @@
 <meta property="og:image" content="http://example.com/2024/04/04/k8s%E8%AE%B0%E5%BD%95/Users/forrest-tao/AppData/Roaming/Typora/typora-user-images/image-20240524144203655.png">
 <meta property="og:image" content="http://example.com/2024/04/04/k8s%E8%AE%B0%E5%BD%95/Users/forrest-tao/AppData/Roaming/Typora/typora-user-images/image-20240524212331300.png">
 <meta property="article:published_time" content="2024-04-04T13:16:17.000Z">
-<meta property="article:modified_time" content="2024-06-15T11:39:32.883Z">
+<meta property="article:modified_time" content="2024-06-22T09:23:11.550Z">
 <meta property="article:author" content="Forrest">
 <meta property="article:tag" content="k8s">
 <meta name="twitter:card" content="summary_large_image">
@@ -295,7 +295,20 @@
                 
                 <p>先留一个坑</p>
 <p><a target="_blank" rel="noopener" href="https://juejin.cn/post/7291513540025434169">01.你为什么需要学习K8S - 掘金 (juejin.cn)</a></p>
-<h3 id="docker"><a href="#docker" class="headerlink" title="docker"></a>docker</h3><p>namespace做隔离、cgroups做限制、rootfs做文件系统</p>
+<h3 id="docker"><a href="#docker" class="headerlink" title="docker"></a>docker</h3><ul>
+<li>基于linux的cgroup、namespace以及union FS 等技术，对进程进行封装隔离，属于操作系统层面的虚拟技术，由于隔离隔离的进程独立于宿主机和其他的隔离进程，因此也成为容器</li>
+<li>docker在容器的基础上，进行了进一步的封装，从文件系统、网络互连到进程隔离等等，极大的简化了容器的创建和维护，使得docker技术比虚拟机更加轻便、快捷</li>
+</ul>
+<p>namespace做隔离、cgroups做限制、rootfs做文件系统</p>
+<p>为什么要使用docker</p>
+<ul>
+<li>更高效利用系统资源</li>
+<li>更快的启动时间</li>
+<li>一致的运行环境</li>
+<li>持续交付和部署</li>
+<li>更加轻松的迁移</li>
+<li>更加容易维护和扩展</li>
+</ul>
 <p>容器的核心技术，就是通过约束和修改进程的动态表现，从而为其创造一个“边界”</p>
 <p>对于docker 等大多数linux容器来说，cgroups是用制造约束的主要手段；namespace是用来修改进程视图的主要方法。</p>
 <h4 id="namespace"><a href="#namespace" class="headerlink" title="namespace"></a><strong>namespace</strong></h4><p>使用 <code>docker run -it busybox /bin/sh</code> ,进入终端，键入<code>ps</code>，发现</p>
